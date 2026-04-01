@@ -20,7 +20,7 @@ const Home = () => {
   useEffect(() => {
     const fetchHomeProducts = async () => {
       try {
-        const { data } = await axios.get('http://localhost:5000/api/products?placement=home');
+        const { data } = await axios.get('https://ayuom-backend.vercel.app/api/products?placement=home');
         setHomeProducts(data);
       } catch (err) {
         console.error('Failed to fetch home products:', err);

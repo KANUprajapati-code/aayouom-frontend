@@ -29,7 +29,7 @@ const Products = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const { data } = await axios.get('http://localhost:5000/api/products?placement=shop');
+        const { data } = await axios.get('https://ayuom-backend.vercel.app/api/products?placement=shop');
         setMedicines(data);
       } catch (err) {
         console.error('Failed to fetch Shop products:', err);

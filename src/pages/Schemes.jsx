@@ -16,8 +16,8 @@ const Schemes = () => {
     const fetchData = async () => {
       try {
         const [contentRes, productsRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/content/schemes').catch(() => ({ data: null })),
-          axios.get('http://localhost:5000/api/products?placement=schemes').catch(() => ({ data: [] }))
+          axios.get('https://ayuom-backend.vercel.app/api/content/schemes').catch(() => ({ data: null })),
+          axios.get('https://ayuom-backend.vercel.app/api/products?placement=schemes').catch(() => ({ data: [] }))
         ]);
         
         if (contentRes.data) {

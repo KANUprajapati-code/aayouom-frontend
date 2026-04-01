@@ -26,7 +26,7 @@ const Dashboard = () => {
     const fetchOrders = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:5000/api/orders/my-orders', {
+        const response = await axios.get('https://ayuom-backend.vercel.app/api/orders/my-orders', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setOrders(response.data);

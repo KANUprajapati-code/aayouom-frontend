@@ -64,17 +64,17 @@ const AdminDashboard = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const prodRes = await axios.get('http://localhost:5000/api/products').catch(() => ({ data: [] }));
+      const prodRes = await axios.get('https://ayuom-backend.vercel.app/api/products').catch(() => ({ data: [] }));
       setProducts(prodRes.data.length ? prodRes.data : [
         { _id: '1', name: 'Augmentin 625 Duo', price: 185, category: 'Antibiotics', image: 'https://via.placeholder.com/100' },
         { _id: '2', name: 'Pan 40 Tablet', price: 110, category: 'Gastrointestinal', image: 'https://via.placeholder.com/100' }
       ]);
       
-      const contentRes = await axios.get('http://localhost:5000/api/content/schemes').catch(() => ({ data: null }));
+      const contentRes = await axios.get('https://ayuom-backend.vercel.app/api/content/schemes').catch(() => ({ data: null }));
       if (contentRes.data) setSchemesHeroData(contentRes.data);
 
       if (token) {
-        const userRes = await axios.get('http://localhost:5000/api/admin/users/pending', config).catch(() => ({ data: [] }));
+        const userRes = await axios.get('https://ayuom-backend.vercel.app/api/admin/users/pending', config).catch(() => ({ data: [] }));
         setPendingUsers(userRes.data);
       }
     } catch (err) {
@@ -92,7 +92,7 @@ const AdminDashboard = () => {
 
   const handleApproveUser = async (id) => {
     try {
-      await axios.put(`http://localhost:5000/api/admin/users/${id}/approve`, {}, config);
+      await axios.put(`https://ayuom-backend.vercel.app/api/admin/users/${id}/approve`, {}, config);
       alert('Doctor Access Granted.');
       setPendingUsers(pendingUsers.filter(u => u._id !== id));
     } catch (err) {
@@ -103,7 +103,7 @@ const AdminDashboard = () => {
   const handlePromoteToAdmin = async (id) => {
     if (!window.confirm('Promote this user to Administrator? They will have full access to this panel.')) return;
     try {
-      await axios.put(`http://localhost:5000/api/admin/users/${id}/role`, { role: 'admin' }, config);
+      await axios.put(`https://ayuom-backend.vercel.app/api/admin/users/${id}/role`, { role: 'admin' }, config);
       alert('User successfully promoted to Administrator.');
       setPendingUsers(pendingUsers.filter(u => u._id !== id));
     } catch (err) {
@@ -143,11 +143,11 @@ const AdminDashboard = () => {
     e.preventDefault();
     try {
       if (modalMode === 'add') {
-        const res = await axios.post('http://localhost:5000/api/products', formData, config);
+        const res = await axios.post('https://ayuom-backend.vercel.app/api/products', formData, config);
         setProducts([res.data, ...products]);
         alert('Product added successfully!');
       } else {
-        const res = await axios.put(`http://localhost:5000/api/products/${currentProductId}`, formData, config);
+        const res = await axios.put(`https://ayuom-backend.vercel.app/api/products/${currentProductId}`, formData, config);
         setProducts(products.map(p => p._id === currentProductId ? res.data : p));
         alert('Product updated successfully!');
       }
@@ -160,7 +160,7 @@ const AdminDashboard = () => {
   const handleDeleteProduct = async (id) => {
     if (!window.confirm('Erase this product from the database?')) return;
     try {
-      await axios.delete(`http://localhost:5000/api/products/${id}`, config);
+      await axios.delete(`https://ayuom-backend.vercel.app/api/products/${id}`, config);
       setProducts(products.filter(p => p._id !== id));
     } catch (err) {
       alert('Error deleting product: ' + (err.response?.data?.message || err.message));
@@ -171,7 +171,7 @@ const AdminDashboard = () => {
     e.preventDefault();
     setIsUpdatingHero(true);
     try {
-      await axios.put('http://localhost:5000/api/content/schemes', schemesHeroData, config);
+      await axios.put('https://ayuom-backend.vercel.app/api/content/schemes', schemesHeroData, config);
       alert('Schemes Hero section updated successfully!');
     } catch (err) {
       alert('Failed to update hero: ' + (err.response?.data?.message || err.message));
