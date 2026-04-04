@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import HomePageCMS from '../components/admin/HomePageCMS';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -198,6 +199,7 @@ const AdminDashboard = () => {
             { id: 'categories', label: 'Categories', icon: Package },
             { id: 'schemes', label: 'Schemes', icon: Zap },
             { id: 'users', label: 'Approvals', icon: Activity, count: pendingUsers.length },
+            { id: 'homecms', label: 'Home Page CMS', icon: Globe },
             { id: 'orders', label: 'Orders Feed', icon: ShoppingBag }
           ].map((item) => (
             <button key={item.id} onClick={() => setActiveTab(item.id)} className={`w-full flex items-center justify-between px-5 py-4 rounded-2xl font-bold transition-all ${activeTab === item.id ? 'bg-primary-600 shadow-xl text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}>
@@ -553,6 +555,10 @@ const AdminDashboard = () => {
                    )}
                 </div>
             </div>
+          )}
+
+          {activeTab === 'homecms' && (
+            <HomePageCMS />
           )}
         </div>
       </main>

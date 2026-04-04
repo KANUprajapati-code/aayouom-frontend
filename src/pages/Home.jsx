@@ -15,20 +15,25 @@ import MedicineCard from '../components/common/MedicineCard';
 
 const Home = () => {
   const [homeProducts, setHomeProducts] = useState([]);
+  const [cms, setCms] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchHomeProducts = async () => {
+    const fetchData = async () => {
       try {
-        const { data } = await axios.get('https://ayuom-backend.vercel.app/api/products?placement=home');
-        setHomeProducts(data);
+        const [prodRes, cmsRes] = await Promise.all([
+          axios.get('https://ayuom-backend.vercel.app/api/products?placement=home'),
+          axios.get('https://ayuom-backend.vercel.app/api/content/homepage').catch(() => ({ data: {} }))
+        ]);
+        setHomeProducts(prodRes.data);
+        setCms(cmsRes.data || {});
       } catch (err) {
-        console.error('Failed to fetch home products:', err);
+        console.error('Failed to fetch home data:', err);
       } finally {
         setLoading(false);
       }
     };
-    fetchHomeProducts();
+    fetchData();
   }, []);
 
   const categoryHighlights = homeProducts.map(p => ({
@@ -55,26 +60,25 @@ const Home = () => {
           <div className="space-y-8">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-50 text-primary-700 border border-primary-100 shadow-sm">
               <ShieldCheck size={18} className="text-primary-600" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em]">Verified B2B Medical Hub</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em]">{cms.heroBadge || "Verified B2B Medical Hub"}</span>
             </div>
             
             <h1 className="text-5xl lg:text-7xl font-black text-slate-900 leading-[1.05] tracking-tight">
-              Premium Medicine <br />
-              <span className="text-primary-600">Sourcing for Doctors</span>
+              {cms.heroTitleLine1 || "Premium Medicine"} <br />
+              <span className="text-primary-600">{cms.heroTitleLine2 || "Sourcing for Doctors"}</span>
             </h1>
             
             <p className="text-xl text-text-muted max-w-lg leading-relaxed">
-              Accelerate your clinic's supply chain with direct access to top-tier pharmaceuticals, 
-              transparent volume schemes, and lightning-fast logistics.
+              {cms.heroDescription || "Accelerate your clinic's supply chain with direct access to top-tier pharmaceuticals, transparent volume schemes, and lightning-fast logistics."}
             </p>
             
             <div className="flex flex-wrap gap-5 pt-4">
-              <Link to="/products" className="btn-primary h-14 px-10 text-lg shadow-premium">
-                Start Ordering
+              <Link to={cms.primaryButtonLink || "/products"} className="btn-primary h-14 px-10 text-lg shadow-premium">
+                {cms.primaryButtonText || "Start Ordering"}
                 <ArrowRight size={22} />
               </Link>
-              <Link to="/quick-order" className="btn-outline h-14 px-10 text-lg">
-                Quick Order Mode
+              <Link to={cms.secondaryButtonLink || "/quick-order"} className="btn-outline h-14 px-10 text-lg">
+                {cms.secondaryButtonText || "Quick Order Mode"}
               </Link>
             </div>
           </div>
@@ -127,8 +131,8 @@ const Home = () => {
       <section className="space-y-8">
         <div className="flex items-end justify-between px-2">
           <div>
-            <h2 className="text-3xl font-black text-slate-900">Top Schemes Today</h2>
-            <p className="text-text-muted mt-2 text-lg">Specially curated high-margin offers for your practice.</p>
+            <h2 className="text-3xl font-black text-slate-900">{cms.schemesTitle || "Top Schemes Today"}</h2>
+            <p className="text-text-muted mt-2 text-lg">{cms.schemesSubtitle || "Specially curated high-margin offers for your practice."}</p>
           </div>
           <Link to="/products" className="text-primary-600 font-black flex items-center gap-2 hover:gap-3 transition-all">
             Browse All Schemes <ArrowRight size={20} />
@@ -145,8 +149,8 @@ const Home = () => {
       {/* Category Highlights: One from each category */}
       <section className="space-y-12">
         <div className="text-center space-y-4 max-w-2xl mx-auto">
-          <h2 className="text-4xl font-black text-slate-900">Explore by Category</h2>
-          <p className="text-text-muted text-lg">We stock over 5000+ medicines across all major therapeutic segments.</p>
+          <h2 className="text-4xl font-black text-slate-900">{cms.categoryTitle || "Explore by Category"}</h2>
+          <p className="text-text-muted text-lg">{cms.categorySubtitle || "We stock over 5000+ medicines across all major therapeutic segments."}</p>
         </div>
 
         <div className="space-y-16">
@@ -161,7 +165,7 @@ const Home = () => {
                     <span className="text-primary-600">{highlight.category}</span>
                  </h3>
                  <p className="text-lg text-text-muted leading-relaxed">
-                    Our {highlight.category} segment features verified products with consistent multi-strip schemes and reliable supply chains for clinics.
+                    {(cms.categoryDescriptionTemplate || "Our {category} segment features verified products with consistent multi-strip schemes and reliable supply chains for clinics.").replace('{category}', highlight.category)}
                  </p>
                  <div className="pt-4">
                     <Link to={`/products?category=${highlight.category}`} className="btn-outline px-8 py-3.5 flex w-fit">
@@ -191,9 +195,9 @@ const Home = () => {
         
         <div className="relative z-10 max-w-4xl mx-auto space-y-12">
           <div className="space-y-4">
-            <h2 className="text-4xl lg:text-6xl font-black leading-tight tracking-tight">The Trusted Hub for <br />Healthcare Procurement</h2>
+            <h2 className="text-4xl lg:text-6xl font-black leading-tight tracking-tight" dangerouslySetInnerHTML={{__html: cms.trustTitle || "The Trusted Hub for <br />Healthcare Procurement"}}></h2>
             <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-              We provide a secure, professional-grade platform for hospitals and independent clinics to source authentic pharmaceuticals at scale.
+              {cms.trustSubtitle || "We provide a secure, professional-grade platform for hospitals and independent clinics to source authentic pharmaceuticals at scale."}
             </p>
           </div>
 
@@ -202,22 +206,22 @@ const Home = () => {
               <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-primary-400 mx-auto border border-white/10 backdrop-blur-md">
                 <ShieldCheck size={32} />
               </div>
-              <h4 className="text-xl font-black">Quality Assured</h4>
-              <p className="text-slate-500 text-sm">Every batch verified for authenticity and storage standards.</p>
+              <h4 className="text-xl font-black">{cms.trustItem1Title || "Quality Assured"}</h4>
+              <p className="text-slate-500 text-sm">{cms.trustItem1Desc || "Every batch verified for authenticity and storage standards."}</p>
             </div>
             <div className="space-y-4">
               <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-primary-400 mx-auto border border-white/10 backdrop-blur-md">
                 <Zap size={32} />
               </div>
-              <h4 className="text-xl font-black">Express Delivery</h4>
-              <p className="text-slate-500 text-sm">Priority shipping for clinics within 24-48 hours nationwide.</p>
+              <h4 className="text-xl font-black">{cms.trustItem2Title || "Express Delivery"}</h4>
+              <p className="text-slate-500 text-sm">{cms.trustItem2Desc || "Priority shipping for clinics within 24-48 hours nationwide."}</p>
             </div>
             <div className="space-y-4">
               <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-primary-400 mx-auto border border-white/10 backdrop-blur-md">
                 <Briefcase size={32} />
               </div>
-              <h4 className="text-xl font-black">B2B Compliance</h4>
-              <p className="text-slate-500 text-sm">Optimized for VAT/GST invoices and professional record-keeping.</p>
+              <h4 className="text-xl font-black">{cms.trustItem3Title || "B2B Compliance"}</h4>
+              <p className="text-slate-500 text-sm">{cms.trustItem3Desc || "Optimized for VAT/GST invoices and professional record-keeping."}</p>
             </div>
           </div>
         </div>
