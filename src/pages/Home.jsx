@@ -15,18 +15,21 @@ import MedicineCard from '../components/common/MedicineCard';
 
 const Home = () => {
   const [homeProducts, setHomeProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [cms, setCms] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [prodRes, cmsRes] = await Promise.all([
+        const [prodRes, cmsRes, catRes] = await Promise.all([
           axios.get('https://ayuom-backend.vercel.app/api/products?placement=home'),
-          axios.get('https://ayuom-backend.vercel.app/api/content/homepage').catch(() => ({ data: {} }))
+          axios.get('https://ayuom-backend.vercel.app/api/content/homepage').catch(() => ({ data: {} })),
+          axios.get('https://ayuom-backend.vercel.app/api/categories').catch(() => ({ data: [] }))
         ]);
         setHomeProducts(prodRes.data);
         setCms(cmsRes.data || {});
+        setCategories(catRes.data || []);
       } catch (err) {
         console.error('Failed to fetch home data:', err);
       } finally {
@@ -36,10 +39,15 @@ const Home = () => {
     fetchData();
   }, []);
 
-  const categoryHighlights = homeProducts.map(p => ({
-    category: p.category || 'Featured',
-    product: p
-  }));
+  // Create highlights based on actual categories from DB
+  const categoryHighlights = categories.map(cat => {
+    // Find a product from this category that is marked for home display
+    const featuredProduct = homeProducts.find(p => p.category === cat.name);
+    return {
+      category: cat.name,
+      product: featuredProduct // might be undefined if no home product in this category
+    };
+  }).filter(h => h.product); // only show categories that have at least one featured product
 
   if (loading) {
     return (

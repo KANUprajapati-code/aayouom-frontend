@@ -15,6 +15,7 @@ import QuickOrder from './pages/QuickOrder';
 import OrderHistory from './pages/OrderHistory';
 import Schemes from './pages/Schemes';
 import Settings from './pages/Settings';
+import DynamicPage from './pages/DynamicPage';
 import Layout from './components/layout/Layout';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
@@ -41,6 +42,7 @@ function App() {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<AdminLogin />} />
+                <Route path="/page/:slug" element={<DynamicPage />} />
               </Route>
 
               {/* Admin Routes */}

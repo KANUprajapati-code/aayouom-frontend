@@ -6,7 +6,7 @@ import {
   Edit, Trash2, CheckCircle2, XCircle, 
   TrendingUp, ArrowUpRight, Bell, LayoutDashboard, 
   Database, Activity, X, Save, Image as ImageIcon,
-  Globe, ShieldCheck, Zap
+  Globe, ShieldCheck, Zap, FileText
 } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
@@ -14,6 +14,7 @@ import HomePageCMS from '../components/admin/HomePageCMS';
 import ProductsCMS from '../components/admin/ProductsCMS';
 import CategoriesCMS from '../components/admin/CategoriesCMS';
 import SchemesCMS from '../components/admin/SchemesCMS';
+import PagesCMS from '../components/admin/PagesCMS';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -101,6 +102,7 @@ const AdminDashboard = () => {
             { id: 'categories', label: 'Categories', icon: Package },
             { id: 'schemes', label: 'Schemes', icon: Zap },
             { id: 'users', label: 'Approvals', icon: Activity, count: pendingUsers.length },
+            { id: 'pages', label: 'Manage Pages', icon: FileText },
             { id: 'homecms', label: 'Home Page CMS', icon: Globe },
             { id: 'orders', label: 'Orders Feed', icon: ShoppingBag }
           ].map((item) => (
@@ -216,9 +218,11 @@ const AdminDashboard = () => {
 
           {activeTab === 'categories' && <CategoriesCMS />}
 
-          {activeTab === 'schemes' && <SchemesCMS />}
+          { activeTab === 'schemes' && <SchemesCMS /> }
 
-          {activeTab === 'products' && (
+          { activeTab === 'pages' && <PagesCMS /> }
+
+          { activeTab === 'products' && (
             <ProductsCMS />
           )}
 
