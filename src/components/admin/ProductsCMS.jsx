@@ -25,8 +25,10 @@ const ProductsCMS = () => {
 
   const [categories, setCategories] = useState([]);
 
-  const token = localStorage.getItem('token');
-  const config = { headers: { Authorization: `Bearer ${token}` } };
+  const getAuthConfig = () => {
+    const token = localStorage.getItem('token');
+    return { headers: { Authorization: `Bearer ${token}` } };
+  };
 
   useEffect(() => {
     fetchProducts();
@@ -85,11 +87,11 @@ const ProductsCMS = () => {
     e.preventDefault();
     try {
       if (modalMode === 'add') {
-        const res = await axios.post('https://ayuom-backend.vercel.app/api/products', formData, config);
+        const res = await axios.post('https://ayuom-backend.vercel.app/api/products', formData, getAuthConfig());
         setProducts([res.data, ...products]);
         alert('Product added completely!');
       } else {
-        const res = await axios.put(`https://ayuom-backend.vercel.app/api/products/${currentProductId}`, formData, config);
+        const res = await axios.put(`https://ayuom-backend.vercel.app/api/products/${currentProductId}`, formData, getAuthConfig());
         setProducts(products.map(p => p._id === currentProductId ? res.data : p));
         alert('Product modified safely!');
       }
@@ -102,7 +104,7 @@ const ProductsCMS = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Erase this item completely from standard inventory and schemes?')) return;
     try {
-      await axios.delete(`https://ayuom-backend.vercel.app/api/products/${id}`, config);
+      await axios.delete(`https://ayuom-backend.vercel.app/api/products/${id}`, getAuthConfig());
       setProducts(products.filter(p => p._id !== id));
     } catch (err) {
       alert('Error deleting data: ' + (err.response?.data?.message || err.message));

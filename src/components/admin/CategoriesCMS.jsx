@@ -10,8 +10,10 @@ const CategoriesCMS = () => {
   const [currentId, setCurrentId] = useState(null);
   const [formData, setFormData] = useState({ name: '', brandsStr: '' });
   
-  const token = localStorage.getItem('token');
-  const config = { headers: { Authorization: `Bearer ${token}` } };
+  const getAuthConfig = () => {
+    const token = localStorage.getItem('token');
+    return { headers: { Authorization: `Bearer ${token}` } };
+  };
 
   useEffect(() => {
     fetchCategories();
@@ -45,10 +47,10 @@ const CategoriesCMS = () => {
       const payload = { name: formData.name, brands };
       
       if (modalMode === 'add') {
-        const res = await axios.post('https://ayuom-backend.vercel.app/api/categories', payload, config);
+        const res = await axios.post('https://ayuom-backend.vercel.app/api/categories', payload, getAuthConfig());
         setCategories([...categories, res.data]);
       } else {
-        const res = await axios.put(`https://ayuom-backend.vercel.app/api/categories/${currentId}`, payload, config);
+        const res = await axios.put(`https://ayuom-backend.vercel.app/api/categories/${currentId}`, payload, getAuthConfig());
         setCategories(categories.map(c => c._id === currentId ? res.data : c));
       }
       setShowModal(false);
@@ -60,7 +62,7 @@ const CategoriesCMS = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this therapeutic segment from the database?')) return;
     try {
-      await axios.delete(`https://ayuom-backend.vercel.app/api/categories/${id}`, config);
+      await axios.delete(`https://ayuom-backend.vercel.app/api/categories/${id}`, getAuthConfig());
       setCategories(categories.filter(c => c._id !== id));
     } catch (err) {
       alert('Error deleting category: ' + (err.response?.data?.message || err.message));

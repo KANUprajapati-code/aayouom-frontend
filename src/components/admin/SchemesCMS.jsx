@@ -13,8 +13,10 @@ const SchemesCMS = () => {
   const [currentId, setCurrentId] = useState(null);
   const [formData, setFormData] = useState({ title: '', description: '', category: '', color: 'emerald', icon: 'Zap', status: 'Active' });
 
-  const token = localStorage.getItem('token');
-  const config = { headers: { Authorization: `Bearer ${token}` } };
+  const getAuthConfig = () => {
+    const token = localStorage.getItem('token');
+    return { headers: { Authorization: `Bearer ${token}` } };
+  };
 
   useEffect(() => {
     fetchData();
@@ -37,10 +39,10 @@ const SchemesCMS = () => {
     e.preventDefault();
     setIsUpdatingHero(true);
     try {
-      await axios.put('https://ayuom-backend.vercel.app/api/content/schemes', schemesHeroData, config);
+      await axios.put('https://ayuom-backend.vercel.app/api/content/schemes', schemesHeroData, getAuthConfig());
       alert('Schemes Hero section updated successfully!');
     } catch (err) {
-      alert('Failed: ' + err.message);
+      alert('Failed: ' + (err.response?.data?.message || err.message));
     } finally {
       setIsUpdatingHero(false);
     }
@@ -62,32 +64,32 @@ const SchemesCMS = () => {
     e.preventDefault();
     try {
       if (modalMode === 'add') {
-        const res = await axios.post('https://ayuom-backend.vercel.app/api/schemesData', formData, config);
+        const res = await axios.post('https://ayuom-backend.vercel.app/api/schemesData', formData, getAuthConfig());
         setSchemes([...schemes, res.data]);
       } else {
-        const res = await axios.put(`https://ayuom-backend.vercel.app/api/schemesData/${currentId}`, formData, config);
+        const res = await axios.put(`https://ayuom-backend.vercel.app/api/schemesData/${currentId}`, formData, getAuthConfig());
         setSchemes(schemes.map(s => s._id === currentId ? res.data : s));
       }
       setShowModal(false);
     } catch (err) {
-      alert('Failed to save scheme: ' + err.message);
+      alert('Failed to save scheme: ' + (err.response?.data?.message || err.message));
     }
   };
 
   const handleDeleteScheme = async (id) => {
     if (!window.confirm('Erase this scheme completely?')) return;
     try {
-      await axios.delete(`https://ayuom-backend.vercel.app/api/schemesData/${id}`, config);
+      await axios.delete(`https://ayuom-backend.vercel.app/api/schemesData/${id}`, getAuthConfig());
       setSchemes(schemes.filter(s => s._id !== id));
     } catch (err) {
-      alert('Failure: ' + err.message);
+      alert('Failure: ' + (err.response?.data?.message || err.message));
     }
   };
 
   const handleToggleStatus = async (sc) => {
     const newStatus = sc.status === 'Active' ? 'Inactive' : 'Active';
     try {
-      const res = await axios.put(`https://ayuom-backend.vercel.app/api/schemesData/${sc._id}`, { ...sc, status: newStatus }, config);
+      const res = await axios.put(`https://ayuom-backend.vercel.app/api/schemesData/${sc._id}`, { ...sc, status: newStatus }, getAuthConfig());
       setSchemes(schemes.map(s => s._id === sc._id ? res.data : s));
     } catch (err) {
       console.error(err);

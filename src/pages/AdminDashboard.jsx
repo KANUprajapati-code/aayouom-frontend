@@ -22,8 +22,11 @@ const AdminDashboard = () => {
   const [pendingUsers, setPendingUsers] = useState([]);
   
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
-  const config = { headers: { Authorization: `Bearer ${token}` } };
+  
+  const getAuthConfig = () => {
+    const token = localStorage.getItem('token');
+    return { headers: { Authorization: `Bearer ${token}` } };
+  };
 
   const stats = [
     { label: 'Network Savings', value: '₹4,82,500', trend: '+18.5%', icon: TrendingUp, color: 'text-primary-600', bg: 'bg-primary-600/10' },
@@ -40,11 +43,16 @@ const AdminDashboard = () => {
         { _id: '2', name: 'Pan 40 Tablet', price: 110, category: 'Gastrointestinal', image: 'https://via.placeholder.com/100' }
       ]);
 
+      const token = localStorage.getItem('token');
       if (token) {
-        const userRes = await axios.get('https://ayuom-backend.vercel.app/api/admin/users/pending', config).catch(() => ({ data: [] }));
+        const userRes = await axios.get('https://ayuom-backend.vercel.app/api/admin/users/pending', getAuthConfig());
         setPendingUsers(userRes.data);
       }
     } catch (err) {
+      if (err.response?.status === 401) {
+        handleLogout();
+        return;
+      }
       console.error('Fetch error:', err);
     }
   };
@@ -61,10 +69,11 @@ const AdminDashboard = () => {
 
   const handleApproveUser = async (id) => {
     try {
-      await axios.put(`https://ayuom-backend.vercel.app/api/admin/users/${id}/approve`, {}, config);
+      await axios.put(`https://ayuom-backend.vercel.app/api/admin/users/${id}/approve`, {}, getAuthConfig());
       alert('Doctor Access Granted.');
       setPendingUsers(pendingUsers.filter(u => u._id !== id));
     } catch (err) {
+      if (err.response?.status === 401) return handleLogout();
       alert('Approval failed: ' + (err.response?.data?.message || err.message));
     }
   };
@@ -72,10 +81,11 @@ const AdminDashboard = () => {
   const handlePromoteToAdmin = async (id) => {
     if (!window.confirm('Promote this user to Administrator? They will have full access to this panel.')) return;
     try {
-      await axios.put(`https://ayuom-backend.vercel.app/api/admin/users/${id}/role`, { role: 'admin' }, config);
+      await axios.put(`https://ayuom-backend.vercel.app/api/admin/users/${id}/role`, { role: 'admin' }, getAuthConfig());
       alert('User successfully promoted to Administrator.');
       setPendingUsers(pendingUsers.filter(u => u._id !== id));
     } catch (err) {
+      if (err.response?.status === 401) return handleLogout();
       alert('Promotion failed: ' + (err.response?.data?.message || err.message));
     }
   };

@@ -23,8 +23,10 @@ const PagesCMS = () => {
 
   const [categories, setCategories] = useState([]);
 
-  const token = localStorage.getItem('token');
-  const config = { headers: { Authorization: `Bearer ${token}` } };
+  const getAuthConfig = () => {
+    const token = localStorage.getItem('token');
+    return { headers: { Authorization: `Bearer ${token}` } };
+  };
 
   useEffect(() => {
     fetchPages();
@@ -34,7 +36,7 @@ const PagesCMS = () => {
   const fetchPages = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('https://ayuom-backend.vercel.app/api/pages/admin/all', config);
+      const res = await axios.get('https://ayuom-backend.vercel.app/api/pages/admin/all', getAuthConfig());
       setPages(res.data);
     } catch (err) {
       console.error('Fetch pages error:', err);
@@ -115,10 +117,10 @@ const PagesCMS = () => {
     }
     try {
       if (modalMode === 'add') {
-        await axios.post('https://ayuom-backend.vercel.app/api/pages', formData, config);
+        await axios.post('https://ayuom-backend.vercel.app/api/pages', formData, getAuthConfig());
         alert('Dynamic page created successfully!');
       } else {
-        await axios.put(`https://ayuom-backend.vercel.app/api/pages/${currentPageId}`, formData, config);
+        await axios.put(`https://ayuom-backend.vercel.app/api/pages/${currentPageId}`, formData, getAuthConfig());
         alert('Dynamic page updated successfully!');
       }
       setShowModal(false);
@@ -131,7 +133,7 @@ const PagesCMS = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this dynamic page?')) return;
     try {
-      await axios.delete(`https://ayuom-backend.vercel.app/api/pages/${id}`, config);
+      await axios.delete(`https://ayuom-backend.vercel.app/api/pages/${id}`, getAuthConfig());
       setPages(pages.filter(p => p._id !== id));
     } catch (err) {
       alert('Error deleting page.');
