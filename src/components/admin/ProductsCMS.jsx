@@ -18,6 +18,7 @@ const ProductsCMS = () => {
     category: 'Antibiotics',
     image: '',
     description: '',
+    stock: 0,
     showOnShop: true,
     showOnHome: false,
     showOnSchemes: false
@@ -68,6 +69,7 @@ const ProductsCMS = () => {
         category: product.category || 'Antibiotics',
         image: product.image,
         description: product.description || '',
+        stock: product.stock || 0,
         showOnShop: product.showOnShop ?? true,
         showOnHome: product.showOnHome || false,
         showOnSchemes: product.showOnSchemes || false
@@ -76,7 +78,7 @@ const ProductsCMS = () => {
     } else {
       setFormData({
         name: '', price: '', originalPrice: '', category: 'Antibiotics', 
-        image: '', description: '', showOnShop: true, showOnHome: false, showOnSchemes: false
+        image: '', description: '', stock: 0, showOnShop: true, showOnHome: false, showOnSchemes: false
       });
       setCurrentProductId(null);
     }
@@ -249,8 +251,8 @@ const ProductsCMS = () => {
                           <input required type="number" placeholder="0.00" className="w-full bg-emerald-50/50 p-5 rounded-2xl font-black text-emerald-900 border border-emerald-100 outline-none focus:bg-emerald-50 focus:border-emerald-500 transition-all uppercase text-sm tracking-tight placeholder:text-slate-300" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} />
                        </div>
                        <div className="space-y-2">
-                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Original MRP (₹)</label>
-                          <input type="number" placeholder="0.00" className="w-full bg-surface-light p-5 rounded-2xl font-black text-slate-900 border border-surface-border outline-none focus:bg-white focus:border-primary-500 transition-all uppercase text-sm tracking-tight placeholder:text-slate-300 line-through opacity-70" value={formData.originalPrice} onChange={e => setFormData({...formData, originalPrice: e.target.value})} />
+                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Stock Quantity</label>
+                          <input required type="number" placeholder="e.g. 100" className="w-full bg-surface-light p-5 rounded-2xl font-black text-slate-900 border border-surface-border outline-none focus:bg-white focus:border-primary-500 transition-all text-sm tracking-tight placeholder:text-slate-300" value={formData.stock} onChange={e => setFormData({...formData, stock: e.target.value})} />
                        </div>
                    </div>
                 </div>

@@ -112,10 +112,17 @@ Link: ${window.location.origin}/product/${medicine._id}`;
                 </div>
                 <div className="text-right">
                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Stock Availability</p>
-                   <p className="text-sm font-bold text-secondary-600 flex items-center gap-2 justify-end">
-                     <div className="w-2 h-2 rounded-full bg-secondary-500 animate-pulse"></div>
-                     {medicine.stock ? "Available for Order" : "Limited Availability"}
-                   </p>
+                   {medicine.stock > 0 ? (
+                     <p className="text-sm font-bold text-secondary-600 flex items-center gap-2 justify-end">
+                       <span className="w-2 h-2 rounded-full bg-secondary-500 animate-pulse"></span>
+                       In Stock ({medicine.stock})
+                     </p>
+                   ) : (
+                     <p className="text-sm font-bold text-rose-500 flex items-center gap-2 justify-end">
+                       <span className="w-2 h-2 rounded-full bg-rose-500"></span>
+                       Out of Stock
+                     </p>
+                   )}
                 </div>
               </div>
 

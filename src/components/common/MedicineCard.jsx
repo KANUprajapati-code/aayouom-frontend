@@ -73,9 +73,9 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
         </div>
       </div>
       
-      {!stock && (
+      {stock <= 0 && (
         <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] rounded-2xl flex items-center justify-center z-20">
-          <span className="bg-slate-800 text-white text-[10px] font-bold px-3 py-1.5 rounded-full">OUT OF STOCK</span>
+          <span className="bg-slate-800 text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest leading-none shadow-premium">OUT OF STOCK</span>
         </div>
       )}
     </div>
