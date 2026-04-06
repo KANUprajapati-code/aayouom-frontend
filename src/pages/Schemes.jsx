@@ -9,15 +9,23 @@ const Schemes = () => {
     description: 'Save up to 30% on essential medicines with our verified healthcare provider status. New schemes updated weekly.',
     imageUrl: ''
   });
+  const [schemesData, setSchemesData] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const IconMap = {
+    TrendingDown,
+    Zap,
+    ShieldCheck
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [contentRes, productsRes] = await Promise.all([
+        const [contentRes, productsRes, schemesRes] = await Promise.all([
           axios.get('https://ayuom-backend.vercel.app/api/content/schemes').catch(() => ({ data: null })),
-          axios.get('https://ayuom-backend.vercel.app/api/products?placement=schemes').catch(() => ({ data: [] }))
+          axios.get('https://ayuom-backend.vercel.app/api/products?placement=schemes').catch(() => ({ data: [] })),
+          axios.get('https://ayuom-backend.vercel.app/api/schemesData').catch(() => ({ data: [] }))
         ]);
         
         if (contentRes.data) {
@@ -25,6 +33,9 @@ const Schemes = () => {
         }
         if (productsRes.data && productsRes.data.length > 0) {
           setProducts(productsRes.data);
+        }
+        if (schemesRes.data && schemesRes.data.length > 0) {
+          setSchemesData(schemesRes.data.filter(s => s.status === 'Active'));
         }
       } catch (err) {
         console.error('Error fetching schemes data:', err);
@@ -35,29 +46,7 @@ const Schemes = () => {
     fetchData();
   }, []);
 
-  const schemesData = [
-    {
-      id: 1,
-      title: "Quarterly Bulk Bonus",
-      description: "Order over ₹50,000 this quarter and get an extra 5% cashback in your clinic wallet.",
-      icon: TrendingDown,
-      color: "emerald"
-    },
-    {
-      id: 2,
-      title: "New Clinic Kit",
-      description: "First order special: Buy 10 units each of top 12 essential medicines and get 2 units free on each.",
-      icon: Zap,
-      color: "blue"
-    },
-    {
-      id: 3,
-      title: "Verified Pro Status",
-      description: "Verified doctors get an additional 2% flat discount on all premium brands automatically.",
-      icon: ShieldCheck,
-      color: "purple"
-    }
-  ];
+  // Hardcoded schemes removed. Data is fetched from /api/schemesData
 
   if (loading) {
      return (
@@ -111,23 +100,26 @@ const Schemes = () => {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          {schemesData.map((scheme) => (
-            <div key={scheme.id} className="group relative bg-white rounded-[2rem] p-8 border border-slate-100 hover:border-emerald-500/20 hover:shadow-2xl hover:shadow-emerald-500/5 transition-all duration-500">
-              <div className={`w-14 h-14 rounded-2xl bg-${scheme.color}-50 text-${scheme.color}-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500`}>
-                <scheme.icon size={28} />
+          {schemesData.map((scheme) => {
+            const Icon = IconMap[scheme.icon] || Zap;
+            return (
+              <div key={scheme._id} className="group relative bg-white rounded-[2rem] p-8 border border-slate-100 hover:border-emerald-500/20 hover:shadow-2xl hover:shadow-emerald-500/5 transition-all duration-500">
+                <div className={`w-14 h-14 rounded-2xl bg-${scheme.color}-50 text-${scheme.color}-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500`}>
+                  <Icon size={28} />
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 mb-4">{scheme.title}</h3>
+                <p className="text-slate-500 leading-relaxed text-sm">
+                  {scheme.description}
+                </p>
+                <div className="mt-8 pt-8 border-t border-slate-50 flex items-center justify-between">
+                  <span className="text-xs font-bold text-emerald-600 uppercase tracking-widest">{scheme.category}</span>
+                  <button className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 group-hover:bg-emerald-500 group-hover:text-white group-hover:border-emerald-500 transition-all">
+                    <ArrowRight size={16} />
+                  </button>
+                </div>
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-4">{scheme.title}</h3>
-              <p className="text-slate-500 leading-relaxed text-sm">
-                {scheme.description}
-              </p>
-              <div className="mt-8 pt-8 border-t border-slate-50 flex items-center justify-between">
-                <span className="text-xs font-bold text-emerald-600 uppercase tracking-widest">Active Now</span>
-                <button className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 group-hover:bg-emerald-500 group-hover:text-white group-hover:border-emerald-500 transition-all">
-                  <ArrowRight size={16} />
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 

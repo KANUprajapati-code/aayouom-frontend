@@ -11,6 +11,8 @@ import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import HomePageCMS from '../components/admin/HomePageCMS';
 import ProductsCMS from '../components/admin/ProductsCMS';
+import CategoriesCMS from '../components/admin/CategoriesCMS';
+import SchemesCMS from '../components/admin/SchemesCMS';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -22,28 +24,12 @@ const AdminDashboard = () => {
   const token = localStorage.getItem('token');
   const config = { headers: { Authorization: `Bearer ${token}` } };
 
-  const [categories, setCategories] = useState([
-    { id: 1, name: 'Antibiotics', brands: ['GlaxoSmithKline', 'Alkem', 'Cipla'] },
-    { id: 2, name: 'Gastrointestinal', brands: ['Alkem Laboratories', 'Abbott', 'Cadila'] },
-    { id: 3, name: 'Analgesics', brands: ['GSK', 'Intas', 'Lupin'] }
-  ]);
-  const [schemes, setSchemes] = useState([
-    { id: 1, title: 'Buy 10 Get 2 Free', category: 'Antibiotics', status: 'Active' },
-    { id: 2, title: 'Extra 5% on 20+', category: 'Gastrointestinal', status: 'Active' },
-    { id: 3, title: 'Bulk Discount 15%', category: 'Cardiac', status: 'Inactive' }
-  ]);
-
   const stats = [
     { label: 'Network Savings', value: '₹4,82,500', trend: '+18.5%', icon: TrendingUp, color: 'text-primary-600', bg: 'bg-primary-600/10' },
     { label: 'Bulk Orders', value: '1,248', trend: '+12.2%', icon: ShoppingBag, color: 'text-secondary-500', bg: 'bg-secondary-500/10' },
     { label: 'Doctor Partners', value: '156', trend: 'Growing', icon: Users, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
     { label: 'Managed Items', value: products.length.toString(), trend: 'Syncing', icon: Package, color: 'text-amber-500', bg: 'bg-amber-500/10' }
   ];
-
-  const [schemesHeroData, setSchemesHeroData] = useState({
-    title: '', subtitle: '', description: '', imageUrl: ''
-  });
-  const [isUpdatingHero, setIsUpdatingHero] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -57,9 +43,6 @@ const AdminDashboard = () => {
         { _id: '1', name: 'Augmentin 625 Duo', price: 185, category: 'Antibiotics', image: 'https://via.placeholder.com/100' },
         { _id: '2', name: 'Pan 40 Tablet', price: 110, category: 'Gastrointestinal', image: 'https://via.placeholder.com/100' }
       ]);
-      
-      const contentRes = await axios.get('https://ayuom-backend.vercel.app/api/content/schemes').catch(() => ({ data: null }));
-      if (contentRes.data) setSchemesHeroData(contentRes.data);
 
       if (token) {
         const userRes = await axios.get('https://ayuom-backend.vercel.app/api/admin/users/pending', config).catch(() => ({ data: [] }));
@@ -103,20 +86,6 @@ const AdminDashboard = () => {
     if (!window.confirm('Reject this request?')) return;
     setPendingUsers(pendingUsers.filter(u => u._id !== id));
   };
-
-  const handleUpdateHero = async (e) => {
-    e.preventDefault();
-    setIsUpdatingHero(true);
-    try {
-      await axios.put('https://ayuom-backend.vercel.app/api/content/schemes', schemesHeroData, config);
-      alert('Schemes Hero section updated successfully!');
-    } catch (err) {
-      alert('Failed to update hero: ' + (err.response?.data?.message || err.message));
-    } finally {
-      setIsUpdatingHero(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans">
       <aside className="fixed left-0 top-0 h-full w-72 bg-primary-900 border-r border-slate-800 z-50 flex flex-col p-8 shadow-2xl overflow-y-auto">
@@ -248,132 +217,9 @@ const AdminDashboard = () => {
             </div>
           )}
 
-          {activeTab === 'categories' && (
-            <div className="animate-in fade-in slide-in-from-right-4 duration-500">
-               <div className="flex justify-between items-end mb-12">
-                  <div>
-                    <h2 className="text-4xl font-black text-slate-900 italic tracking-tighter uppercase leading-none">Category Matrix</h2>
-                    <p className="text-slate-400 mt-2 font-bold uppercase tracking-[0.2em] text-[10px]">Manage Therapeutic Segments and Brands</p>
-                  </div>
-                  <button className="btn-primary px-8 py-4 rounded-2xl text-[10px] shadow-premium">
-                    <Plus className="w-4 h-4" /> New Main Category
-                  </button>
-               </div>
-               
-               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {categories.map((cat) => (
-                    <div key={cat.id} className="card !p-8 space-y-6">
-                       <div className="flex justify-between items-start">
-                          <div className="w-12 h-12 bg-primary-50 text-primary-600 rounded-2xl flex items-center justify-center border border-primary-100">
-                             <Package size={24} />
-                          </div>
-                          <div className="flex gap-2">
-                             <button className="p-2 bg-surface-light hover:bg-primary-50 text-slate-400 hover:text-primary-600 rounded-lg transition-all"><Edit size={14}/></button>
-                             <button className="p-2 bg-surface-light hover:bg-rose-50 text-slate-400 hover:text-rose-500 rounded-lg transition-all"><Trash2 size={14}/></button>
-                          </div>
-                       </div>
-                       <div>
-                          <h4 className="text-xl font-black text-slate-800 uppercase tracking-tighter">{cat.name}</h4>
-                          <p className="text-[10px] font-black text-primary-600 uppercase tracking-widest mt-1 italic">{cat.brands.length} Brands Synced</p>
-                       </div>
-                       <div className="pt-4 border-t border-surface-border">
-                          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Associated Brands</p>
-                          <div className="flex flex-wrap gap-2">
-                             {cat.brands.map(brand => (
-                               <span key={brand} className="px-3 py-1.5 bg-surface-light border border-surface-border rounded-lg text-[10px] font-bold text-slate-600">{brand}</span>
-                             ))}
-                             <button className="px-3 py-1.5 bg-primary-50 text-primary-600 border border-primary-100 rounded-lg text-[10px] font-black hover:bg-primary-600 hover:text-white transition-all">+ Add</button>
-                          </div>
-                       </div>
-                    </div>
-                  ))}
-               </div>
-            </div>
-          )}
+          {activeTab === 'categories' && <CategoriesCMS />}
 
-          {activeTab === 'schemes' && (
-            <div className="animate-in fade-in slide-in-from-left-4 duration-500">
-               <div className="flex justify-between items-end mb-12">
-                  <div>
-                    <h2 className="text-4xl font-black text-slate-900 italic tracking-tighter uppercase leading-none">Schemes Optimizer</h2>
-                    <p className="text-slate-400 mt-2 font-bold uppercase tracking-[0.2em] text-[10px]">Configure Volume-based Pricing Models</p>
-                  </div>
-                  <button className="btn-primary px-8 py-4 rounded-2xl text-[10px] shadow-premium">
-                    <Zap className="w-4 h-4" /> Create New Scheme
-                  </button>
-               </div>
-
-               {/* Hero Banner Editor */}
-               <div className="bg-white rounded-[40px] border border-surface-border shadow-soft p-10 mb-8 flex flex-col lg:flex-row gap-10">
-                  <div className="lg:w-1/3">
-                    <h3 className="text-2xl font-black text-slate-900 italic tracking-tighter uppercase leading-none mb-2">Promotion Settings</h3>
-                    <p className="text-slate-500 text-xs font-medium leading-relaxed mb-6">Modify the main hero banner on the `/schemes` page. This is the first thing doctors will see when looking for bulk discounts.</p>
-                  </div>
-                  <form onSubmit={handleUpdateHero} className="lg:w-2/3 space-y-6 bg-surface-light p-8 rounded-[32px] border border-surface-border">
-                    <div className="space-y-4">
-                      <div>
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Main Promotion Title</label>
-                        <input type="text" value={schemesHeroData.title || ''} onChange={(e) => setSchemesHeroData({...schemesHeroData, title: e.target.value})} className="w-full bg-white p-4 rounded-2xl font-black text-slate-900 border border-surface-border outline-none focus:border-primary-500 transition-all uppercase text-sm" placeholder="e.g. Professional Medical Schemes" />
-                      </div>
-                      <div>
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Subtitle</label>
-                        <input type="text" value={schemesHeroData.subtitle || ''} onChange={(e) => setSchemesHeroData({...schemesHeroData, subtitle: e.target.value})} className="w-full bg-white p-4 rounded-2xl font-medium text-slate-800 border border-surface-border outline-none focus:border-primary-500 transition-all text-sm" placeholder="e.g. Exclusive discounts for registered clinics." />
-                      </div>
-                      <div>
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Hero Description</label>
-                        <textarea value={schemesHeroData.description || ''} onChange={(e) => setSchemesHeroData({...schemesHeroData, description: e.target.value})} className="w-full bg-white p-4 rounded-2xl font-medium text-slate-600 border border-surface-border outline-none focus:border-primary-500 transition-all text-sm min-h-[100px]" placeholder="Detailed description of current offers..." />
-                      </div>
-                    </div>
-                    <button type="submit" disabled={isUpdatingHero} className="w-full bg-slate-900 hover:bg-black text-white py-5 rounded-2xl font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 transition-all disabled:opacity-50">
-                      {isUpdatingHero ? 'Syncing with Server...' : <><Save size={16} /> Sync Promotion Hero</>}
-                    </button>
-                  </form>
-               </div>
-
-               <div className="bg-white rounded-[40px] border border-surface-border shadow-premium overflow-hidden">
-                  <table className="w-full text-left">
-                     <thead className="bg-surface-light border-b border-surface-border">
-                        <tr>
-                           <th className="px-10 py-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Offer Designation</th>
-                           <th className="px-10 py-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Applicable Segment</th>
-                           <th className="px-10 py-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Status</th>
-                           <th className="px-10 py-6 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Control</th>
-                        </tr>
-                     </thead>
-                     <tbody className="divide-y divide-surface-border">
-                        {schemes.map(scheme => (
-                           <tr key={scheme.id} className="hover:bg-primary-50/20 transition-all">
-                              <td className="px-10 py-6">
-                                 <div className="flex items-center gap-4">
-                                    <div className="w-10 h-10 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center font-black">
-                                       %
-                                    </div>
-                                    <p className="font-black text-slate-800 uppercase italic tracking-tighter">{scheme.title}</p>
-                                 </div>
-                              </td>
-                              <td className="px-10 py-6">
-                                 <span className="px-3 py-1 bg-primary-50 text-primary-600 rounded-full text-[10px] font-black uppercase tracking-widest">
-                                    {scheme.category}
-                                 </span>
-                              </td>
-                              <td className="px-10 py-6">
-                                 <div className="flex items-center gap-2">
-                                    <div className={`w-2 h-2 rounded-full ${scheme.status === 'Active' ? 'bg-emerald-500 animate-pulse' : 'bg-slate-300'}`}></div>
-                                    <span className={`text-[10px] font-black uppercase tracking-widest ${scheme.status === 'Active' ? 'text-emerald-600' : 'text-slate-400'}`}>
-                                       {scheme.status}
-                                    </span>
-                                 </div>
-                              </td>
-                              <td className="px-10 py-6 text-right">
-                                 <button className="text-primary-600 font-black text-[10px] uppercase tracking-widest hover:underline">Toggle status</button>
-                              </td>
-                           </tr>
-                        ))}
-                     </tbody>
-                  </table>
-               </div>
-            </div>
-          )}
+          {activeTab === 'schemes' && <SchemesCMS />}
 
           {activeTab === 'products' && (
             <ProductsCMS />

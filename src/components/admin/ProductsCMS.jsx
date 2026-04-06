@@ -23,7 +23,7 @@ const ProductsCMS = () => {
     showOnSchemes: false
   });
 
-  const categories = ['Antibiotics', 'Gastrointestinal', 'Analgesics', 'Cardiac', 'Vitamins', 'Ayurveda', 'Medical Devices', 'Others'];
+  const [categories, setCategories] = useState([]);
 
   const token = localStorage.getItem('token');
   const config = { headers: { Authorization: `Bearer ${token}` } };
@@ -35,11 +35,19 @@ const ProductsCMS = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('https://ayuom-backend.vercel.app/api/products');
-      if (res.data && res.data.length) {
-        setProducts(res.data);
+      const [prodRes, catRes] = await Promise.all([
+         axios.get('https://ayuom-backend.vercel.app/api/products'),
+         axios.get('https://ayuom-backend.vercel.app/api/categories').catch(() => ({ data: [] }))
+      ]);
+      if (prodRes.data && prodRes.data.length) {
+        setProducts(prodRes.data);
       } else {
         setProducts([]);
+      }
+      if (catRes.data && catRes.data.length) {
+         setCategories(catRes.data.map(c => c.name));
+      } else {
+         setCategories(['General']);
       }
     } catch (err) {
       console.error('Fetch error:', err);
