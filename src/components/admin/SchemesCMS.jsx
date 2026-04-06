@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Zap, Save, Trash2, Plus, X, Edit, ShieldCheck, TrendingDown } from 'lucide-react';

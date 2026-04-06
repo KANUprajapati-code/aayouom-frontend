@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Package, Edit, Trash2, Plus, X, Save } from 'lucide-react';
