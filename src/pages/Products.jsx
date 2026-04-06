@@ -18,8 +18,10 @@ import {
   AlertCircle
 } from 'lucide-react';
 import MedicineCard from '../components/common/MedicineCard';
+import { useCart } from '../context/CartContext';
 
 const Products = () => {
+  const { addToCart } = useCart();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [viewMode, setViewMode] = useState('grid');
@@ -153,7 +155,7 @@ const Products = () => {
           {filteredMedicines.length > 0 ? (
             <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
               {filteredMedicines.map(med => (
-                <MedicineCard key={med.id} medicine={med} />
+                <MedicineCard key={med._id} medicine={med} onAddToCart={addToCart} />
               ))}
             </div>
           ) : (

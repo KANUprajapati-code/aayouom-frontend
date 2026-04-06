@@ -4,7 +4,7 @@ import SchemeBadge from './SchemeBadge';
 
 const MedicineCard = ({ medicine, onAddToCart }) => {
   const {
-    id = 1,
+    _id,
     name,
     brand,
     mrp,
@@ -25,7 +25,7 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
         </div>
       )}
 
-      <Link to={`/product/${id}`} className="block relative aspect-square mb-4 bg-surface-light rounded-xl overflow-hidden group-hover:scale-[1.02] transition-transform duration-300">
+      <Link to={`/product/${_id}`} className="block relative aspect-square mb-4 bg-surface-light rounded-xl overflow-hidden group-hover:scale-[1.02] transition-transform duration-300">
         <img 
           src={image || 'https://via.placeholder.com/200'} 
           alt={name} 
@@ -41,7 +41,7 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
           <p className="text-[10px] font-bold text-primary-600 uppercase tracking-widest leading-none mb-1">
             {brand}
           </p>
-          <Link to={`/product/${id}`}>
+          <Link to={`/product/${_id}`}>
             <h3 className="text-sm font-bold text-slate-800 line-clamp-1 group-hover:text-primary-600 transition-colors">
               {name}
             </h3>

@@ -9,7 +9,8 @@ import {
   ArrowRight,
   TrendingDown,
   ShieldCheck,
-  ShoppingBag
+  ShoppingBag,
+  MessageCircle
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -26,37 +27,16 @@ const Cart = () => {
   const totalMRP = cart.reduce((acc, item) => acc + (item.mrp * item.quantity), 0);
   const savings = totalMRP - subtotal;
 
-  const handlePlaceOrder = async () => {
-    if (cart.length === 0) return;
-    setLoading(true);
-
-    try {
-      const token = localStorage.getItem('token');
-      const orderData = {
-        customerName: user.name,
-        phone: user.phone || '9999999999',
-        address: user.clinicName || 'Default Clinic Address',
-        products: cart.map(item => ({
-          productId: item.id,
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price
-        })),
-        totalAmount: subtotal
-      };
-
-      await axios.post('https://ayuom-backend.vercel.app/api/orders', orderData, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      clearCart();
-      navigate('/dashboard');
-    } catch (err) {
-      console.error('Error placing order:', err);
-      alert('Failed to place order. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+  const handleWhatsAppCheckout = () => {
+    const whatsappNumber = "917990411390"; // Updated from USER_REQUEST
+    let message = `*New Order from ${user?.clinicName || 'Clinic'}*\n\n`;
+    cart.forEach((item, index) => {
+      message += `${index + 1}. *${item.name}* x ${item.quantity} = ₹${(item.price * item.quantity).toLocaleString()}\n`;
+    });
+    message += `\n*Grand Total: ₹${subtotal.toLocaleString()}*`;
+    message += `\n\nAddress: ${user?.address || 'Mumbai, Maharashtra'}`;
+    
+    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   if (cart.length === 0) {
@@ -101,7 +81,7 @@ const Cart = () => {
 
             <div className="divide-y divide-slate-50">
               {cart.map(item => (
-                <div key={item.id} className="p-4 md:p-6 grid md:grid-cols-12 gap-6 items-center group">
+                <div key={item._id} className="p-4 md:p-6 grid md:grid-cols-12 gap-6 items-center group">
                   <div className="col-span-6 flex gap-4">
                     <div className="w-20 h-20 bg-surface-light rounded-xl overflow-hidden shrink-0">
                       <img src={item.image} alt={item.name} className="w-full h-full object-contain p-2" />
@@ -119,14 +99,14 @@ const Cart = () => {
                   <div className="col-span-3 flex justify-center">
                     <div className="inline-flex items-center gap-3 p-1 bg-surface-light rounded-xl border border-surface-border">
                       <button 
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        onClick={() => updateQuantity(item._id, item.quantity - 1)}
                         className="p-1.5 hover:bg-white hover:text-red-600 rounded-lg transition-all shadow-sm"
                       >
                         <Minus size={16} />
                       </button>
                       <span className="text-sm font-bold text-slate-900 w-8 text-center">{item.quantity}</span>
                       <button 
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        onClick={() => updateQuantity(item._id, item.quantity + 1)}
                         className="p-1.5 hover:bg-white hover:text-primary-600 rounded-lg transition-all shadow-sm"
                       >
                         <Plus size={16} />
@@ -141,7 +121,7 @@ const Cart = () => {
 
                   <div className="col-span-1 flex justify-end">
                     <button 
-                      onClick={() => removeFromCart(item.id)}
+                      onClick={() => removeFromCart(item._id)}
                       className="p-2 text-slate-300 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
                     >
                       <Trash2 size={20} />
@@ -213,12 +193,12 @@ const Cart = () => {
             </div>
 
             <button 
-              onClick={handlePlaceOrder}
+              onClick={handleWhatsAppCheckout}
               disabled={loading}
-              className="btn-primary w-full py-4 text-lg disabled:opacity-50"
+              className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-4 rounded-2xl font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 shadow-premium transition-all active:scale-95"
             >
-              {loading ? 'Processing...' : 'Place Professional Order'}
-              {!loading && <ShieldCheck size={20} />}
+              Order on WhatsApp
+              <MessageCircle size={20} />
             </button>
             
             <p className="text-[10px] text-center text-text-muted leading-relaxed">

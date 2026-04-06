@@ -12,8 +12,10 @@ import {
   Briefcase
 } from 'lucide-react';
 import MedicineCard from '../components/common/MedicineCard';
+import { useCart } from '../context/CartContext';
 
 const Home = () => {
+  const { addToCart } = useCart();
   const [homeProducts, setHomeProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [cms, setCms] = useState({});
@@ -148,8 +150,9 @@ const Home = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {categoryHighlights.slice(0, 4).map((highlight, i) => (
-            <MedicineCard key={i} medicine={highlight.product} />
+          {homeProducts.length === 0 && <p className="text-slate-400">Loading home products...</p>}
+          {homeProducts.map((p, i) => (
+            <MedicineCard key={p._id} medicine={p} onAddToCart={addToCart} />
           ))}
         </div>
       </section>
@@ -187,7 +190,7 @@ const Home = () => {
                   <div className="relative group">
                      <div className="absolute inset-0 bg-primary-600 rounded-[40px] blur-3xl opacity-10 group-hover:opacity-20 transition-opacity"></div>
                      <div className="relative transform group-hover:scale-[1.02] transition-transform duration-500">
-                        <MedicineCard medicine={highlight.product} />
+                        <MedicineCard medicine={highlight.product} onAddToCart={addToCart} />
                      </div>
                   </div>
                </div>

@@ -10,9 +10,11 @@ import {
   Plus
 } from 'lucide-react';
 import MedicineCard from '../components/common/MedicineCard';
+import { useCart } from '../context/CartContext';
 
 const DynamicPage = () => {
   const { slug } = useParams();
+  const { addToCart } = useCart();
   const [page, setPage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
@@ -93,7 +95,7 @@ const DynamicPage = () => {
                 <Link to="/products" className="text-primary-600 font-black flex items-center gap-2 hover:gap-3 transition-all">Explore Entire Grid <ArrowRight size={20} /></Link>
              </div>
              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                {filteredProducts.map((p, i) => <MedicineCard key={i} medicine={p} />)}
+                {filteredProducts.map((p, i) => <MedicineCard key={p._id} medicine={p} onAddToCart={addToCart} />)}
                 {filteredProducts.length === 0 && <p className="col-span-full py-10 text-center text-slate-400 font-bold uppercase tracking-widest text-xs">No active records found in this category segment.</p>}
              </div>
           </section>
