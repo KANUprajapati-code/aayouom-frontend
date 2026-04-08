@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-import HomePageCMS from '../components/admin/HomePageCMS';
+import GlobalCMSHub from '../components/admin/GlobalCMSHub';
 import ProductsCMS from '../components/admin/ProductsCMS';
 import CategoriesCMS from '../components/admin/CategoriesCMS';
 import SchemesCMS from '../components/admin/SchemesCMS';
@@ -253,7 +253,7 @@ const AdminDashboard = () => {
           )}
 
           {activeTab === 'products' && <ProductsCMS />}
-          {activeTab === 'homecms' && <HomePageCMS />}
+          {activeTab === 'homecms' && <GlobalCMSHub />}
           {activeTab === 'categories' && <CategoriesCMS />}
           {activeTab === 'schemes' && <SchemesCMS />}
           {activeTab === 'pages' && <PagesCMS />}
