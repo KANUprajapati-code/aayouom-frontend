@@ -157,11 +157,11 @@ const ProductsCMS = () => {
         <table className="w-full text-left bg-white">
           <thead className="bg-surface-light border-b border-surface-border">
             <tr>
-              <th className="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400">Medicine Designation</th>
+              <th className="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400 w-1/3">Medicine Designation</th>
               <th className="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400">Clinical Segment</th>
               <th className="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400">Inventory Status</th>
               <th className="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400">Placements</th>
-              <th className="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Commit Actions</th>
+              <th className="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-surface-border">
@@ -179,8 +179,8 @@ const ProductsCMS = () => {
                    <div className="w-16 h-16 bg-white rounded-2xl p-3 border border-surface-border shadow-sm group-hover:scale-110 transition-transform flex items-center justify-center shrink-0">
                       <img src={p.image} className="max-w-full max-h-full object-contain" alt="" />
                    </div>
-                   <div>
-                      <p className="text-slate-900 font-black uppercase text-sm italic tracking-tighter">{p.name}</p>
+                   <div className="min-w-0">
+                      <p className="text-slate-900 font-black uppercase text-sm italic tracking-tighter truncate">{p.name}</p>
                       <p className="text-[10px] font-black text-primary-600 tracking-widest mt-1 opacity-60">REF: {p._id.slice(-6).toUpperCase()}</p>
                    </div>
                 </td>
@@ -190,12 +190,12 @@ const ProductsCMS = () => {
                    </span>
                 </td>
                 <td className="px-10 py-8">
-                   <div className="space-y-1">
-                      <p className={`text-sm font-black ${p.stock <= 0 ? 'text-rose-500' : p.stock < 10 ? 'text-amber-500' : 'text-slate-700'}`}>
+                   <div className="bg-slate-50 border border-slate-100 p-4 rounded-2xl inline-block min-w-[120px]">
+                      <p className={`text-base font-black leading-none ${p.stock <= 0 ? 'text-rose-600' : p.stock < 10 ? 'text-amber-600' : 'text-emerald-600'}`}>
                          {p.stock} Units
                       </p>
-                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
-                         {p.stock <= 0 ? 'Exhausted' : p.stock < 10 ? 'Critical' : 'Balanced'}
+                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-2 border-t border-slate-200 pt-2">
+                         {p.stock <= 0 ? 'Out of Stock' : p.stock < 10 ? 'Low Stock' : 'In Stock'}
                       </p>
                    </div>
                 </td>
@@ -206,7 +206,7 @@ const ProductsCMS = () => {
                        {p.showOnSchemes && <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-[10px] font-black" title="Active Scheme">A</span>}
                    </div>
                 </td>
-                <td className="px-10 py-8 text-right space-x-3">
+                <td className="px-10 py-8 text-right space-x-3 whitespace-nowrap">
                    <button onClick={() => handleOpenModal('edit', p)} className="p-3.5 bg-surface-light hover:bg-primary-600 rounded-xl text-slate-400 hover:text-white shadow-sm transition-all border border-surface-border"><Edit className="w-5 h-5" /></button>
                    <button onClick={() => handleDelete(p._id)} className="p-3.5 bg-surface-light hover:bg-rose-500 rounded-xl text-slate-400 hover:text-white shadow-sm transition-all border border-surface-border"><Trash2 className="w-5 h-5" /></button>
                 </td>
