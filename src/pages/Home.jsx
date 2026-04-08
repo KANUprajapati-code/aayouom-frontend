@@ -138,29 +138,49 @@ const Home = () => {
                   transition={{ duration: 0.6 }}
                   className="space-y-8"
                 >
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-50 text-primary-700 border border-primary-100 shadow-sm">
-                    <ShieldCheck size={18} className="text-primary-600" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">{banner.badge}</span>
-                  </div>
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-primary-50 text-primary-700 border border-primary-200 shadow-sm backdrop-blur-sm"
+                  >
+                    <div className="w-2 h-2 rounded-full bg-primary-600 animate-pulse"></div>
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em]">{banner.badge || "Verified B2B Medical Hub"}</span>
+                  </motion.div>
                   
-                  <h1 className="text-5xl lg:text-7xl font-black text-slate-900 leading-[1.05] tracking-tight">
+                  <motion.h1 
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4, duration: 0.8 }}
+                    className="text-6xl lg:text-8xl font-black text-slate-900 leading-[0.95] tracking-tighter"
+                  >
                     {banner.title1} <br />
-                    <span className="text-primary-600">{banner.title2}</span>
-                  </h1>
+                    <span className="text-primary-600 italic">{banner.title2}</span>
+                  </motion.h1>
                   
-                  <p className="text-xl text-text-muted max-w-lg leading-relaxed">
+                  <motion.p 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                    className="text-xl text-text-muted max-w-lg leading-relaxed font-medium"
+                  >
                     {banner.description}
-                  </p>
+                  </motion.p>
                   
-                  <div className="flex flex-wrap gap-5 pt-4">
-                    <Link to={banner.btn1Link} className="btn-primary h-14 px-10 text-lg shadow-premium">
-                      {banner.btn1Text}
-                      <ArrowRight size={22} />
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 }}
+                    className="flex flex-wrap gap-6 pt-4"
+                  >
+                    <Link to={banner.btn1Link || "/products"} className="btn-primary h-16 px-12 text-lg shadow-2xl shadow-primary-600/30 group">
+                      {banner.btn1Text || "Start Ordering"}
+                      <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform" />
                     </Link>
-                    <Link to={banner.btn2Link} className="btn-outline h-14 px-10 text-lg">
-                      {banner.btn2Text}
+                    <Link to={banner.btn2Link || "/quick-order"} className="btn-outline h-16 px-12 text-lg hover:bg-slate-50">
+                      {banner.btn2Text || "Quick Order"}
                     </Link>
-                  </div>
+                  </motion.div>
                 </motion.div>
               ))}
 

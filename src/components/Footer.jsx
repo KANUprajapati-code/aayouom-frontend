@@ -44,10 +44,9 @@ const Footer = () => {
         <div>
           <h4 className="font-black mb-10 uppercase tracking-[0.3em] text-xs text-white">Quick Support</h4>
           <ul className="space-y-6 font-black text-white/60 text-sm">
-            <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Return Policy</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Contact US</a></li>
+            <li><Link to="/about" className="hover:text-white transition-colors">About Wedome</Link></li>
+            <li><Link to="/bulk-inquiry" className="hover:text-white transition-colors">Bulk Procurement</Link></li>
+            <li><Link to="/contact" className="hover:text-white transition-colors">Contact US</Link></li>
           </ul>
         </div>
 

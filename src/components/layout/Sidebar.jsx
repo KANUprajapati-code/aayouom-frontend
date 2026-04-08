@@ -35,7 +35,8 @@ const Sidebar = ({ isOpen, onClose }) => {
   ];
 
   const secondaryItems = [
-    { icon: Settings, label: 'Settings', path: '/settings', requiresAuth: true },
+    { icon: FileText, label: 'About Us', path: '/about', requiresAuth: false },
+    { icon: ShoppingCart, label: 'Bulk Inquiry', path: '/bulk-inquiry', requiresAuth: false },
     { icon: HelpCircle, label: 'Support', path: '/support', requiresAuth: false },
   ];
 

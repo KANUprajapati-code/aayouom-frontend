@@ -21,6 +21,7 @@ const OrderHistory = lazy(() => import('./pages/OrderHistory'));
 const Schemes = lazy(() => import('./pages/Schemes'));
 const Settings = lazy(() => import('./pages/Settings'));
 const DynamicPage = lazy(() => import('./pages/DynamicPage'));
+const BulkInquiry = lazy(() => import('./pages/BulkInquiry'));
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -52,6 +53,7 @@ function App() {
                   <Route path="/register" element={<Register />} />
                   <Route path="/login" element={<AdminLogin />} />
                   <Route path="/page/:slug" element={<DynamicPage />} />
+                  <Route path="/bulk-inquiry" element={<BulkInquiry />} />
                 </Route>
 
                 {/* Admin Routes */}

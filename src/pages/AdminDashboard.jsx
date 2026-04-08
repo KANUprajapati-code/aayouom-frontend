@@ -15,6 +15,9 @@ import ProductsCMS from '../components/admin/ProductsCMS';
 import CategoriesCMS from '../components/admin/CategoriesCMS';
 import SchemesCMS from '../components/admin/SchemesCMS';
 import PagesCMS from '../components/admin/PagesCMS';
+import BulkOrderCMS from '../components/admin/BulkOrderCMS';
+import AboutCMS from '../components/admin/AboutCMS';
+import { ShoppingBag as shoppingBagIcon } from 'lucide-react';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -92,7 +95,9 @@ const AdminDashboard = () => {
                   { id: 'categories', label: 'Categories', icon: Package },
                   { id: 'consultationcat', label: 'Consultation Categories', icon: Zap },
                   { id: 'promocodes', label: 'Promo Codes', icon: Tag },
-                  { id: 'homecms', label: 'Content', icon: Globe },
+                  { id: 'bulkorders', label: 'Bulk Orders', icon: shoppingBagIcon },
+                  { id: 'homecms', label: 'Home CMS', icon: Globe },
+                  { id: 'aboutcms', label: 'About CMS', icon: FileText },
                   { id: 'messages', label: 'Messages', icon: Bell }
                 ].map((item) => (
                   <button 
@@ -256,6 +261,8 @@ const AdminDashboard = () => {
           {activeTab === 'categories' && <CategoriesCMS />}
           {activeTab === 'schemes' && <SchemesCMS />}
           {activeTab === 'pages' && <PagesCMS />}
+          {activeTab === 'bulkorders' && <BulkOrderCMS />}
+          {activeTab === 'aboutcms' && <AboutCMS />}
           
           {/* Missing Section Placeholders */}
           {['orders', 'users', 'doctors', 'doctorbookings', 'consultationcat', 'promocodes', 'messages'].includes(activeTab) && (
