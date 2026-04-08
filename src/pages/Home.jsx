@@ -65,6 +65,31 @@ const Home = () => {
     visible: { opacity: 1, y: 0 }
   };
 
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Auto-play slider
+  useEffect(() => {
+    if (cms?.heroBanners?.length > 1) {
+      const timer = setInterval(() => {
+        setCurrentSlide((prev) => (prev + 1) % cms.heroBanners.length);
+      }, 5000);
+      return () => clearInterval(timer);
+    }
+  }, [cms?.heroBanners]);
+
+  const activeBanners = cms?.heroBanners?.length > 0 
+    ? cms.heroBanners 
+    : [{
+        badge: "Verified B2B Medical Hub",
+        title1: "Premium Medicine",
+        title2: "Sourcing for Doctors",
+        description: "Accelerate your clinic's supply chain with direct access to top-tier pharmaceuticals, transparent volume schemes, and lightning-fast logistics.",
+        btn1Text: "Start Ordering",
+        btn1Link: "/products",
+        btn2Text: "Quick Order Mode",
+        btn2Link: "/quick-order"
+      }];
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -75,94 +100,132 @@ const Home = () => {
 
   return (
     <div className="space-y-16 pb-20">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-white rounded-[40px] border border-surface-border p-8 lg:p-20 shadow-soft">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 0.6, scale: 1 }}
-          transition={{ duration: 1.5 }}
-          className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[500px] h-[500px] bg-primary-50 rounded-full blur-[100px] -z-10"
-        ></motion.div>
-        
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="space-y-8"
-          >
-            <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-50 text-primary-700 border border-primary-100 shadow-sm">
-              <ShieldCheck size={18} className="text-primary-600" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em]">{cms.heroBadge || "Verified B2B Medical Hub"}</span>
-            </motion.div>
-            
-            <motion.h1 variants={itemVariants} className="text-5xl lg:text-7xl font-black text-slate-900 leading-[1.05] tracking-tight">
-              {cms.heroTitleLine1 || "Premium Medicine"} <br />
-              <span className="text-primary-600">{cms.heroTitleLine2 || "Sourcing for Doctors"}</span>
-            </motion.h1>
-            
-            <motion.p variants={itemVariants} className="text-xl text-text-muted max-w-lg leading-relaxed">
-              {cms.heroDescription || "Accelerate your clinic's supply chain with direct access to top-tier pharmaceuticals, transparent volume schemes, and lightning-fast logistics."}
-            </motion.p>
-            
-            <motion.div variants={itemVariants} className="flex flex-wrap gap-5 pt-4">
-              <Link to={cms.primaryButtonLink || "/products"} className="btn-primary h-14 px-10 text-lg shadow-premium">
-                {cms.primaryButtonText || "Start Ordering"}
-                <ArrowRight size={22} />
-              </Link>
-              <Link to={cms.secondaryButtonLink || "/quick-order"} className="btn-outline h-14 px-10 text-lg">
-                {cms.secondaryButtonText || "Quick Order Mode"}
-              </Link>
-            </motion.div>
-          </motion.div>
+      {/* Hero Slider Section */}
+      <section className="relative overflow-hidden bg-white rounded-[40px] border border-surface-border shadow-soft">
+        <div className="relative min-h-[600px] lg:min-h-[700px] flex items-center p-8 lg:p-20">
+          {/* Slider Backgrounds */}
+          {activeBanners.map((banner, idx) => (
+             <motion.div
+               key={idx}
+               initial={{ opacity: 0 }}
+               animate={{ opacity: currentSlide === idx ? 1 : 0 }}
+               transition={{ duration: 1 }}
+               className="absolute inset-0 z-0"
+             >
+                {banner.imageUrl ? (
+                  <div className="absolute inset-0">
+                    <img src={banner.imageUrl} alt="" className="w-full h-full object-cover opacity-10" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent"></div>
+                  </div>
+                ) : (
+                  <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[600px] h-[600px] bg-primary-50 rounded-full blur-[120px] opacity-60"></div>
+                )}
+             </motion.div>
+          ))}
           
-          <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            side="right"
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="hidden lg:grid grid-cols-2 gap-6 relative"
-          >
-             <div className="space-y-6 pt-16">
-                <div className="card !p-6 bg-white shadow-premium border-primary-50 transform -rotate-2 hover:rotate-0 transition-all duration-500 scale-105">
-                   <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-600 mb-4">
-                      <TrendingDown size={24} />
-                   </div>
-                   <p className="text-sm font-black text-slate-900">Professional Savings</p>
-                   <p className="text-xs text-text-muted mt-1">Save up to 25% on bulk cardiac orders.</p>
+          <div className="grid lg:grid-cols-2 gap-16 items-center w-full relative z-10">
+            {/* Content Side */}
+            <div className="relative overflow-hidden min-h-[400px]">
+              {activeBanners.map((banner, idx) => (
+                <motion.div 
+                  key={idx}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ 
+                    opacity: currentSlide === idx ? 1 : 0,
+                    x: currentSlide === idx ? 0 : 20,
+                    display: currentSlide === idx ? 'block' : 'none'
+                  }}
+                  transition={{ duration: 0.6 }}
+                  className="space-y-8"
+                >
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-50 text-primary-700 border border-primary-100 shadow-sm">
+                    <ShieldCheck size={18} className="text-primary-600" />
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">{banner.badge}</span>
+                  </div>
+                  
+                  <h1 className="text-5xl lg:text-7xl font-black text-slate-900 leading-[1.05] tracking-tight">
+                    {banner.title1} <br />
+                    <span className="text-primary-600">{banner.title2}</span>
+                  </h1>
+                  
+                  <p className="text-xl text-text-muted max-w-lg leading-relaxed">
+                    {banner.description}
+                  </p>
+                  
+                  <div className="flex flex-wrap gap-5 pt-4">
+                    <Link to={banner.btn1Link} className="btn-primary h-14 px-10 text-lg shadow-premium">
+                      {banner.btn1Text}
+                      <ArrowRight size={22} />
+                    </Link>
+                    <Link to={banner.btn2Link} className="btn-outline h-14 px-10 text-lg">
+                      {banner.btn2Text}
+                    </Link>
+                  </div>
+                </motion.div>
+              ))}
+
+              {/* Slider Dots */}
+              {activeBanners.length > 1 && (
+                <div className="flex gap-2 mt-12">
+                   {activeBanners.map((_, i) => (
+                     <button 
+                       key={i} 
+                       onClick={() => setCurrentSlide(i)}
+                       className={`h-1.5 transition-all duration-300 rounded-full ${currentSlide === i ? 'w-8 bg-primary-600' : 'w-2 bg-slate-200'}`}
+                     />
+                   ))}
                 </div>
-                <div className="card !p-6 bg-white shadow-premium border-secondary-50 transform rotate-1 hover:rotate-0 transition-all duration-500">
-                   <div className="w-12 h-12 rounded-2xl bg-green-50 flex items-center justify-center text-green-600 mb-4">
-                      <Zap size={24} strokeWidth={2.5} />
-                   </div>
-                   <p className="text-sm font-black text-slate-900">Instant Schemes</p>
-                   <p className="text-xs text-text-muted mt-1">10+2 and 15% OFF applied in real-time.</p>
-                </div>
-             </div>
-             <div className="space-y-6">
-                <div className="bg-primary-600 p-8 rounded-3xl shadow-premium text-white transform -rotate-1 hover:rotate-0 transition-all duration-500 min-h-[220px] flex flex-col">
-                   <div className="flex justify-between items-start mb-4">
-                      <div className="px-3 py-1 bg-white/20 rounded-full text-[10px] font-black uppercase tracking-widest">New Arrival</div>
-                      <Plus size={20} className="text-white/40" />
-                   </div>
-                   <p className="text-2xl font-black mb-2">Amox-Clav 625</p>
-                   <p className="text-sm opacity-80 mb-6">Restocked for clinical high-demand.</p>
-                   <button className="mt-auto w-full py-3 bg-white text-primary-600 rounded-xl font-black text-xs flex items-center justify-center gap-2 hover:bg-primary-50 transition-all">
-                      Check Stock <ChevronRight size={16} />
-                   </button>
-                </div>
-                <div className="card !p-6 bg-slate-900 text-white border-none shadow-premium transform rotate-2 hover:rotate-0 transition-all duration-500">
-                   <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary-400 mb-2">Live Status</p>
-                   <p className="text-sm font-bold">14 Doctors active</p>
-                   <div className="flex -space-x-2 mt-3 block">
-                      {[1,2,3,4].map(i => (
-                         <div key={i} className="w-8 h-8 rounded-full border-2 border-slate-900 bg-slate-800 flex items-center justify-center text-[10px] font-black text-slate-300">D{i}</div>
-                      ))}
-                      <div className="w-8 h-8 rounded-full border-2 border-slate-900 bg-primary-600 flex items-center justify-center text-[10px] font-black text-white">+8</div>
-                   </div>
-                </div>
-             </div>
-          </motion.div>
+              )}
+            </div>
+            
+            {/* Info Cards Side */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+              className="hidden lg:grid grid-cols-2 gap-6 relative"
+            >
+               <div className="space-y-6 pt-16">
+                  <div className="card !p-6 bg-white shadow-premium border-primary-50 transform -rotate-2 hover:rotate-0 transition-all duration-500 scale-105">
+                     <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-600 mb-4">
+                        <TrendingDown size={24} />
+                     </div>
+                     <p className="text-sm font-black text-slate-900">{cms.card1Title || "Professional Savings"}</p>
+                     <p className="text-xs text-text-muted mt-1">{cms.card1Desc || "Save up to 25% on bulk cardiac orders."}</p>
+                  </div>
+                  <div className="card !p-6 bg-white shadow-premium border-secondary-50 transform rotate-1 hover:rotate-0 transition-all duration-500">
+                     <div className="w-12 h-12 rounded-2xl bg-green-50 flex items-center justify-center text-green-600 mb-4">
+                        <Zap size={24} strokeWidth={2.5} />
+                     </div>
+                     <p className="text-sm font-black text-slate-900">{cms.card2Title || "Instant Schemes"}</p>
+                     <p className="text-xs text-text-muted mt-1">{cms.card2Desc || "10+2 and 15% OFF applied in real-time."}</p>
+                  </div>
+               </div>
+               <div className="space-y-6">
+                  <div className="bg-primary-600 p-8 rounded-3xl shadow-premium text-white transform -rotate-1 hover:rotate-0 transition-all duration-500 min-h-[220px] flex flex-col">
+                     <div className="flex justify-between items-start mb-4">
+                        <div className="px-3 py-1 bg-white/20 rounded-full text-[10px] font-black uppercase tracking-widest">New Arrival</div>
+                        <Plus size={20} className="text-white/40" />
+                     </div>
+                     <p className="text-2xl font-black mb-2">Amox-Clav 625</p>
+                     <p className="text-sm opacity-80 mb-6">Restocked for clinical high-demand.</p>
+                     <button className="mt-auto w-full py-3 bg-white text-primary-600 rounded-xl font-black text-xs flex items-center justify-center gap-2 hover:bg-primary-50 transition-all">
+                        Check Stock <ChevronRight size={16} />
+                     </button>
+                  </div>
+                  <div className="card !p-6 bg-slate-900 text-white border-none shadow-premium transform rotate-2 hover:rotate-0 transition-all duration-500">
+                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary-400 mb-2">Live Status</p>
+                     <p className="text-sm font-bold">14 Doctors active</p>
+                     <div className="flex -space-x-2 mt-3 block">
+                        {[1,2,3,4].map(i => (
+                           <div key={i} className="w-8 h-8 rounded-full border-2 border-slate-900 bg-slate-800 flex items-center justify-center text-[10px] font-black text-slate-300">D{i}</div>
+                        ))}
+                        <div className="w-8 h-8 rounded-full border-2 border-slate-900 bg-primary-600 flex items-center justify-center text-[10px] font-black text-white">+8</div>
+                     </div>
+                  </div>
+               </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
