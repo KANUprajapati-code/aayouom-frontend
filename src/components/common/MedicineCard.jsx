@@ -64,6 +64,11 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
         <div className="flex items-center gap-2">
           {scheme && <SchemeBadge scheme={scheme} />}
           {discount && <span className="text-[10px] font-bold text-secondary-600 bg-secondary-50 px-1.5 py-0.5 rounded">{discount}% OFF</span>}
+          {stock > 0 && stock < 15 && (
+            <span className="text-[10px] font-bold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded animate-pulse">
+              ONLY {stock} LEFT
+            </span>
+          )}
         </div>
 
         <div className="pt-2 border-t border-slate-50">

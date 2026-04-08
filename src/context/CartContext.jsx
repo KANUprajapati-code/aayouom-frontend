@@ -14,21 +14,36 @@ export const CartProvider = ({ children }) => {
 
   const addToCart = (product, quantity = 1) => {
     setCart(prev => {
-      const existing = prev.find(item => item.id === product.id);
+      const existing = prev.find(item => item._id === product._id);
+      const currentQty = existing ? existing.quantity : 0;
+      const totalRequested = currentQty + quantity;
+
+      // Validate against stock
+      if (totalRequested > (product.stock || 0)) {
+        alert(`Cannot add more. Only ${product.stock} units available in stock.`);
+        return prev;
+      }
+
       if (existing) {
-        return prev.map(item => item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item);
+        return prev.map(item => item._id === product._id ? { ...item, quantity: item.quantity + quantity } : item);
       }
       return [...prev, { ...product, quantity }];
     });
   };
 
   const removeFromCart = (id) => {
-    setCart(prev => prev.filter(item => item.id !== id));
+    setCart(prev => prev.filter(item => item._id !== id));
   };
 
-  const updateQuantity = (id, quantity) => {
+  const updateQuantity = (id, quantity, availableStock) => {
     if (quantity < 1) return removeFromCart(id);
-    setCart(prev => prev.map(item => item.id === id ? { ...item, quantity } : item));
+    
+    if (availableStock !== undefined && quantity > availableStock) {
+      alert(`Only ${availableStock} units available in stock.`);
+      return;
+    }
+
+    setCart(prev => prev.map(item => item._id === id ? { ...item, quantity } : item));
   };
 
   const clearCart = () => setCart([]);

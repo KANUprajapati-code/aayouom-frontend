@@ -119,6 +119,7 @@ const ProductsCMS = () => {
      if (activeFilter === 'Home') matchesFilter = p.showOnHome === true;
      if (activeFilter === 'Schemes') matchesFilter = p.showOnSchemes === true;
      if (activeFilter === 'Shop') matchesFilter = p.showOnShop === true;
+     if (activeFilter === 'Out of Stock') matchesFilter = (p.stock || 0) <= 0;
      return matchesSearch && matchesFilter;
   });
 
@@ -131,7 +132,7 @@ const ProductsCMS = () => {
         </div>
         <div className="flex items-center gap-4 border border-surface-border bg-white rounded-3xl p-2 shadow-soft">
            <div className="flex bg-surface-light rounded-2xl overflow-hidden p-1">
-              {['All', 'Shop', 'Home', 'Schemes'].map((filter) => (
+              {['All', 'Shop', 'Home', 'Schemes', 'Out of Stock'].map((filter) => (
                 <button 
                   key={filter} 
                   onClick={() => setActiveFilter(filter)}
@@ -158,6 +159,7 @@ const ProductsCMS = () => {
             <tr>
               <th className="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400">Medicine Designation</th>
               <th className="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400">Clinical Segment</th>
+              <th className="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400">Inventory Status</th>
               <th className="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400">Placements</th>
               <th className="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Commit Actions</th>
             </tr>
@@ -165,11 +167,11 @@ const ProductsCMS = () => {
           <tbody className="divide-y divide-surface-border">
             {loading ? (
                <tr>
-                 <td colSpan="4" className="px-10 py-20 text-center text-slate-400 text-sm font-bold">Querying Grid Nodes...</td>
+                 <td colSpan="5" className="px-10 py-20 text-center text-slate-400 text-sm font-bold">Querying Grid Nodes...</td>
                </tr>
             ) : filteredProducts.length === 0 ? (
                <tr>
-                 <td colSpan="4" className="px-10 py-20 text-center text-slate-400 text-sm font-bold">No records matched your query parameters.</td>
+                 <td colSpan="5" className="px-10 py-20 text-center text-slate-400 text-sm font-bold">No records matched your query parameters.</td>
                </tr>
             ) : filteredProducts.map(p => (
               <tr key={p._id} className="hover:bg-primary-50/30 transition-all group">
@@ -186,6 +188,16 @@ const ProductsCMS = () => {
                    <span className="px-4 py-1.5 bg-primary-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary-500/20">
                       {p.category}
                    </span>
+                </td>
+                <td className="px-10 py-8">
+                   <div className="space-y-1">
+                      <p className={`text-sm font-black ${p.stock <= 0 ? 'text-rose-500' : p.stock < 10 ? 'text-amber-500' : 'text-slate-700'}`}>
+                         {p.stock} Units
+                      </p>
+                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                         {p.stock <= 0 ? 'Exhausted' : p.stock < 10 ? 'Critical' : 'Balanced'}
+                      </p>
+                   </div>
                 </td>
                 <td className="px-10 py-8">
                    <div className="flex items-center gap-2">
