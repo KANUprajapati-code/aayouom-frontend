@@ -50,8 +50,7 @@ const AdminDashboard = () => {
         setPendingUsers(userRes.data);
       }
     } catch (err) {
-      if (err.response?.status === 401) handleLogout();
-      console.error('Fetch error:', err);
+      console.error('Fetch error in Admin Dashboard:', err);
     } finally {
       setLoading(false);
     }

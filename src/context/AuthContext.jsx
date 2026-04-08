@@ -12,9 +12,30 @@ export const AuthProvider = ({ children }) => {
     const savedUser = localStorage.getItem('userInfo');
     if (savedUser && token) {
       setUser(JSON.parse(savedUser));
+      // Set default header for all future requests
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    } else {
+      delete axios.defaults.headers.common['Authorization'];
     }
     setLoading(false);
   }, [token]);
+
+  // Global Interceptor for 401s
+  useEffect(() => {
+    const interceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response && error.response.status === 401) {
+          console.warn('Session expired or unauthorized. Logging out...');
+          logout();
+          window.location.href = '/login';
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => axios.interceptors.response.eject(interceptor);
+  }, []);
 
   const login = async (email, password) => {
     try {
