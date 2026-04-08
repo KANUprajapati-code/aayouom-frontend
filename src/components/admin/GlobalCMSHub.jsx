@@ -90,25 +90,147 @@ const GlobalCMSHub = () => {
       <div className="space-y-12">
         {activeSubTab === 'home' && (
           <div className="grid grid-cols-1 gap-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-             <div className="bg-white rounded-[40px] border border-slate-100 shadow-sm p-10 space-y-8">
-                <h3 className="text-sm font-black text-primary-600 uppercase tracking-widest flex items-center gap-2 leading-none"><div className="w-1.5 h-4 bg-primary-600 rounded-full"></div> Hero Section</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                   <div className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Hero Badge</label>
-                      <input name="heroBadge" value={formData?.heroBadge || ''} onChange={handleChange} className="w-full bg-slate-50 p-5 rounded-2xl font-bold text-slate-800 border border-slate-100 focus:bg-white focus:border-primary-500 outline-none transition-all" />
-                   </div>
-                   <div className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Hero Title Line 1</label>
-                      <input name="heroTitleLine1" value={formData?.heroTitleLine1 || ''} onChange={handleChange} className="w-full bg-slate-50 p-5 rounded-2xl font-bold text-slate-800 border border-slate-100 focus:bg-white focus:border-primary-500 outline-none transition-all" />
-                   </div>
-                   <div className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Hero Title Line 2 (Accent Color)</label>
-                      <input name="heroTitleLine2" value={formData?.heroTitleLine2 || ''} onChange={handleChange} className="w-full bg-slate-50 p-5 rounded-2xl font-bold text-slate-800 border border-slate-100 focus:bg-white focus:border-primary-500 outline-none transition-all" />
-                   </div>
-                   <div className="space-y-2 col-span-full">
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Hero Description Text</label>
-                      <textarea rows="3" name="heroDescription" value={formData?.heroDescription || ''} onChange={handleChange} className="w-full bg-slate-50 p-5 rounded-2xl font-bold text-slate-800 border border-slate-100 focus:bg-white focus:border-primary-500 outline-none transition-all resize-none"></textarea>
-                   </div>
+             {/* HERO SLIDER SECTION */}
+             <div className="bg-white rounded-[40px] border border-slate-100 shadow-sm p-10 space-y-10">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-xl font-black text-primary-600 uppercase tracking-widest flex items-center gap-3 leading-none"><div className="w-1.5 h-4 bg-primary-600 rounded-full"></div> Hero Slider Management</h3>
+                  <button 
+                    onClick={() => {
+                      const newBanner = {
+                        imageUrl: "",
+                        badge: "Verified B2B Medical Hub",
+                        title1: "Premium Medicine",
+                        title2: "Sourcing for Doctors",
+                        description: "Accelerate your clinic's supply chain...",
+                        btn1Text: "Start Ordering",
+                        btn1Link: "/products",
+                        btn2Text: "Quick Order",
+                        btn2Link: "/quick-order"
+                      };
+                      setFormData(prev => ({
+                        ...prev,
+                        heroBanners: [...(prev.heroBanners || []), newBanner]
+                      }));
+                    }} 
+                    className="flex items-center gap-2 px-6 py-3 bg-primary-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-primary-700 transition-all shadow-lg shadow-primary-600/20"
+                  >
+                    Add New Slide
+                  </button>
+                </div>
+                
+                <div className="space-y-8">
+                  {(formData?.heroBanners || []).map((banner, index) => (
+                    <div key={index} className="p-8 bg-slate-50 rounded-[32px] border border-slate-100 relative group">
+                      <button 
+                        onClick={() => {
+                          const updated = formData.heroBanners.filter((_, i) => i !== index);
+                          setFormData(prev => ({ ...prev, heroBanners: updated }));
+                        }} 
+                        className="absolute top-4 right-4 p-2 bg-white text-rose-500 rounded-xl border border-slate-200 opacity-0 group-hover:opacity-100 transition-all hover:bg-rose-50"
+                      >
+                         Delete Slide
+                      </button>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="space-y-2 col-span-full">
+                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Background Image URL</label>
+                           <input 
+                              value={banner.imageUrl || ''} 
+                              onChange={(e) => {
+                                 const updated = [...formData.heroBanners];
+                                 updated[index].imageUrl = e.target.value;
+                                 setFormData(prev => ({ ...prev, heroBanners: updated }));
+                              }}
+                              className="w-full bg-white p-5 rounded-2xl font-bold text-slate-800 border border-slate-100 outline-none focus:border-primary-500 transition-all" 
+                              placeholder="https://images.unsplash.com/..."
+                           />
+                        </div>
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Badge Text</label>
+                           <input 
+                              value={banner.badge || ''} 
+                              onChange={(e) => {
+                                 const updated = [...formData.heroBanners];
+                                 updated[index].badge = e.target.value;
+                                 setFormData(prev => ({ ...prev, heroBanners: updated }));
+                              }}
+                              className="w-full bg-white p-5 rounded-2xl font-bold text-slate-800 border border-slate-100 outline-none focus:border-primary-500 transition-all" 
+                           />
+                        </div>
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Title Line 1</label>
+                           <input 
+                              value={banner.title1 || ''} 
+                              onChange={(e) => {
+                                 const updated = [...formData.heroBanners];
+                                 updated[index].title1 = e.target.value;
+                                 setFormData(prev => ({ ...prev, heroBanners: updated }));
+                              }}
+                              className="w-full bg-white p-5 rounded-2xl font-bold text-slate-800 border border-slate-100 outline-none focus:border-primary-500 transition-all" 
+                           />
+                        </div>
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Title Line 2 (Accent)</label>
+                           <input 
+                              value={banner.title2 || ''} 
+                              onChange={(e) => {
+                                 const updated = [...formData.heroBanners];
+                                 updated[index].title2 = e.target.value;
+                                 setFormData(prev => ({ ...prev, heroBanners: updated }));
+                              }}
+                              className="w-full bg-white p-5 rounded-2xl font-bold text-slate-800 border border-slate-100 outline-none focus:border-primary-500 transition-all" 
+                           />
+                        </div>
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Slide Description</label>
+                           <textarea 
+                              rows="2"
+                              value={banner.description || ''} 
+                              onChange={(e) => {
+                                 const updated = [...formData.heroBanners];
+                                 updated[index].description = e.target.value;
+                                 setFormData(prev => ({ ...prev, heroBanners: updated }));
+                              }}
+                              className="w-full bg-white p-5 rounded-2xl font-bold text-slate-800 border border-slate-100 outline-none focus:border-primary-500 transition-all resize-none" 
+                           ></textarea>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4 col-span-full pt-4 border-t border-slate-100">
+                           <div className="space-y-1">
+                              <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Button 1 Text</label>
+                              <input value={banner.btn1Text || ''} onChange={(e) => {
+                                 const updated = [...formData.heroBanners];
+                                 updated[index].btn1Text = e.target.value;
+                                 setFormData(prev => ({ ...prev, heroBanners: updated }));
+                              }} className="w-full bg-white p-3 rounded-xl border border-slate-100 text-xs font-bold" />
+                           </div>
+                           <div className="space-y-1">
+                              <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Button 1 Link</label>
+                              <input value={banner.btn1Link || ''} onChange={(e) => {
+                                 const updated = [...formData.heroBanners];
+                                 updated[index].btn1Link = e.target.value;
+                                 setFormData(prev => ({ ...prev, heroBanners: updated }));
+                              }} className="w-full bg-white p-3 rounded-xl border border-slate-100 text-xs font-bold" />
+                           </div>
+                           <div className="space-y-1">
+                              <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Button 2 Text</label>
+                              <input value={banner.btn2Text || ''} onChange={(e) => {
+                                 const updated = [...formData.heroBanners];
+                                 updated[index].btn2Text = e.target.value;
+                                 setFormData(prev => ({ ...prev, heroBanners: updated }));
+                              }} className="w-full bg-white p-3 rounded-xl border border-slate-100 text-xs font-bold" />
+                           </div>
+                           <div className="space-y-1">
+                              <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Button 2 Link</label>
+                              <input value={banner.btn2Link || ''} onChange={(e) => {
+                                 const updated = [...formData.heroBanners];
+                                 updated[index].btn2Link = e.target.value;
+                                 setFormData(prev => ({ ...prev, heroBanners: updated }));
+                              }} className="w-full bg-white p-3 rounded-xl border border-slate-100 text-xs font-bold" />
+                           </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
              </div>
 
