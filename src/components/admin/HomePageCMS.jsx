@@ -243,7 +243,11 @@ const HomePageCMS = () => {
              {[1, 2, 3].map(i => (
                <div key={i} className="p-6 bg-slate-50 rounded-3xl border border-slate-100 space-y-4">
                   <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest">Trust Point {i}</p>
+                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1">Image/Icon URL</label>
+                  <input name={`trustItem${i}Img`} value={formData?.[`trustItem${i}Img`] || ''} onChange={handleChange} placeholder="Image URL" className="w-full bg-white p-3 rounded-xl font-bold text-slate-900 border border-slate-200 text-xs mb-2" />
+                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1">Title</label>
                   <input name={`trustItem${i}Title`} value={formData?.[`trustItem${i}Title`] || ''} onChange={handleChange} placeholder="Point Title" className="w-full bg-white p-3 rounded-xl font-bold text-slate-900 border border-slate-200 text-xs" />
+                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1">Description</label>
                   <textarea rows="2" name={`trustItem${i}Desc`} value={formData?.[`trustItem${i}Desc`] || ''} onChange={handleChange} placeholder="Point Description" className="w-full bg-white p-3 rounded-xl font-bold text-slate-600 border border-slate-200 text-xs resize-none"></textarea>
                </div>
              ))}

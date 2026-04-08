@@ -70,7 +70,7 @@ const AdminDashboard = () => {
   return (
     <div className="min-h-screen bg-[#f8f9fa] flex text-slate-800 font-sans">
       {/* SIDEBAR - Styled like reference video */}
-      <aside className="w-80 bg-primary-800 text-white flex flex-col fixed h-full z-50">
+      <aside className="w-80 bg-primary-800 text-white flex flex-col fixed h-full z-50 overflow-y-auto">
         <div className="p-8 pb-4">
            <div className="flex flex-col gap-1 mb-10">
               <span className="text-[10px] font-bold text-primary-300 uppercase tracking-widest opacity-60">Website</span>

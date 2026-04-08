@@ -8,7 +8,7 @@ const CategoriesCMS = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState('add');
   const [currentId, setCurrentId] = useState(null);
-  const [formData, setFormData] = useState({ name: '', brandsStr: '' });
+  const [formData, setFormData] = useState({ name: '', imageUrl: '', brandsStr: '' });
   
   const getAuthConfig = () => {
     const token = localStorage.getItem('token');
@@ -31,10 +31,14 @@ const CategoriesCMS = () => {
   const handleOpenModal = (mode, cat = null) => {
     setModalMode(mode);
     if (mode === 'edit' && cat) {
-      setFormData({ name: cat.name, brandsStr: cat.brands ? cat.brands.join(', ') : '' });
+      setFormData({ 
+        name: cat.name, 
+        imageUrl: cat.imageUrl || '', 
+        brandsStr: cat.brands ? cat.brands.join(', ') : '' 
+      });
       setCurrentId(cat._id);
     } else {
-      setFormData({ name: '', brandsStr: '' });
+      setFormData({ name: '', imageUrl: '', brandsStr: '' });
       setCurrentId(null);
     }
     setShowModal(true);
@@ -44,7 +48,7 @@ const CategoriesCMS = () => {
     e.preventDefault();
     try {
       const brands = formData.brandsStr.split(',').map(b => b.trim()).filter(b => b);
-      const payload = { name: formData.name, brands };
+      const payload = { name: formData.name, imageUrl: formData.imageUrl, brands };
       
       if (modalMode === 'add') {
         const res = await axios.post('https://ayuom-backend.vercel.app/api/categories', payload, getAuthConfig());
@@ -123,6 +127,10 @@ const CategoriesCMS = () => {
                 <div className="space-y-2">
                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Therapeutic Category Name</label>
                    <input required type="text" className="w-full bg-surface-light p-4 rounded-xl font-black text-slate-900 outline-none focus:bg-white focus:border-primary-500 border border-transparent transition-all uppercase text-sm" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+                </div>
+                <div className="space-y-2">
+                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Category Image URL</label>
+                   <input type="text" className="w-full bg-surface-light p-4 rounded-xl font-bold text-slate-900 outline-none focus:bg-white focus:border-primary-500 border border-transparent transition-all text-sm" value={formData.imageUrl} onChange={e => setFormData({...formData, imageUrl: e.target.value})} placeholder="https://..." />
                 </div>
                 <div className="space-y-2">
                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Brands (Comma Separated)</label>

@@ -342,22 +342,34 @@ const Home = () => {
             className="grid md:grid-cols-3 gap-12 lg:gap-20"
           >
             <motion.div variants={itemVariants} className="space-y-4">
-              <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-primary-400 mx-auto border border-white/10 backdrop-blur-md">
-                <ShieldCheck size={32} />
+              <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-primary-400 mx-auto border border-white/10 backdrop-blur-md overflow-hidden">
+                {cms?.trustItem1Img ? (
+                  <img src={cms.trustItem1Img} alt="" className="w-full h-full object-cover" />
+                ) : (
+                  <ShieldCheck size={32} />
+                )}
               </div>
               <h4 className="text-xl font-black">{cms.trustItem1Title || "Quality Assured"}</h4>
               <p className="text-slate-500 text-sm">{cms.trustItem1Desc || "Every batch verified for authenticity and storage standards."}</p>
             </motion.div>
             <motion.div variants={itemVariants} className="space-y-4">
-              <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-primary-400 mx-auto border border-white/10 backdrop-blur-md">
-                <Zap size={32} />
+              <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-primary-400 mx-auto border border-white/10 backdrop-blur-md overflow-hidden">
+                {cms?.trustItem2Img ? (
+                  <img src={cms.trustItem2Img} alt="" className="w-full h-full object-cover" />
+                ) : (
+                  <Zap size={32} />
+                )}
               </div>
               <h4 className="text-xl font-black">{cms.trustItem2Title || "Express Delivery"}</h4>
               <p className="text-slate-500 text-sm">{cms.trustItem2Desc || "Priority shipping for clinics within 24-48 hours nationwide."}</p>
             </motion.div>
             <motion.div variants={itemVariants} className="space-y-4">
-              <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-primary-400 mx-auto border border-white/10 backdrop-blur-md">
-                <Briefcase size={32} />
+              <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-primary-400 mx-auto border border-white/10 backdrop-blur-md overflow-hidden">
+                {cms?.trustItem3Img ? (
+                  <img src={cms.trustItem3Img} alt="" className="w-full h-full object-cover" />
+                ) : (
+                  <Briefcase size={32} />
+                )}
               </div>
               <h4 className="text-xl font-black">{cms.trustItem3Title || "B2B Compliance"}</h4>
               <p className="text-slate-500 text-sm">{cms.trustItem3Desc || "Optimized for VAT/GST invoices and professional record-keeping."}</p>
