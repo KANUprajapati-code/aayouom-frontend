@@ -226,6 +226,22 @@ const Home = () => {
                </div>
             </motion.div>
           </div>
+
+          {/* Navigation Arrows */}
+          <div className="absolute bottom-10 right-10 flex gap-4 z-20">
+             <button 
+               onClick={() => setCurrentSlide(prev => (prev - 1 + activeBanners.length) % activeBanners.length)}
+               className="w-14 h-14 rounded-full bg-white shadow-premium border border-surface-border flex items-center justify-center text-slate-400 hover:text-primary-600 hover:scale-110 transition-all active:scale-95 transition-all"
+             >
+                <ArrowRight size={24} className="rotate-180" />
+             </button>
+             <button 
+               onClick={() => setCurrentSlide(prev => (prev + 1) % activeBanners.length)}
+               className="w-14 h-14 rounded-full bg-white shadow-premium border border-surface-border flex items-center justify-center text-slate-400 hover:text-primary-600 hover:scale-110 transition-all active:scale-95 transition-all"
+             >
+                <ArrowRight size={24} />
+             </button>
+          </div>
         </div>
       </section>
 
@@ -255,55 +271,66 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {/* Category Highlights */}
+      {/* Category Explorer Grid */}
       <section className="space-y-12">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center space-y-4 max-w-2xl mx-auto"
+          className="flex flex-col md:flex-row md:items-end justify-between gap-6"
         >
-          <h2 className="text-4xl font-black text-slate-900">{cms.categoryTitle || "Explore by Category"}</h2>
-          <p className="text-text-muted text-lg">{cms.categorySubtitle || "We stock over 5000+ medicines across all major therapeutic segments."}</p>
+          <div className="space-y-4">
+             <div className="px-4 py-1.5 bg-secondary-50 text-secondary-700 rounded-full text-[10px] font-black uppercase tracking-widest border border-secondary-100 w-fit">Clinical Segments</div>
+             <h2 className="text-4xl lg:text-5xl font-black text-slate-900 leading-none">{cms.categoryTitle || "Explore Therapeutic Matrix"}</h2>
+             <p className="text-text-muted text-lg max-w-xl">{cms.categorySubtitle || "Browse our specialized medicinal segments verified for quality and supply consistency."}</p>
+          </div>
+          <Link to="/products" className="group flex items-center gap-3 text-sm font-black text-primary-600 uppercase tracking-widest">
+             See Full Catalog <div className="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center group-hover:bg-primary-600 group-hover:text-white transition-all"><ArrowRight size={18} /></div>
+          </Link>
         </motion.div>
 
-        <div className="space-y-16">
-          {categoryHighlights.map((highlight, index) => (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+          {categories.length === 0 && [1,2,3,4].map(i => (
+             <div key={i} className="aspect-[4/5] bg-slate-100 animate-pulse rounded-[32px]"></div>
+          ))}
+          {categories.map((cat, index) => (
             <motion.div 
-              key={index}
-              initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              key={cat._id || index}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className={`flex flex-col lg:flex-row items-center gap-12 ${index % 2 !== 0 ? 'lg:flex-row-reverse' : ''}`}
+              transition={{ delay: index * 0.05 }}
+              className="relative aspect-[3/4] group overflow-hidden rounded-[32px] border border-surface-border bg-white shadow-soft cursor-pointer"
             >
-               <div className="lg:w-1/2 space-y-6">
-                 <div className="inline-block px-4 py-1.5 bg-primary-50 text-primary-700 rounded-full text-xs font-black uppercase tracking-widest border border-primary-100">
-                    {highlight.category}
-                 </div>
-                 <h3 className="text-4xl font-black text-slate-900 leading-tight">
-                    Top Trending in <br />
-                    <span className="text-primary-600">{highlight.category}</span>
-                 </h3>
-                 <p className="text-lg text-text-muted leading-relaxed">
-                    {(cms.categoryDescriptionTemplate || "Our {category} segment features verified products with consistent multi-strip schemes and reliable supply chains for clinics.").replace('{category}', highlight.category)}
-                 </p>
-                 <div className="pt-4">
-                    <Link to={`/products?category=${highlight.category}`} className="btn-outline px-8 py-3.5 flex w-fit">
-                       View All {highlight.category}
-                       <ChevronRight size={20} />
-                    </Link>
-                 </div>
+               {/* Background Image / Placeholder */}
+               <div className="absolute inset-0 z-0">
+                  {cat.imageUrl ? (
+                    <img src={cat.imageUrl} alt={cat.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  ) : (
+                    <div className="w-full h-full bg-primary-50 flex items-center justify-center text-primary-200">
+                       <Zap size={80} />
+                    </div>
+                  )}
+                  {/* Subtle Overlays */}
+                  <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent"></div>
                </div>
-               
-               <div className="lg:w-1/2 w-full max-w-md">
-                  <div className="relative group">
-                     <div className="absolute inset-0 bg-primary-600 rounded-[40px] blur-3xl opacity-10 group-hover:opacity-20 transition-opacity"></div>
-                     <div className="relative transform group-hover:scale-[1.02] transition-transform duration-500">
-                        <MedicineCard medicine={highlight.product} onAddToCart={addToCart} />
-                     </div>
+
+               {/* Content */}
+               <div className="absolute inset-0 z-10 p-8 flex flex-col justify-end">
+                  <div className="space-y-3 transform lg:translate-y-4 lg:group-hover:translate-y-0 transition-transform duration-500">
+                     <p className="text-[10px] font-black text-white/60 uppercase tracking-widest italic">{cat.brands?.length || 0} Brands Syncing</p>
+                     <h3 className="text-2xl font-black text-white tracking-tighter uppercase leading-none">{cat.name}</h3>
+                     <div className="h-0.5 w-12 bg-primary-500 group-hover:w-full transition-all duration-700"></div>
+                     <Link to={`/products?category=${cat.name}`} className="block">
+                        <span className="inline-flex py-3 text-[10px] font-black text-white uppercase tracking-widest opacity-0 lg:group-hover:opacity-100 transition-opacity flex items-center gap-2">
+                           Enter Segment <ChevronRight size={14} />
+                        </span>
+                     </Link>
                   </div>
                </div>
+               
+               {/* Absolute Link Layer for whole card */}
+               <Link to={`/products?category=${cat.name}`} className="absolute inset-0 z-20" aria-label={`View ${cat.name}`}></Link>
             </motion.div>
           ))}
         </div>
