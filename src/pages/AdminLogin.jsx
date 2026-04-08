@@ -47,8 +47,17 @@ const Login = () => {
         <div className="bg-white rounded-[48px] p-10 shadow-2xl border border-border-main">
           <form onSubmit={handleLogin} className="space-y-8">
             {error && (
-              <div className="bg-red-50 text-red-500 p-4 rounded-2xl text-xs font-black uppercase text-center border border-red-100">
-                {error}
+              <div className={`p-5 rounded-2xl text-[10px] font-black uppercase text-center border animate-in slide-in-from-top-4 duration-300 ${
+                error.includes('pending') 
+                ? 'bg-amber-50 text-amber-700 border-amber-100' 
+                : 'bg-red-50 text-red-500 border-red-100'
+              }`}>
+                {error.includes('pending') ? (
+                  <div className="space-y-2">
+                    <p className="text-sm italic tracking-tight mb-2">Verification In Progress</p>
+                    <p className="opacity-70 leading-relaxed tracking-wider">Your medical verification is currently in our primary queue. Once our team verifies your credentials, you will receive an active status.</p>
+                  </div>
+                ) : error}
               </div>
             )}
 

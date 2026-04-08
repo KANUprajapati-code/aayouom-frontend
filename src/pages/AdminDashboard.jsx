@@ -17,6 +17,7 @@ import SchemesCMS from '../components/admin/SchemesCMS';
 import PagesCMS from '../components/admin/PagesCMS';
 import BulkOrderCMS from '../components/admin/BulkOrderCMS';
 import AboutCMS from '../components/admin/AboutCMS';
+import UserApprovalCMS from '../components/admin/UserApprovalCMS';
 import { ShoppingBag as shoppingBagIcon } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -263,6 +264,8 @@ const AdminDashboard = () => {
           {activeTab === 'pages' && <PagesCMS />}
           {activeTab === 'bulkorders' && <BulkOrderCMS />}
           {activeTab === 'aboutcms' && <AboutCMS />}
+          {activeTab === 'users' && <UserApprovalCMS />}
+          {activeTab === 'doctors' && <UserApprovalCMS />}
           
           {/* Missing Section Placeholders */}
           {['orders', 'users', 'doctors', 'doctorbookings', 'consultationcat', 'promocodes', 'messages'].includes(activeTab) && (

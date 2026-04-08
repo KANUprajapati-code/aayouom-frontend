@@ -64,7 +64,19 @@ const Register = () => {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && <div className="p-3 bg-red-50 text-red-500 rounded-xl text-sm border border-red-100">{error}</div>}
-            {success && <div className="p-3 bg-green-50 text-green-600 rounded-xl text-sm border border-green-100">{success}</div>}
+            {success && (
+              <div className="p-6 bg-emerald-50 border border-emerald-100 rounded-2xl space-y-3 animate-in fade-in zoom-in duration-500">
+                <div className="flex items-center gap-3 text-emerald-700 font-black uppercase text-xs tracking-widest">
+                  <CheckCircle2 size={20} /> Identity Staging Successful
+                </div>
+                <p className="text-sm font-medium text-emerald-800 leading-relaxed">
+                  Your registration is now in our <span className="font-black">Medical Verification Queue</span>. Our administrators will review your credentials within 2-4 business hours.
+                </p>
+                <div className="pt-2">
+                  <Link to="/login" className="text-xs font-black uppercase tracking-widest text-emerald-600 hover:text-emerald-700">Proceed to Login Gate &rarr;</Link>
+                </div>
+              </div>
+            )}
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
