@@ -254,24 +254,35 @@ const ProductsCMS = () => {
 
                 <div className="h-px w-full bg-surface-border"></div>
 
-                {/* SECTION 2: Pricing */}
+                <div className="h-px w-full bg-surface-border"></div>
+
+                {/* SECTION 3: Inventory Management */}
                 <div>
-                   <h3 className="text-sm font-black text-emerald-800 uppercase tracking-widest mb-6 flex items-center gap-2"><div className="w-1.5 h-4 bg-emerald-500 rounded-full"></div> Commerce & Pricing</h3>
-                   <div className="grid grid-cols-2 gap-8">
-                       <div className="space-y-2">
-                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Base Procurement Price (₹)</label>
-                          <input required type="number" placeholder="0.00" className="w-full bg-emerald-50/50 p-5 rounded-2xl font-black text-emerald-900 border border-emerald-100 outline-none focus:bg-emerald-50 focus:border-emerald-500 transition-all uppercase text-sm tracking-tight placeholder:text-slate-300" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} />
-                       </div>
-                       <div className="space-y-2">
-                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Stock Quantity</label>
-                          <input required type="number" placeholder="e.g. 100" className="w-full bg-surface-light p-5 rounded-2xl font-black text-slate-900 border border-surface-border outline-none focus:bg-white focus:border-primary-500 transition-all text-sm tracking-tight placeholder:text-slate-300" value={formData.stock} onChange={e => setFormData({...formData, stock: e.target.value})} />
-                       </div>
+                   <h3 className="text-sm font-black text-amber-800 uppercase tracking-widest mb-6 flex items-center gap-2">
+                      <div className="w-1.5 h-4 bg-amber-500 rounded-full"></div> 
+                      <Database className="w-4 h-4" /> Inventory Management
+                   </h3>
+                   <div className="bg-amber-50/30 border border-amber-100 p-8 rounded-[32px] space-y-4">
+                      <div className="space-y-2">
+                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Current Stock Count</label>
+                         <input 
+                           required 
+                           type="number" 
+                           placeholder="Enter available units (e.g. 500)" 
+                           className="w-full bg-white p-6 rounded-2xl font-black text-slate-900 border border-amber-200 outline-none focus:border-amber-500 transition-all text-lg tracking-tight shadow-sm" 
+                           value={formData.stock} 
+                           onChange={e => setFormData({...formData, stock: e.target.value})} 
+                         />
+                      </div>
+                      <p className="text-[10px] font-bold text-amber-600/60 uppercase tracking-widest px-2">
+                         Setting this to 0 will automatically mark the product as "Out of Stock" on the frontend.
+                      </p>
                    </div>
                 </div>
 
                 <div className="h-px w-full bg-surface-border"></div>
 
-                {/* SECTION 3: Media */}
+                {/* SECTION 4: Media Assets */}
                 <div>
                    <h3 className="text-sm font-black text-blue-800 uppercase tracking-widest mb-6 flex items-center gap-2"><div className="w-1.5 h-4 bg-blue-500 rounded-full"></div> Media Assets</h3>
                    <div className="space-y-2">
