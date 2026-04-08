@@ -6,7 +6,7 @@ import {
   Edit, Trash2, CheckCircle2, XCircle, 
   TrendingUp, ArrowUpRight, Bell, LayoutDashboard, 
   Database, Activity, X, Save, Image as ImageIcon,
-  Globe, ShieldCheck, Zap, FileText
+  Globe, ShieldCheck, Zap, FileText, Tag
 } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
