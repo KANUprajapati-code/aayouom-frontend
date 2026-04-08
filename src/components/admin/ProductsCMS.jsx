@@ -254,6 +254,21 @@ const ProductsCMS = () => {
 
                 <div className="h-px w-full bg-surface-border"></div>
 
+                {/* SECTION 2: Commerce & Pricing */}
+                <div>
+                   <h3 className="text-sm font-black text-emerald-800 uppercase tracking-widest mb-6 flex items-center gap-2"><div className="w-1.5 h-4 bg-emerald-500 rounded-full"></div> Commerce & Pricing</h3>
+                   <div className="grid grid-cols-2 gap-8">
+                       <div className="space-y-2">
+                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Base Procurement Price (₹)</label>
+                          <input required type="number" placeholder="0.00" className="w-full bg-emerald-50/50 p-5 rounded-2xl font-black text-emerald-900 border border-emerald-100 outline-none focus:bg-emerald-50 focus:border-emerald-500 transition-all uppercase text-sm tracking-tight placeholder:text-slate-300" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} />
+                       </div>
+                       <div className="space-y-2">
+                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Original MRP (₹)</label>
+                          <input type="number" placeholder="0.00" className="w-full bg-surface-light p-5 rounded-2xl font-black text-slate-900 border border-surface-border outline-none focus:bg-white focus:border-primary-500 transition-all uppercase text-sm tracking-tight placeholder:text-slate-300" value={formData.originalPrice} onChange={e => setFormData({...formData, originalPrice: e.target.value})} />
+                       </div>
+                   </div>
+                </div>
+
                 <div className="h-px w-full bg-surface-border"></div>
 
                 {/* SECTION 3: Inventory Management */}
