@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ShoppingCart, Plus, Minus, Info, TrendingUp } from 'lucide-react';
 import SchemeBadge from './SchemeBadge';
+import { motion } from 'framer-motion';
 
 const MedicineCard = ({ medicine, onAddToCart }) => {
   const {
@@ -17,12 +18,23 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
   } = medicine;
 
   return (
-    <div className={`group relative bg-white rounded-2xl border border-surface-border p-4 transition-all duration-300 hover:shadow-medium hover:border-primary-200 ${isBestDeal ? 'ring-1 ring-primary-500/20' : ''}`}>
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+      whileHover={{ y: -5 }}
+      className={`group relative bg-white rounded-2xl border border-surface-border p-4 transition-all duration-300 hover:shadow-medium hover:border-primary-200 ${isBestDeal ? 'ring-1 ring-primary-500/20' : ''}`}
+    >
       {isBestDeal && (
-        <div className="absolute -top-3 left-4 bg-primary-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1 z-10">
+        <motion.div 
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="absolute -top-3 left-4 bg-primary-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1 z-10"
+        >
           <TrendingUp size={12} />
           BEST DEAL
-        </div>
+        </motion.div>
       )}
 
       <Link to={`/product/${_id}`} className="block relative aspect-square mb-4 bg-surface-light rounded-xl overflow-hidden group-hover:scale-[1.02] transition-transform duration-300">
@@ -30,6 +42,7 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
           src={image || 'https://via.placeholder.com/200'} 
           alt={name} 
           className="w-full h-full object-contain p-4"
+          loading="lazy"
         />
         <div className="absolute top-2 right-2 p-1.5 bg-white/80 backdrop-blur-md rounded-lg text-text-muted hover:text-primary-600 border border-surface-border opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <Info size={16} />
@@ -63,12 +76,14 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
               </div>
             </div>
             
-            <button 
+            <motion.button 
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => onAddToCart && onAddToCart(medicine)}
-              className="p-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl shadow-lg shadow-primary-500/20 transition-all active:scale-95 group/btn"
+              className="p-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl shadow-lg shadow-primary-500/20 transition-all group/btn"
             >
               <Plus size={20} className="group-hover/btn:rotate-90 transition-transform duration-300" />
-            </button>
+            </motion.button>
           </div>
         </div>
       </div>
@@ -78,7 +93,7 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
           <span className="bg-slate-800 text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest leading-none shadow-premium">OUT OF STOCK</span>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 
