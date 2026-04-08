@@ -124,91 +124,118 @@ const ProductsCMS = () => {
   });
 
   return (
-    <div className="animate-in fade-in slide-in-from-right-4 duration-500">
-      <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-6 mb-12">
-        <div>
-          <h2 className="text-4xl font-black text-slate-900 italic tracking-tighter uppercase leading-none underline decoration-primary-600 underline-offset-8">Master Records Engine</h2>
-          <p className="text-slate-400 mt-4 font-bold uppercase tracking-[0.2em] text-[10px]">Real-time Database Management For Website & Schemes</p>
-        </div>
-        <div className="flex items-center gap-4 border border-surface-border bg-white rounded-3xl p-2 shadow-soft">
-           <div className="flex bg-surface-light rounded-2xl overflow-hidden p-1">
-              {['All', 'Shop', 'Home', 'Schemes', 'Out of Stock'].map((filter) => (
-                <button 
-                  key={filter} 
-                  onClick={() => setActiveFilter(filter)}
-                  className={`px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${activeFilter === filter ? 'bg-primary-600 text-white shadow-lg' : 'text-slate-400 hover:text-primary-600'}`}
-                >
-                  {filter}
-                </button>
-              ))}
-           </div>
-           <button onClick={() => handleOpenModal('add')} className="bg-primary-600 hover:bg-primary-500 text-white font-black px-8 py-4 rounded-2xl text-[10px] uppercase tracking-widest shadow-2xl shadow-primary-500/30 flex items-center gap-2 active:scale-95 transition-all">
-             <Plus className="w-4 h-4" /> Add Record
-           </button>
-        </div>
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-8">
+      {/* Header section with search and add product */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
+         <div>
+            <h2 className="text-3xl font-black text-slate-900 italic tracking-tighter uppercase leading-none">Products Inventory</h2>
+            <p className="text-slate-400 mt-2 font-bold uppercase tracking-widest text-[10px]">Manage clinical stock and medicinal records</p>
+         </div>
+         <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 bg-slate-50 border border-slate-100 px-5 py-3 rounded-2xl w-64 focus-within:bg-white focus-within:border-primary-500 transition-all">
+               <Search size={16} className="text-slate-400" />
+               <input 
+                 type="text" 
+                 placeholder="Search medicines..." 
+                 className="bg-transparent border-none outline-none text-xs font-bold w-full text-slate-800 placeholder:text-slate-300" 
+                 value={searchQuery} 
+                 onChange={e => setSearchQuery(e.target.value)} 
+               />
+            </div>
+            <button onClick={() => handleOpenModal('add')} className="bg-slate-900 hover:bg-black text-white px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl flex items-center gap-2 transition-all active:scale-95">
+               <Plus className="w-4 h-4" /> Create Product
+            </button>
+         </div>
       </div>
 
-      <div className="flex items-center gap-4 bg-white border border-surface-border rounded-3xl px-6 py-4 mb-8 shadow-sm">
-         <Search className="w-5 h-5 text-slate-400" />
-         <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search database globally by generic name or category..." className="bg-transparent border-none outline-none text-sm font-bold w-full text-slate-900 placeholder:text-slate-300" />
+      {/* Stats Bar */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+         <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-6">
+            <div className="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center font-black text-lg shadow-sm border border-emerald-100">
+               {products.length}
+            </div>
+            <div>
+               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Total SKUs</p>
+               <p className="text-sm font-black text-slate-800 uppercase italic">Clinical Node Active</p>
+            </div>
+         </div>
+         <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-6">
+            <div className="w-14 h-14 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center font-black text-lg shadow-sm border border-rose-100">
+               {products.filter(p => !p.stock || p.stock <= 0).length}
+            </div>
+            <div>
+               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Exhausted Items</p>
+               <p className="text-sm font-black text-slate-800 uppercase italic">Restock Required</p>
+            </div>
+         </div>
+         <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-6">
+            <div className="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center font-black text-lg shadow-sm border border-amber-100">
+               {products.filter(p => p.stock > 0 && p.stock < 10).length}
+            </div>
+            <div>
+               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Critical Stock</p>
+               <p className="text-sm font-black text-slate-800 uppercase italic">Sub-optimal levels</p>
+            </div>
+         </div>
       </div>
 
-      <div className="bg-white rounded-[48px] overflow-hidden border border-surface-border shadow-soft">
-        <table className="w-full text-left bg-white">
-          <thead className="bg-surface-light border-b border-surface-border">
+      {/* Main Table Container */}
+      <div className="bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden">
+        <table className="w-full text-left">
+          <thead className="bg-slate-50/50 border-b border-slate-100">
             <tr>
-              <th className="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400 w-1/3">Medicine Designation</th>
-              <th className="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400">Clinical Segment</th>
-              <th className="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400">Inventory Status</th>
-              <th className="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400">Placements</th>
-              <th className="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Actions</th>
+              <th className="px-10 py-6 text-[10px] font-black uppercase tracking-widest text-slate-400 w-1/3">Medicine Designation</th>
+              <th className="px-10 py-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Clinical Segment</th>
+              <th className="px-10 py-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Inventory Status</th>
+              <th className="px-10 py-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Placements</th>
+              <th className="px-10 py-6 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-surface-border">
+          <tbody className="divide-y divide-slate-50">
             {loading ? (
                <tr>
-                 <td colSpan="5" className="px-10 py-20 text-center text-slate-400 text-sm font-bold">Querying Grid Nodes...</td>
+                 <td colSpan="5" className="px-10 py-20 text-center text-slate-300 text-xs font-bold uppercase tracking-widest animate-pulse">Querying Grid Nodes...</td>
                </tr>
             ) : filteredProducts.length === 0 ? (
                <tr>
-                 <td colSpan="5" className="px-10 py-20 text-center text-slate-400 text-sm font-bold">No records matched your query parameters.</td>
+                 <td colSpan="5" className="px-10 py-20 text-center text-slate-300 text-xs font-bold uppercase tracking-widest">No records matched your query parameters.</td>
                </tr>
             ) : filteredProducts.map(p => (
-              <tr key={p._id} className="hover:bg-primary-50/30 transition-all group">
-                <td className="px-10 py-8 flex items-center gap-6">
-                   <div className="w-16 h-16 bg-white rounded-2xl p-3 border border-surface-border shadow-sm group-hover:scale-110 transition-transform flex items-center justify-center shrink-0">
+              <tr key={p._id} className="hover:bg-slate-50/50 transition-all group">
+                <td className="px-10 py-6 flex items-center gap-6">
+                   <div className="w-14 h-14 bg-white rounded-xl p-2 border border-slate-100 shadow-sm group-hover:scale-105 transition-transform flex items-center justify-center shrink-0">
                       <img src={p.image} className="max-w-full max-h-full object-contain" alt="" />
                    </div>
                    <div className="min-w-0">
                       <p className="text-slate-900 font-black uppercase text-sm italic tracking-tighter truncate">{p.name}</p>
-                      <p className="text-[10px] font-black text-primary-600 tracking-widest mt-1 opacity-60">REF: {p._id.slice(-6).toUpperCase()}</p>
+                      <p className="text-[10px] font-black text-slate-400 tracking-widest mt-1">ID: {p._id.slice(-6).toUpperCase()}</p>
                    </div>
                 </td>
-                <td className="px-10 py-8">
-                   <span className="px-4 py-1.5 bg-primary-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary-500/20">
+                <td className="px-10 py-6">
+                   <span className="px-4 py-1.5 bg-slate-100 border border-slate-200 text-slate-600 rounded-lg text-[10px] font-bold uppercase tracking-widest">
                       {p.category}
                    </span>
                 </td>
-                <td className="px-10 py-8">
-                   <div className="bg-slate-50 border border-slate-100 p-4 rounded-2xl inline-block min-w-[120px]">
-                      <p className={`text-base font-black leading-none ${p.stock <= 0 ? 'text-rose-600' : p.stock < 10 ? 'text-amber-600' : 'text-emerald-600'}`}>
+                <td className="px-10 py-6">
+                   <div className="flex flex-col gap-1.5">
+                      <p className={`text-sm font-black ${p.stock <= 0 ? 'text-rose-600' : p.stock < 10 ? 'text-amber-600' : 'text-emerald-700'}`}>
                          {p.stock} Units
                       </p>
-                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-2 border-t border-slate-200 pt-2">
-                         {p.stock <= 0 ? 'Out of Stock' : p.stock < 10 ? 'Low Stock' : 'In Stock'}
-                      </p>
+                      <div className="h-1 w-20 bg-slate-100 rounded-full overflow-hidden">
+                         <div className={`h-full transition-all duration-1000 ${p.stock <= 0 ? 'bg-rose-500' : p.stock < 10 ? 'bg-amber-500' : 'bg-emerald-500'}`} style={{ width: `${Math.min(100, (p.stock || 0) * 2)}%` }}></div>
+                      </div>
                    </div>
                 </td>
-                <td className="px-10 py-8">
+                <td className="px-10 py-6">
                    <div className="flex items-center gap-2">
-                       {p.showOnShop && <span className="w-6 h-6 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-[10px] font-black" title="Shop">S</span>}
-                       {p.showOnHome && <span className="w-6 h-6 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-[10px] font-black" title="Home Banner">H</span>}
-                       {p.showOnSchemes && <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-[10px] font-black" title="Active Scheme">A</span>}
+                       {p.showOnShop && <span className="w-5 h-5 rounded-md bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center text-[10px] font-black" title="Shop">S</span>}
+                       {p.showOnHome && <span className="w-5 h-5 rounded-md bg-orange-50 text-orange-600 border border-orange-100 flex items-center justify-center text-[10px] font-black" title="Home Banner">H</span>}
+                       {p.showOnSchemes && <span className="w-5 h-5 rounded-md bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center text-[10px] font-black" title="Active Scheme">A</span>}
                    </div>
                 </td>
-                <td className="px-10 py-8 text-right space-x-3 whitespace-nowrap">
-                   <button onClick={() => handleOpenModal('edit', p)} className="p-3.5 bg-surface-light hover:bg-primary-600 rounded-xl text-slate-400 hover:text-white shadow-sm transition-all border border-surface-border"><Edit className="w-5 h-5" /></button>
-                   <button onClick={() => handleDelete(p._id)} className="p-3.5 bg-surface-light hover:bg-rose-500 rounded-xl text-slate-400 hover:text-white shadow-sm transition-all border border-surface-border"><Trash2 className="w-5 h-5" /></button>
+                <td className="px-10 py-6 text-right space-x-2 whitespace-nowrap">
+                   <button onClick={() => handleOpenModal('edit', p)} className="p-2.5 bg-slate-50 hover:bg-slate-900 rounded-xl text-slate-400 hover:text-white transition-all border border-slate-100"><Edit className="w-4 h-4" /></button>
+                   <button onClick={() => handleDelete(p._id)} className="p-2.5 bg-slate-50 hover:bg-rose-500 rounded-xl text-slate-400 hover:text-white transition-all border border-slate-100"><Trash2 className="w-4 h-4" /></button>
                 </td>
               </tr>
             ))}
