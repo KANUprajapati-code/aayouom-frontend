@@ -77,9 +77,14 @@ const AdminDashboard = () => {
         <div className="p-8 pb-4">
            <div className="flex flex-col gap-1 mb-10">
               <span className="text-[10px] font-bold text-primary-300 uppercase tracking-widest opacity-60">Website</span>
-              <div className="flex items-center gap-3">
-                 <Globe className="w-5 h-5 text-primary-400" />
-                 <h2 className="text-xl font-black subpixel-antialiased tracking-tight">Admin</h2>
+              <div className="flex items-center justify-between">
+                 <div className="flex items-center gap-3">
+                   <Globe className="w-5 h-5 text-primary-400" />
+                   <h2 className="text-xl font-black subpixel-antialiased tracking-tight">Admin</h2>
+                 </div>
+                 <Link to="/" className="p-2 bg-white/5 hover:bg-white/10 rounded-lg text-primary-300 transition-all group" title="Back to Site">
+                    <ArrowUpRight size={18} className="group-hover:rotate-12 transition-transform" />
+                 </Link>
               </div>
            </div>
            
