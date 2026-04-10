@@ -25,7 +25,7 @@ const BulkInquiry = lazy(() => import('./pages/BulkInquiry'));
 const WalletDashboard = lazy(() => import('./pages/WalletDashboard'));
 const ReferAndEarn = lazy(() => import('./pages/ReferAndEarn'));
 const Promotions = lazy(() => import('./pages/Promotions'));
-
+const Profile = lazy(() => import('./pages/Profile'));
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-screen">
     <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
@@ -60,6 +60,7 @@ function App() {
                   <Route path="/wallet" element={<WalletDashboard />} />
                   <Route path="/refer" element={<ReferAndEarn />} />
                   <Route path="/promotions" element={<Promotions />} />
+                  <Route path="/profile" element={<Profile />} />
                 </Route>
 
                 {/* Admin Routes */}

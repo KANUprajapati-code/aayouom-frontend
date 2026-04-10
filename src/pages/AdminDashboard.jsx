@@ -18,7 +18,8 @@ import PagesCMS from '../components/admin/PagesCMS';
 import BulkOrderCMS from '../components/admin/BulkOrderCMS';
 import AboutCMS from '../components/admin/AboutCMS';
 import UserApprovalCMS from '../components/admin/UserApprovalCMS';
-import { ShoppingBag as shoppingBagIcon } from 'lucide-react';
+import AdminWalletCMS from '../components/admin/AdminWalletCMS';
+import { ShoppingBag as shoppingBagIcon, Wallet } from 'lucide-react';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -101,6 +102,7 @@ const AdminDashboard = () => {
                   { id: 'categories', label: 'Categories', icon: Package },
                   { id: 'consultationcat', label: 'Consultation Categories', icon: Zap },
                   { id: 'promocodes', label: 'Promo Codes', icon: Tag },
+                  { id: 'wallet', label: 'Wallet Management', icon: Wallet },
                   { id: 'bulkorders', label: 'Bulk Orders', icon: shoppingBagIcon },
                   { id: 'homecms', label: 'Home CMS', icon: Globe },
                   { id: 'aboutcms', label: 'About CMS', icon: FileText },
@@ -269,8 +271,9 @@ const AdminDashboard = () => {
           {activeTab === 'pages' && <PagesCMS />}
           {activeTab === 'bulkorders' && <BulkOrderCMS />}
           {activeTab === 'aboutcms' && <AboutCMS />}
-          {activeTab === 'users' && <UserApprovalCMS />}
-          {activeTab === 'doctors' && <UserApprovalCMS />}
+          { activeTab === 'users' && <UserApprovalCMS /> }
+          { activeTab === 'doctors' && <UserApprovalCMS /> }
+          { activeTab === 'wallet' && <AdminWalletCMS /> }
           
           {/* Missing Section Placeholders */}
           {['orders', 'users', 'doctors', 'doctorbookings', 'consultationcat', 'promocodes', 'messages'].includes(activeTab) && (
