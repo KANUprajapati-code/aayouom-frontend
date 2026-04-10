@@ -13,6 +13,7 @@ const Navbar = () => {
     { name: 'Medicines', path: '/products?category=Medicines' },
     { name: 'Wellness', path: '/products?category=Wellness' },
     { name: 'Offers', path: '/promotions' },
+    { name: 'Wallet', path: '/wallet' },
     { name: 'About Us', path: '/about' },
     { name: 'Contact', path: '/contact' }
   ];
@@ -148,9 +149,10 @@ const Navbar = () => {
           </div>
           
           <div className="mt-12 pt-12 border-t border-slate-100">
-             <div className="flex gap-8 text-primary-600 font-black text-sm mb-8">
-                <span className="flex items-center gap-2"><User /> Profile</span>
-                <span className="flex items-center gap-2"><Heart /> Wishlist</span>
+             <div className="flex flex-wrap gap-6 text-primary-600 font-black text-sm mb-8">
+                <Link to="/profile" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-2"><User /> Profile</Link>
+                <Link to="/wallet" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-2"><Wallet /> Wallet</Link>
+                <Link to="/cart" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-2"><ShoppingCart /> Cart</Link>
              </div>
              <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">Support Line</p>
              <p className="text-2xl font-black text-slate-900 mt-2">+91 123 456 7890</p>
