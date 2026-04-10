@@ -30,9 +30,9 @@ const Home = () => {
           axios.get('https://ayuom-backend.vercel.app/api/content/homepage').catch(() => ({ data: {} })),
           axios.get('https://ayuom-backend.vercel.app/api/categories').catch(() => ({ data: [] }))
         ]);
-        setHomeProducts(prodRes.data);
+        setHomeProducts(Array.isArray(prodRes.data) ? prodRes.data : []);
         setCms(cmsRes.data || {});
-        setCategories(catRes.data || []);
+        setCategories(Array.isArray(catRes.data) ? catRes.data : []);
       } catch (err) {
         console.error('Failed to fetch home data:', err);
       } finally {
@@ -42,7 +42,7 @@ const Home = () => {
     fetchData();
   }, []);
 
-  const categoryHighlights = categories.map(cat => {
+  const categoryHighlights = (Array.isArray(categories) ? categories : []).map(cat => {
     const featuredProduct = homeProducts.find(p => p.category === cat.name);
     return {
       category: cat.name,
