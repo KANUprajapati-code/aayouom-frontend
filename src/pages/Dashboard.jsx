@@ -7,7 +7,10 @@ import {
   ArrowDownRight,
   Plus,
   ArrowRight,
-  ShieldCheck
+  ShieldCheck,
+  Wallet,
+  Gift,
+  IndianRupee
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -17,21 +20,24 @@ import MedicineCard from '../components/common/MedicineCard';
 const Dashboard = () => {
   const { user } = useAuth();
   const [orders, setOrders] = useState([]);
+  const [wallet, setWallet] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const isAdmin = user?.role === 'admin';
 
   useEffect(() => {
-    const fetchOrders = async () => {
+    const fetchData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('https://ayuom-backend.vercel.app/api/orders/my-orders', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setOrders(response.data);
+        const [ordersRes, walletRes] = await Promise.all([
+          axios.get('https://ayuom-backend.vercel.app/api/orders/my-orders', { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: [] })),
+          axios.get('http://localhost:5000/api/wallet/my-wallet', { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: null }))
+        ]);
+        setOrders(ordersRes.data || []);
+        setWallet(walletRes.data);
       } catch (err) {
-        console.error('Error fetching orders:', err);
+        console.error('Error fetching dashboard data:', err);
         setError('Failed to load dashboard data');
       } finally {
         setLoading(false);
@@ -39,7 +45,7 @@ const Dashboard = () => {
     };
 
     if (user) {
-      fetchOrders();
+      fetchData();
     }
   }, [user]);
 
@@ -170,19 +176,52 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Recommended for You Placeholder */}
+        {/* Wallet & Rewards Widget */}
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold text-slate-900">Top Medicines</h2>
+            <h2 className="text-xl font-bold text-slate-900">My Wallet</h2>
+            <Link to="/wallet" className="text-sm font-bold text-emerald-600 flex items-center gap-1">
+              Dashboard <ArrowRight size={16} />
+            </Link>
           </div>
           
-          <div className="bg-primary-600 rounded-3xl p-6 text-white relative overflow-hidden">
+          {/* Wallet Balance Card */}
+          <div className="bg-emerald-600 rounded-[32px] p-6 text-white relative overflow-hidden shadow-2xl shadow-emerald-100">
              <div className="relative z-10">
-                <h3 className="text-lg font-bold mb-2">Exclusive Scheme</h3>
-                <p className="text-sm text-primary-100 mb-4">Stock up on essentials and save up to 30% this week.</p>
-                <Link to="/products" className="bg-white text-primary-600 px-4 py-2 rounded-xl text-xs font-bold inline-block">Browse Now</Link>
+                <div className="flex justify-between items-center mb-4">
+                   <p className="text-emerald-100 font-bold uppercase text-[10px] tracking-widest">Available Balance</p>
+                   <Wallet className="text-emerald-200 opacity-50" size={20} />
+                </div>
+                <h3 className="text-4xl font-black tracking-tighter flex items-center gap-1">
+                   <IndianRupee size={32} strokeWidth={3} />
+                   {wallet?.balance || 0}
+                </h3>
+                
+                <div className="mt-6 flex gap-2">
+                   <Link to="/wallet" className="flex-1 bg-white text-emerald-600 px-4 py-3 text-center rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-50 transition-colors">
+                      Withdraw
+                   </Link>
+                   <Link to="/wallet" className="flex-1 bg-emerald-700 text-white px-4 py-3 text-center rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-800 transition-colors border border-emerald-500">
+                      Redeem
+                   </Link>
+                </div>
              </div>
-             <ShieldCheck className="absolute top-1/2 right-0 translate-x-1/4 -translate-y-1/2 text-white/10" size={150} />
+             <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500 rounded-full -mr-16 -mt-16 blur-xl opacity-50" />
+          </div>
+
+          {/* Loyalty Points Card */}
+          <div className="bg-white rounded-[24px] p-6 border border-slate-100 shadow-xl shadow-slate-200/50">
+             <div className="flex justify-between items-center mb-2">
+               <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">Loyalty Points</p>
+               <Gift className="text-amber-500" size={20} />
+             </div>
+             <h3 className="text-3xl font-black text-slate-900 tracking-tighter">
+               {wallet?.points || 0} <span className="text-sm text-slate-400 font-bold uppercase tracking-widest ml-1">Pts</span>
+             </h3>
+             <p className="text-xs font-bold text-slate-500 mt-2">Earn points on every purchase!</p>
+             <Link to="/refer" className="block mt-4 text-center py-3 bg-slate-50 text-slate-900 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-100 transition-colors">
+               Refer & Earn More
+             </Link>
           </div>
         </div>
       </div>
