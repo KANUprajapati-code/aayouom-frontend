@@ -212,7 +212,7 @@ const Schemes = () => {
          
          <div className="relative z-10 max-w-4xl mx-auto space-y-10">
             <motion.h3 variants={itemVariants} className="text-4xl lg:text-6xl font-black text-white italic tracking-tighter leading-tight">Need Institutional <br /> <span className="text-emerald-500">Bulk Pricing?</span></motion.h3>
-            <motion.p variants={itemVariants} className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">Our advanced procurement matrix works directly with large hospitals and medical institutions for specialized quote requirements.</p>
+            <motion.p variants={itemVariants} className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">Our advanced procurement matrix works directly with large hospitals and medical institutions for specialized quote requirements.</motion.p>
             <motion.button variants={itemVariants} className="bg-white text-slate-950 px-12 py-6 rounded-3xl font-black uppercase text-xs tracking-[0.2em] shadow-2xl hover:bg-emerald-50 transition-all active:scale-95">
                Contact Institutional Sales
             </motion.button>
