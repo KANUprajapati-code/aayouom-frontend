@@ -86,9 +86,9 @@ const Navbar = () => {
 
             <Link to="/cart" className="relative p-3.5 bg-primary-50 text-primary-600 rounded-2xl hover:bg-primary-600 hover:text-white transition-all shadow-lg shadow-primary-50 active:scale-95 group">
               <ShoppingCart className="w-6 h-6" strokeWidth={2} />
-              {cart.length > 0 && (
+              {cart.reduce((total, item) => total + item.quantity, 0) > 0 && (
                 <span className="absolute -top-1 -right-1 bg-secondary-500 text-white text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center border-2 border-white group-hover:scale-110 transition-transform">
-                  {cart.length}
+                  {cart.reduce((total, item) => total + item.quantity, 0)}
                 </span>
               )}
             </Link>

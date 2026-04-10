@@ -84,7 +84,11 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
             <motion.button 
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              onClick={() => onAddToCart && onAddToCart(medicine)}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if(onAddToCart) onAddToCart(medicine);
+              }}
               className="p-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl shadow-lg shadow-primary-500/20 transition-all group/btn"
             >
               <Plus size={20} className="group-hover/btn:rotate-90 transition-transform duration-300" />
