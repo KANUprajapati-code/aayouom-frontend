@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, ShoppingCart, User, Heart, Package, Phone, Mail, Menu, X, ChevronDown, Clock, ShieldCheck } from 'lucide-react';
+import { Search, ShoppingCart, User, Heart, Package, Phone, Mail, Menu, X, ChevronDown, Clock, ShieldCheck, Wallet, Gift, Tag } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 
@@ -12,8 +12,7 @@ const Navbar = () => {
     { name: 'Home', path: '/' },
     { name: 'Medicines', path: '/products?category=Medicines' },
     { name: 'Wellness', path: '/products?category=Wellness' },
-    { name: 'Devices', path: '/products?category=Devices' },
-    { name: 'Ayurveda', path: '/products?category=Ayurveda' },
+    { name: 'Offers', path: '/promotions' },
     { name: 'About Us', path: '/about' },
     { name: 'Contact', path: '/contact' }
   ];
@@ -71,14 +70,15 @@ const Navbar = () => {
           <div className="hidden md:flex items-center gap-3">
             <div className="flex items-center border-r border-slate-100 pr-4 gap-1">
               {[
-                { icon: User, label: 'Profile' },
-                { icon: Heart, label: 'Wishlist' },
-                { icon: Package, label: 'Orders' }
+                { icon: User, label: 'Profile', path: '/profile' },
+                { icon: Package, label: 'Orders', path: '/orders' },
+                { icon: Wallet, label: 'Wallet', path: '/wallet' },
+                { icon: Gift, label: 'Refer', path: '/refer' }
               ].map((item) => (
-                <button key={item.label} className="flex flex-col items-center p-2.5 rounded-xl hover:bg-slate-50 transition-all text-slate-400 hover:text-primary-600 group">
+                <Link key={item.label} to={item.path} className="flex flex-col items-center p-2.5 rounded-xl hover:bg-slate-50 transition-all text-slate-400 hover:text-primary-600 group">
                   <item.icon className="w-6 h-6 border-slate-200" strokeWidth={1.5} />
-                  <span className="text-[9px] font-black uppercase tracking-tighter mt-1 opacity-0 group-hover:opacity-100 transition-opacity">{item.label}</span>
-                </button>
+                  <span className="text-[9px] font-black uppercase tracking-tighter mt-1 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">{item.label}</span>
+                </Link>
               ))}
               <Link to="/register" className="ml-2 px-6 py-3 bg-slate-900 text-white rounded-[14px] text-[10px] font-black uppercase tracking-widest hover:bg-primary-600 transition-all shadow-xl shadow-slate-200 active:scale-95">Register</Link>
             </div>

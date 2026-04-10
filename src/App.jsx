@@ -22,6 +22,9 @@ const Schemes = lazy(() => import('./pages/Schemes'));
 const Settings = lazy(() => import('./pages/Settings'));
 const DynamicPage = lazy(() => import('./pages/DynamicPage'));
 const BulkInquiry = lazy(() => import('./pages/BulkInquiry'));
+const WalletDashboard = lazy(() => import('./pages/WalletDashboard'));
+const ReferAndEarn = lazy(() => import('./pages/ReferAndEarn'));
+const Promotions = lazy(() => import('./pages/Promotions'));
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -54,6 +57,9 @@ function App() {
                   <Route path="/login" element={<AdminLogin />} />
                   <Route path="/page/:slug" element={<DynamicPage />} />
                   <Route path="/bulk-inquiry" element={<BulkInquiry />} />
+                  <Route path="/wallet" element={<WalletDashboard />} />
+                  <Route path="/refer" element={<ReferAndEarn />} />
+                  <Route path="/promotions" element={<Promotions />} />
                 </Route>
 
                 {/* Admin Routes */}
