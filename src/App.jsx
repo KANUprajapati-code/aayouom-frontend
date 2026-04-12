@@ -1,31 +1,31 @@
-import React, { lazy, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute';
 import Layout from './components/layout/Layout';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
 
-// Lazy load pages
-const Home = lazy(() => import('./pages/Home'));
-const Products = lazy(() => import('./pages/Products'));
-const ProductDetail = lazy(() => import('./pages/ProductDetail'));
-const Cart = lazy(() => import('./pages/Cart'));
-const AdminLogin = lazy(() => import('./pages/AdminLogin'));
-const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
-const About = lazy(() => import('./pages/About'));
-const Contact = lazy(() => import('./pages/Contact'));
-const Register = lazy(() => import('./pages/Register'));
-const Dashboard = lazy(() => import('./pages/Dashboard'));
-const QuickOrder = lazy(() => import('./pages/QuickOrder'));
-const OrderHistory = lazy(() => import('./pages/OrderHistory'));
-const Schemes = lazy(() => import('./pages/Schemes'));
-const Settings = lazy(() => import('./pages/Settings'));
-const DynamicPage = lazy(() => import('./pages/DynamicPage'));
-const BulkInquiry = lazy(() => import('./pages/BulkInquiry'));
-const WalletDashboard = lazy(() => import('./pages/WalletDashboard'));
-const ReferAndEarn = lazy(() => import('./pages/ReferAndEarn'));
-const Promotions = lazy(() => import('./pages/Promotions'));
-const Profile = lazy(() => import('./pages/Profile'));
+import Home from './pages/Home';
+import Products from './pages/Products';
+import ProductDetail from './pages/ProductDetail';
+import Cart from './pages/Cart';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
+import QuickOrder from './pages/QuickOrder';
+import OrderHistory from './pages/OrderHistory';
+import Schemes from './pages/Schemes';
+import Settings from './pages/Settings';
+import DynamicPage from './pages/DynamicPage';
+import BulkInquiry from './pages/BulkInquiry';
+import WalletDashboard from './pages/WalletDashboard';
+import ReferAndEarn from './pages/ReferAndEarn';
+import Promotions from './pages/Promotions';
+import Profile from './pages/Profile';
+
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-screen">
     <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
