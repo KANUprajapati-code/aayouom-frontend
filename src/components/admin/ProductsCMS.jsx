@@ -13,6 +13,7 @@ const ProductsCMS = () => {
 
   const [formData, setFormData] = useState({
     name: '',
+    brand: '',
     price: '',
     originalPrice: '',
     category: 'Antibiotics',
@@ -65,6 +66,7 @@ const ProductsCMS = () => {
     if (mode === 'edit' && product) {
       setFormData({
         name: product.name,
+        brand: product.brand || '',
         price: product.price,
         originalPrice: product.originalPrice || '',
         category: product.category || 'Antibiotics',
@@ -79,7 +81,7 @@ const ProductsCMS = () => {
       setCurrentProductId(product._id);
     } else {
       setFormData({
-        name: '', price: '', originalPrice: '', category: 'Antibiotics', 
+        name: '', brand: '', price: '', originalPrice: '', category: 'Antibiotics', 
         image: '', images: [], description: '', stock: 0, showOnShop: true, showOnHome: false, showOnSchemes: false
       });
       setCurrentProductId(null);
@@ -331,12 +333,17 @@ const ProductsCMS = () => {
                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Medicine Nomenclature</label>
                         <input required type="text" placeholder="e.g. AUGMENTIN 625 DUO" className="w-full bg-surface-light p-5 rounded-2xl font-black text-slate-900 border border-surface-border outline-none focus:bg-white focus:border-primary-500 transition-all uppercase text-sm tracking-tight placeholder:text-slate-300" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
                      </div>
-                     <div className="grid grid-cols-1 gap-8">
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-2">
-                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Therapeutic Segment</label>
-                           <select className="w-full bg-surface-light p-5 rounded-2xl font-black text-slate-900 border border-surface-border outline-none focus:bg-white transition-all appearance-none cursor-pointer" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}>
-                             {categories.map(c => <option key={c}>{c}</option>)}
-                           </select>
+                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Manufacturing Brand</label>
+                           <input required type="text" placeholder="e.g. GSK, Cipla, Sun Pharma" className="w-full bg-surface-light p-5 rounded-2xl font-black text-slate-900 border border-surface-border outline-none focus:bg-white focus:border-primary-500 transition-all uppercase text-sm tracking-tight placeholder:text-slate-300" value={formData.brand} onChange={e => setFormData({...formData, brand: e.target.value})} />
+                        </div>
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Therapeutic Segment / Category</label>
+                           <input required type="text" list="category-options" placeholder="Select or type new category..." className="w-full bg-surface-light p-5 rounded-2xl font-black text-slate-900 border border-surface-border outline-none focus:bg-white focus:border-primary-500 transition-all text-sm tracking-tight placeholder:text-slate-300" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} />
+                           <datalist id="category-options">
+                             {categories.map(c => <option key={c} value={c} />)}
+                           </datalist>
                         </div>
                      </div>
                      <div className="space-y-2">
