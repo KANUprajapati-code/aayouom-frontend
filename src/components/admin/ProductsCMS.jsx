@@ -204,7 +204,7 @@ const ProductsCMS = () => {
               <tr key={p._id} className="hover:bg-slate-50/50 transition-all group">
                 <td className="px-10 py-6 flex items-center gap-6">
                    <div className="w-14 h-14 bg-white rounded-xl p-2 border border-slate-100 shadow-sm group-hover:scale-105 transition-transform flex items-center justify-center shrink-0">
-                      <img src={p.image} className="max-w-full max-h-full object-contain" alt="" />
+                      <img loading="lazy" src={p.image} className="max-w-full max-h-full object-contain" alt="" />
                    </div>
                    <div className="min-w-0">
                       <p className="text-slate-900 font-black uppercase text-sm italic tracking-tighter truncate">{p.name}</p>

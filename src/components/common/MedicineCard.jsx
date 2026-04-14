@@ -38,8 +38,7 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
       )}
 
       <Link to={`/product/${_id}`} className="block relative aspect-square mb-4 bg-surface-light rounded-xl overflow-hidden group-hover:scale-[1.02] transition-transform duration-300">
-        <img 
-          src={image || 'https://via.placeholder.com/200'} 
+        <img loading="lazy" src={image || 'https://via.placeholder.com/200'} 
           alt={name} 
           className="w-full h-full object-contain p-4"
           loading="lazy"

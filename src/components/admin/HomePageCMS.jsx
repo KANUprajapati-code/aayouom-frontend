@@ -132,7 +132,7 @@ const HomePageCMS = () => {
                     <div className="flex gap-4">
                        <input value={banner.imageUrl} onChange={(e) => handleBannerChange(index, 'imageUrl', e.target.value)} placeholder="https://..." className="flex-grow bg-white p-4 rounded-2xl font-bold text-slate-900 border border-surface-border outline-none focus:border-primary-500 text-sm" />
                        <div className="w-14 h-14 rounded-2xl bg-white border border-surface-border flex items-center justify-center overflow-hidden">
-                          {banner.imageUrl ? <img src={banner.imageUrl} alt="preview" className="w-full h-full object-cover" /> : <ImageIcon className="text-slate-200" />}
+                          {banner.imageUrl ? <img loading="lazy" src={banner.imageUrl} alt="preview" className="w-full h-full object-cover" /> : <ImageIcon className="text-slate-200" />}
                        </div>
                     </div>
                   </div>

@@ -85,8 +85,7 @@ Link: ${window.location.origin}/product/${medicine._id}`;
              <div className="absolute top-6 left-6">
                {medicine.scheme && <SchemeBadge scheme={medicine.scheme} />}
              </div>
-             <img 
-               src={medicine.image || 'https://via.placeholder.com/400'} 
+             <img loading="lazy" src={medicine.image || 'https://via.placeholder.com/400'} 
                alt={medicine.name} 
                className="w-full h-full object-contain" 
              />

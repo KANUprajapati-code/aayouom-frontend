@@ -10,8 +10,7 @@ const ProductCard = ({ product }) => {
     <div className="group bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-300 border border-slate-100 flex flex-col relative h-full">
       {/* Image Area */}
       <Link to={`/product/${product.id}`} className="block relative aspect-square mb-4 overflow-hidden p-4 flex items-center justify-center bg-slate-50/30 rounded-lg">
-        <img 
-          src={product.image} 
+        <img loading="lazy" src={product.image} 
           alt={product.name} 
           className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
         />

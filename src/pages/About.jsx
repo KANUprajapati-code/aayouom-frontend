@@ -46,8 +46,7 @@ const About = () => {
             <section className="relative h-[500px] flex items-center justify-center overflow-hidden bg-slate-900 rounded-b-[80px]">
                 <div className="absolute inset-0 z-0">
                     <div className="absolute inset-0 bg-primary-900/60 z-10"></div>
-                    <img 
-                      src="https://images.unsplash.com/photo-1576091160550-217359f42f8c?auto=format&fit=crop&q=80&w=2000" 
+                    <img loading="lazy" src="https://images.unsplash.com/photo-1576091160550-217359f42f8c?auto=format&fit=crop&q=80&w=2000" 
                       className="w-full h-full object-cover grayscale opacity-40" 
                       alt="Healthcare" 
                     />
@@ -109,8 +108,7 @@ const About = () => {
                     </div>
                     <div className="lg:w-1/2 relative">
                         <div className="absolute -inset-10 bg-primary-600 opacity-5 blur-[100px] rounded-full"></div>
-                        <img 
-                          src="https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&q=80&w=1000" 
+                        <img loading="lazy" src="https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&q=80&w=1000" 
                           className="relative rounded-[40px] shadow-2xl border-4 border-white" 
                           alt="Medicine" 
                         />

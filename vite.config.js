@@ -8,4 +8,22 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  build: {
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+        dead_code: true
+      }
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          ui: ['framer-motion', 'lucide-react']
+        }
+      }
+    }
+  }
 })

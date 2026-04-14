@@ -72,7 +72,7 @@ const Schemes = () => {
       {/* Advanced Hero Section */}
       <section className="relative min-h-[500px] rounded-[3rem] overflow-hidden bg-slate-900 flex items-center p-8 md:p-20 group">
         <div className="absolute inset-0 z-0">
-           <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=2000" alt="" className="w-full h-full object-cover opacity-20 transition-transform duration-1000 group-hover:scale-110" />
+           <img loading="lazy" src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=2000" alt="" className="w-full h-full object-cover opacity-20 transition-transform duration-1000 group-hover:scale-110" />
            <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/40 to-transparent"></div>
         </div>
 
@@ -96,7 +96,7 @@ const Schemes = () => {
             <div className="flex -space-x-3 items-center">
                {[1,2,3,4].map(i => (
                  <div key={i} className="w-10 h-10 rounded-full border-2 border-slate-900 bg-slate-800 overflow-hidden">
-                    <img src={`https://i.pravatar.cc/100?img=${i+10}`} alt="" />
+                    <img loading="lazy" src={`https://i.pravatar.cc/100?img=${i+10}`} alt="" />
                  </div>
                ))}
                <span className="pl-6 text-[10px] font-black text-white uppercase tracking-widest opacity-60">+1.2k Partners</span>
@@ -180,7 +180,7 @@ const Schemes = () => {
                   </div>
                   
                   <div className="relative aspect-square rounded-[32px] overflow-hidden bg-slate-50 mb-6 p-6 group-hover:bg-emerald-50 transition-all duration-700">
-                    <img src={product.imageUrl || 'https://images.unsplash.com/photo-1584308666744-24d5e4b2dcd9?w=300&q=80'} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 mix-blend-multiply" />
+                    <img loading="lazy" src={product.imageUrl || 'https://images.unsplash.com/photo-1584308666744-24d5e4b2dcd9?w=300&q=80'} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 mix-blend-multiply" />
                   </div>
                   
                   <div className="flex-grow flex flex-col justify-end space-y-4">

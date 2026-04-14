@@ -84,7 +84,7 @@ const Cart = () => {
                 <div key={item._id} className="p-4 md:p-6 grid md:grid-cols-12 gap-6 items-center group">
                   <div className="col-span-6 flex gap-4">
                     <div className="w-20 h-20 bg-surface-light rounded-xl overflow-hidden shrink-0">
-                      <img src={item.image} alt={item.name} className="w-full h-full object-contain p-2" />
+                      <img loading="lazy" src={item.image} alt={item.name} className="w-full h-full object-contain p-2" />
                     </div>
                     <div className="space-y-1">
                       <p className="text-[10px] font-bold text-primary-600 uppercase tracking-widest">{item.brand}</p>

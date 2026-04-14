@@ -114,7 +114,7 @@ const Home = () => {
              >
                 {banner.imageUrl ? (
                   <div className="absolute inset-0">
-                    <img src={banner.imageUrl} alt="" className="w-full h-full object-cover opacity-10" />
+                    <img loading="lazy" src={banner.imageUrl} alt="" className="w-full h-full object-cover opacity-10" />
                     <div className="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent"></div>
                   </div>
                 ) : (
@@ -325,7 +325,7 @@ const Home = () => {
                {/* Background Image / Placeholder */}
                <div className="absolute inset-0 z-0">
                   {cat.imageUrl ? (
-                    <img src={cat.imageUrl} alt={cat.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <img loading="lazy" src={cat.imageUrl} alt={cat.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                   ) : (
                     <div className="w-full h-full bg-primary-50 flex items-center justify-center text-primary-200">
                        <Zap size={80} />
@@ -391,7 +391,7 @@ const Home = () => {
             <motion.div variants={itemVariants} className="space-y-4">
               <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-primary-400 mx-auto border border-white/10 backdrop-blur-md overflow-hidden">
                 {cms?.trustItem1Img ? (
-                  <img src={cms.trustItem1Img} alt="" className="w-full h-full object-cover" />
+                  <img loading="lazy" src={cms.trustItem1Img} alt="" className="w-full h-full object-cover" />
                 ) : (
                   <ShieldCheck size={32} />
                 )}
@@ -402,7 +402,7 @@ const Home = () => {
             <motion.div variants={itemVariants} className="space-y-4">
               <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-primary-400 mx-auto border border-white/10 backdrop-blur-md overflow-hidden">
                 {cms?.trustItem2Img ? (
-                  <img src={cms.trustItem2Img} alt="" className="w-full h-full object-cover" />
+                  <img loading="lazy" src={cms.trustItem2Img} alt="" className="w-full h-full object-cover" />
                 ) : (
                   <Zap size={32} />
                 )}
@@ -413,7 +413,7 @@ const Home = () => {
             <motion.div variants={itemVariants} className="space-y-4">
               <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-primary-400 mx-auto border border-white/10 backdrop-blur-md overflow-hidden">
                 {cms?.trustItem3Img ? (
-                  <img src={cms.trustItem3Img} alt="" className="w-full h-full object-cover" />
+                  <img loading="lazy" src={cms.trustItem3Img} alt="" className="w-full h-full object-cover" />
                 ) : (
                   <Briefcase size={32} />
                 )}
