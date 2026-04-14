@@ -26,12 +26,16 @@ const ProductDetail = () => {
   const [medicine, setMedicine] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const [mainImage, setMainImage] = useState(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const { data } = await axios.get(`https://ayuom-backend.vercel.app/api/products/${id}`);
         setMedicine(data);
+        if (data) {
+           setMainImage(data.images?.length > 0 ? data.images[0] : (data.image || 'https://via.placeholder.com/400'));
+        }
       } catch (err) {
         console.error('Failed to fetch product details:', err);
       } finally {
@@ -79,17 +83,36 @@ Link: ${window.location.origin}/product/${medicine._id}`;
       </button>
 
       <div className="grid lg:grid-cols-2 gap-12">
-        {/* Image Section */}
-        <div className="space-y-6">
-          <div className="card !p-8 bg-white aspect-square flex items-center justify-center relative rounded-[40px] border border-surface-border shadow-soft">
-             <div className="absolute top-6 left-6">
+        {/* Image Section (Amazon Style Gallery) */}
+        <div className="space-y-4">
+          <div className="card !p-8 bg-white aspect-square flex items-center justify-center relative rounded-[40px] border border-surface-border shadow-soft group">
+             <div className="absolute top-6 left-6 z-10">
                {medicine.scheme && <SchemeBadge scheme={medicine.scheme} />}
              </div>
-             <img loading="lazy" src={medicine.image || 'https://via.placeholder.com/400'} 
+             <img loading="lazy" src={mainImage} 
                alt={medicine.name} 
-               className="w-full h-full object-contain" 
+               className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500 ease-out" 
              />
           </div>
+          
+          {/* Thumbnails Row */}
+          {medicine.images && medicine.images.length > 1 && (
+             <div className="flex items-center gap-3 overflow-x-auto pb-2 custom-scrollbar justify-center">
+                {medicine.images.map((img, idx) => (
+                  <button 
+                    key={idx} 
+                    onClick={() => setMainImage(img)}
+                    className={`shrink-0 w-20 h-20 bg-white rounded-2xl border-2 p-2 flex items-center justify-center transition-all ${
+                       mainImage === img 
+                         ? 'border-primary-500 shadow-lg shadow-primary-500/20' 
+                         : 'border-slate-100 opacity-60 hover:opacity-100 hover:border-primary-300'
+                    }`}
+                  >
+                     <img src={img} alt={`Thumbnail ${idx+1}`} className="max-w-full max-h-full object-contain mix-blend-multiply" />
+                  </button>
+                ))}
+             </div>
+          )}
         </div>
 
         {/* Content Section */}

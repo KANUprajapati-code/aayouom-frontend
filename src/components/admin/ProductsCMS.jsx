@@ -17,6 +17,7 @@ const ProductsCMS = () => {
     originalPrice: '',
     category: 'Antibiotics',
     image: '',
+    images: [],
     description: '',
     stock: 0,
     showOnShop: true,
@@ -67,7 +68,8 @@ const ProductsCMS = () => {
         price: product.price,
         originalPrice: product.originalPrice || '',
         category: product.category || 'Antibiotics',
-        image: product.image,
+        image: product.image || '',
+        images: product.images?.length > 0 ? product.images : (product.image ? [product.image] : []),
         description: product.description || '',
         stock: product.stock || 0,
         showOnShop: product.showOnShop ?? true,
@@ -78,11 +80,76 @@ const ProductsCMS = () => {
     } else {
       setFormData({
         name: '', price: '', originalPrice: '', category: 'Antibiotics', 
-        image: '', description: '', stock: 0, showOnShop: true, showOnHome: false, showOnSchemes: false
+        image: '', images: [], description: '', stock: 0, showOnShop: true, showOnHome: false, showOnSchemes: false
       });
       setCurrentProductId(null);
     }
     setShowModal(true);
+  };
+
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const handleImageUpload = (file) => {
+    if (!file) return;
+    if (formData.images.length >= 5) {
+      alert("Maximum 5 images allowed.");
+      return;
+    }
+    setUploadingImage(true);
+    
+    // We must compress the image heavily to avoid Vercel's strict 4.5MB Serverless Payload Limits!
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = async () => {
+        // Compress using Canvas
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 1200;
+        const scaleSize = MAX_WIDTH / img.width;
+        canvas.width = MAX_WIDTH;
+        canvas.height = img.height * scaleSize;
+        
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        
+        // Export heavily compressed webp (size will be < 500KB)
+        const compressedBase64 = canvas.toDataURL('image/webp', 0.8);
+        
+        try {
+          const token = localStorage.getItem('token');
+          const { data } = await axios.post('https://ayuom-backend.vercel.app/api/upload', 
+            { base64: compressedBase64 }, 
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+          
+          setFormData(prev => {
+            const newImages = [...prev.images, data.url];
+            return {
+              ...prev,
+              images: newImages,
+              image: newImages[0] || ''
+            };
+          });
+        } catch (error) {
+           console.error("Error uploading image:", error);
+           alert(error.response?.data?.message || "Failed to upload image. Vercel connection error.");
+        } finally {
+          setUploadingImage(false);
+        }
+      };
+    };
+  };
+
+  const handleRemoveImage = (indexToRemove) => {
+    setFormData(prev => {
+      const newImages = prev.images.filter((_, idx) => idx !== indexToRemove);
+      return {
+        ...prev,
+        images: newImages,
+        image: newImages[0] || ''
+      };
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -326,10 +393,45 @@ const ProductsCMS = () => {
 
                 {/* SECTION 4: Media Assets */}
                 <div>
-                   <h3 className="text-sm font-black text-blue-800 uppercase tracking-widest mb-6 flex items-center gap-2"><div className="w-1.5 h-4 bg-blue-500 rounded-full"></div> Media Assets</h3>
-                   <div className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Static Asset URI (Image URL)</label>
-                      <input required type="text" placeholder="https://..." className="w-full bg-surface-light p-5 rounded-2xl font-black text-blue-900 border border-surface-border outline-none focus:bg-blue-50 focus:border-blue-500 transition-all text-xs tracking-widest placeholder:text-slate-300" value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} />
+                   <h3 className="text-sm font-black text-blue-800 uppercase tracking-widest mb-6 flex items-center gap-2"><div className="w-1.5 h-4 bg-blue-500 rounded-full"></div> Media Assets Gallery (Max 5)</h3>
+                   <div className="space-y-4 bg-blue-50/50 p-6 rounded-[32px] border border-blue-100">
+                      
+                      {/* Image Preview Strip */}
+                      {formData.images && formData.images.length > 0 && (
+                        <div className="flex flex-wrap gap-4 mb-4">
+                          {formData.images.map((imgUrl, idx) => (
+                            <div key={idx} className="relative w-24 h-24 bg-white rounded-2xl border border-blue-200 overflow-hidden shadow-sm group">
+                              <img src={imgUrl} className="w-full h-full object-contain p-2" alt={`Slot ${idx+1}`} />
+                              <button type="button" onClick={() => handleRemoveImage(idx)} className="absolute top-1 right-1 w-6 h-6 bg-white/90 backdrop-blur text-rose-500 rounded-full border border-rose-100 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-rose-500 hover:text-white">
+                                <X size={14} />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {(!formData.images || formData.images.length < 5) && (
+                        <div>
+                          <label className={`flex flex-col items-center justify-center w-full h-24 border-2 border-dashed ${uploadingImage ? 'border-primary-400 bg-primary-50' : 'border-blue-200 bg-white hover:bg-blue-50 hover:border-blue-400'} rounded-2xl cursor-pointer transition-all group`}>
+                             <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                               {uploadingImage ? (
+                                 <div className="text-primary-600 font-bold text-[10px] uppercase tracking-widest animate-pulse flex flex-col items-center gap-2">
+                                   <div className="w-4 h-4 border-2 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
+                                   Compressing & Uploading...
+                                 </div>
+                               ) : (
+                                 <>
+                                   <Plus className="w-6 h-6 text-blue-400 group-hover:text-blue-500 mb-2 transition-colors" />
+                                   <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Select Image File</p>
+                                 </>
+                               )}
+                             </div>
+                             <input type="file" className="hidden" accept="image/*" disabled={uploadingImage} onChange={(e) => handleImageUpload(e.target.files[0])} />
+                          </label>
+                        </div>
+                      )}
+                      
+                      <p className="text-[9px] font-bold text-blue-400 uppercase tracking-widest">The first image will act as the primary Master UI thumbnail.</p>
                    </div>
                 </div>
 
