@@ -19,8 +19,9 @@ export const CartProvider = ({ children }) => {
       const totalRequested = currentQty + quantity;
 
       // Validate against stock
-      if (totalRequested > (product.stock || 0)) {
-        alert(`Cannot add more. Only ${product.stock} units available in stock.`);
+      const availableStock = product.stock !== undefined ? product.stock : Infinity;
+      if (totalRequested > availableStock) {
+        alert(`Cannot add more. Only ${availableStock} units available in stock.`);
         return prev;
       }
 

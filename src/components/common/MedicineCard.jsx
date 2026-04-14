@@ -9,12 +9,12 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
     brand,
     mrp,
     price,
-    discount,
     scheme,
     image,
-    stock = true,
+    stock,
     isBestDeal = false
   } = medicine;
+  const availableStock = stock !== undefined ? stock : Infinity;
 
   const handleWhatsApp = (e) => {
     e.preventDefault();
@@ -108,6 +108,16 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
                   e.preventDefault();
                   e.stopPropagation();
                   if(onAddToCart) onAddToCart(medicine);
+                  
+                  // Visual Feedback
+                  const btn = e.currentTarget;
+                  const originalHtml = btn.innerHTML;
+                  btn.innerHTML = '<span class="text-[11px] font-black uppercase tracking-widest text-emerald-400">Added to Cart!</span>';
+                  btn.classList.add('bg-black');
+                  setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                    btn.classList.remove('bg-black');
+                  }, 1500);
                 }}
                 className="w-full py-3.5 bg-slate-900 hover:bg-black text-white rounded-xl shadow-xl shadow-slate-900/20 transition-all flex items-center justify-center gap-2 group/add"
               >
@@ -128,7 +138,7 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
       </div>
       
       {/* Out of Stock Overlay */}
-      {stock <= 0 && (
+      {availableStock <= 0 && (
         <div className="absolute inset-0 bg-white/70 backdrop-blur-sm rounded-3xl flex items-center justify-center z-20">
           <div className="bg-slate-900 text-white text-[11px] font-black px-6 py-3 rounded-2xl uppercase tracking-[0.2em] shadow-2xl flex flex-col items-center gap-2">
             <span className="w-2 h-2 bg-rose-500 rounded-full animate-ping"></span>
