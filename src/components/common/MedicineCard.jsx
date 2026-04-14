@@ -109,7 +109,55 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
                   e.stopPropagation();
                   if(onAddToCart) onAddToCart(medicine);
                   
-                  // Visual Feedback
+                  // Visual Fly to Cart Animation
+                  const cartIcon = document.getElementById('navbar-cart-icon');
+                  if (cartIcon) {
+                    const startX = e.clientX;
+                    const startY = e.clientY;
+                    const cartRect = cartIcon.getBoundingClientRect();
+                    const endX = cartRect.left + cartRect.width / 2;
+                    const endY = cartRect.top + cartRect.height / 2;
+
+                    const flyingObj = document.createElement('div');
+                    flyingObj.style.position = 'fixed';
+                    flyingObj.style.left = `${startX - 15}px`;
+                    flyingObj.style.top = `${startY - 15}px`;
+                    flyingObj.style.width = '30px';
+                    flyingObj.style.height = '30px';
+                    flyingObj.style.backgroundImage = `url(${image || 'https://via.placeholder.com/30'})`;
+                    flyingObj.style.backgroundSize = 'contain';
+                    flyingObj.style.backgroundRepeat = 'no-repeat';
+                    flyingObj.style.backgroundPosition = 'center';
+                    flyingObj.style.backgroundColor = 'white';
+                    flyingObj.style.borderRadius = '50%';
+                    flyingObj.style.boxShadow = '0 10px 25px -5px rgba(16, 185, 129, 0.5)';
+                    flyingObj.style.border = '2px solid #10b981';
+                    flyingObj.style.zIndex = '9999';
+                    flyingObj.style.pointerEvents = 'none';
+
+                    document.body.appendChild(flyingObj);
+
+                    const animation = flyingObj.animate([
+                      { transform: 'scale(0.8)', opacity: 1, left: `${startX - 15}px`, top: `${startY - 15}px` },
+                      { transform: 'scale(1.2)', opacity: 0.9, left: `${startX - 15 + (endX - startX) * 0.4}px`, top: `${Math.min(startY, endY) - 100}px` },
+                      { transform: 'scale(0.2)', opacity: 0, left: `${endX - 15}px`, top: `${endY - 15}px` }
+                    ], {
+                      duration: 800,
+                      easing: 'cubic-bezier(0.25, 1, 0.5, 1)'
+                    });
+
+                    animation.onfinish = () => {
+                      flyingObj.remove();
+                      cartIcon.animate([
+                        { transform: 'scale(1)' },
+                        { transform: 'scale(1.3) rotate(-15deg)' },
+                        { transform: 'scale(1.1) rotate(15deg)' },
+                        { transform: 'scale(1)' }
+                      ], { duration: 400 });
+                    };
+                  }
+                  
+                  // Text Feedback
                   const btn = e.currentTarget;
                   const originalHtml = btn.innerHTML;
                   btn.innerHTML = '<span class="text-[11px] font-black uppercase tracking-widest text-emerald-400">Added to Cart!</span>';
@@ -119,7 +167,7 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
                     btn.classList.remove('bg-black');
                   }, 1500);
                 }}
-                className="w-full py-3.5 bg-slate-900 hover:bg-black text-white rounded-xl shadow-xl shadow-slate-900/20 transition-all flex items-center justify-center gap-2 group/add"
+                className="w-full py-3.5 bg-slate-900 hover:bg-black text-white rounded-xl shadow-xl shadow-slate-900/20 transition-all flex items-center justify-center gap-2 group/add relative overflow-hidden"
               >
                 <ShoppingCart size={18} className="group-hover/add:scale-110 group-hover/add:-translate-y-0.5 transition-transform" />
                 <span className="text-[11px] font-black uppercase tracking-widest">Add to Procurement</span>
