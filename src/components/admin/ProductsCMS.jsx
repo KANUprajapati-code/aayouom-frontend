@@ -157,6 +157,11 @@ const ProductsCMS = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      if (!categories.includes(formData.category)) {
+          await axios.post('https://ayuom-backend.vercel.app/api/categories', { name: formData.category, slug: formData.category.toLowerCase().replace(/\s+/g, '-') }, getAuthConfig()).catch(err => console.log(err));
+          setCategories(prev => [...prev, formData.category]);
+      }
+
       if (modalMode === 'add') {
         const res = await axios.post('https://ayuom-backend.vercel.app/api/products', formData, getAuthConfig());
         setProducts([res.data, ...products]);
@@ -335,15 +340,15 @@ const ProductsCMS = () => {
                      </div>
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-2">
-                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Manufacturing Brand</label>
-                           <input required type="text" placeholder="e.g. GSK, Cipla, Sun Pharma" className="w-full bg-surface-light p-5 rounded-2xl font-black text-slate-900 border border-surface-border outline-none focus:bg-white focus:border-primary-500 transition-all uppercase text-sm tracking-tight placeholder:text-slate-300" value={formData.brand} onChange={e => setFormData({...formData, brand: e.target.value})} />
+                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Manufacturing Brand (Required)</label>
+                           <input required type="text" placeholder="e.g. GSK, Cipla, Generic..." className="w-full bg-surface-light p-5 rounded-2xl font-black text-slate-900 border border-surface-border outline-none focus:bg-white focus:border-primary-500 transition-all text-sm tracking-tight placeholder:text-slate-300" value={formData.brand} onChange={e => setFormData({...formData, brand: e.target.value})} />
                         </div>
                         <div className="space-y-2">
                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Therapeutic Segment / Category</label>
-                           <input required type="text" list="category-options" placeholder="Select or type new category..." className="w-full bg-surface-light p-5 rounded-2xl font-black text-slate-900 border border-surface-border outline-none focus:bg-white focus:border-primary-500 transition-all text-sm tracking-tight placeholder:text-slate-300" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} />
-                           <datalist id="category-options">
-                             {categories.map(c => <option key={c} value={c} />)}
-                           </datalist>
+                           <select required className="w-full bg-surface-light p-5 rounded-2xl font-black text-slate-900 border border-surface-border outline-none focus:bg-white transition-all appearance-none cursor-pointer" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}>
+                             {categories.length === 0 && <option value="General">General</option>}
+                             {categories.map(c => <option key={c} value={c}>{c}</option>)}
+                           </select>
                         </div>
                      </div>
                      <div className="space-y-2">
