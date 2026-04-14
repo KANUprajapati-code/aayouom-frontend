@@ -7,10 +7,10 @@ const Navbar = ({ onMenuClick }) => {
   const { user, isAuthenticated } = useAuth();
 
   return (
-    <nav className="sticky top-0 z-40 bg-white border-b border-surface-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
+    <nav className="sticky top-0 z-40 bg-white/90 backdrop-blur-lg border-b border-surface-border shadow-sm transition-all">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div className="flex justify-between items-center h-16 sm:h-auto sm:py-3 lg:h-20 gap-4">
+          <div className="flex items-center shrink-0">
             <button
               onClick={onMenuClick}
               className="p-2 rounded-md lg:hidden text-text-muted hover:text-primary-600 hover:bg-primary-50"
@@ -27,41 +27,41 @@ const Navbar = ({ onMenuClick }) => {
             </Link>
           </div>
 
-          <div className="hidden md:flex flex-1 max-w-lg items-center px-8">
-            <div className="relative w-full">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+          <div className="hidden md:flex flex-1 max-w-2xl items-center justify-center px-4 lg:px-8 mx-auto">
+            <div className="relative w-full shadow-soft rounded-xl bg-white">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
                 <Search size={18} />
               </div>
               <input
                 type="text"
                 placeholder="Search medicines, brands, or schemes..."
-                className="block w-full pl-10 pr-3 py-2 border border-surface-border rounded-xl bg-surface-light focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-sm"
+                className="block w-full pl-11 pr-4 py-2.5 border border-surface-border rounded-xl bg-surface-light hover:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-sm font-medium"
               />
             </div>
           </div>
 
-          <div className="flex items-center gap-2 md:gap-4">
-            <button className="p-2 text-text-muted hover:text-primary-600 hover:bg-primary-50 rounded-lg relative">
+          <div className="flex items-center gap-1 sm:gap-3 shrink-0">
+            <button className="p-2 sm:p-2.5 text-text-muted hover:text-primary-600 hover:bg-primary-50 rounded-xl relative transition-colors shadow-sm bg-white border border-transparent hover:border-primary-100">
               <ShoppingCart size={22} />
-              <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-primary-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 w-5 h-5 bg-secondary-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm border border-white">
                 0
               </span>
             </button>
-            <button className="p-2 text-text-muted hover:text-primary-600 hover:bg-primary-50 rounded-lg">
+            <button className="hidden sm:flex p-2.5 text-text-muted hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-colors shadow-sm bg-white border border-transparent hover:border-primary-100">
               <Bell size={22} />
             </button>
-            <div className="h-8 w-[1px] bg-surface-border mx-1"></div>
+            <div className="hidden sm:block h-8 w-[1px] bg-surface-border mx-2"></div>
             
             {isAuthenticated ? (
               <Link 
                 to={user?.role === 'admin' ? '/admin/dashboard' : '/dashboard'}
-                className="flex items-center gap-2 p-1 pl-2 hover:bg-surface-light rounded-lg transition-all border border-transparent hover:border-surface-border"
+                className="flex items-center gap-3 p-1.5 sm:pl-3 hover:bg-surface-light rounded-xl transition-all border border-transparent hover:border-surface-border shadow-sm hover:shadow-md bg-white group"
               >
                 <div className="hidden text-right lg:block">
-                  <p className="text-xs font-semibold text-slate-900 leading-none">{user?.name || 'User'}</p>
-                  <p className="text-[10px] text-text-muted mt-1 uppercase tracking-wider">{user?.role || 'Member'}</p>
+                  <p className="text-sm font-bold text-slate-900 leading-none group-hover:text-primary-600 transition-colors">{user?.name || 'User'}</p>
+                  <p className="text-[10px] font-black text-text-silver mt-1 uppercase tracking-widest">{user?.role || 'Member'}</p>
                 </div>
-                <div className="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center text-slate-600 overflow-hidden">
+                <div className="w-9 h-9 bg-primary-50 border border-primary-100 rounded-full flex items-center justify-center text-primary-600 overflow-hidden shadow-inner shrink-0">
                   <User size={20} />
                 </div>
               </Link>

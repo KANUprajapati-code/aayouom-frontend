@@ -48,13 +48,13 @@ const Sidebar = ({ isOpen, onClose }) => {
       to={item.path}
       onClick={() => onClose && onClose()}
       className={({ isActive }) => `
-        flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
+        flex items-center gap-3.5 px-4 py-3.5 rounded-xl transition-all duration-300 group
         ${isActive 
-          ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/20 font-medium' 
-          : 'text-text-muted hover:bg-primary-50 hover:text-primary-600'}
+          ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/30 font-bold scale-[1.02]' 
+          : 'text-slate-500 hover:bg-surface-light hover:text-primary-600 font-medium'}
       `}
     >
-      <item.icon size={20} />
+      <item.icon size={22} className={`transition-transform duration-300 group-hover:scale-110`} />
       <span className="text-sm">{item.label}</span>
     </NavLink>
   );
@@ -75,17 +75,17 @@ const Sidebar = ({ isOpen, onClose }) => {
       `}>
         <div className="flex flex-col h-full p-4 overflow-y-auto">
 
-          <div className="space-y-1 shrink-0">
-            <p className="px-4 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-              Gernal
+          <div className="space-y-1.5 shrink-0 px-2 lg:px-4">
+            <p className="px-4 py-3 text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">
+              General
             </p>
             {filteredMenuItems.map((item) => (
               <NavItem key={item.path} item={item} />
             ))}
           </div>
 
-          <div className="mt-8 space-y-1 shrink-0">
-            <p className="px-4 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+          <div className="mt-8 space-y-1.5 shrink-0 px-2 lg:px-4">
+            <p className="px-4 py-3 text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">
               Account
             </p>
             {filteredSecondaryItems.map((item) => (
@@ -94,24 +94,26 @@ const Sidebar = ({ isOpen, onClose }) => {
           </div>
 
           {isAuthenticated && (
-            <div className="mt-8 pt-4 border-t border-surface-border shrink-0">
-              <div className="p-4 bg-primary-50 rounded-2xl mb-4 border border-primary-100">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 rounded-lg bg-primary-100 flex items-center justify-center text-primary-600">
-                    <TrendingDown size={16} />
+            <div className="mt-auto pt-6 px-4 border-t border-surface-border shrink-0">
+              <div className="p-5 bg-gradient-to-br from-primary-50 to-primary-100/50 rounded-2xl mb-4 border border-primary-100/50 shadow-inner group">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-white border border-primary-100 flex items-center justify-center text-primary-600 shadow-sm group-hover:scale-110 transition-transform">
+                    <TrendingDown size={20} />
                   </div>
-                  <span className="text-xs font-bold text-primary-700">Total Savings</span>
+                  <span className="text-xs font-black text-primary-700 uppercase tracking-widest">Total Savings</span>
                 </div>
-                <p className="text-lg font-bold text-slate-900">₹12,450.00</p>
-                <p className="text-[10px] text-primary-600 font-medium mt-1">Updated today</p>
+                <p className="text-2xl font-black text-slate-900 tracking-tight">₹12,450.00</p>
+                <p className="text-[11px] text-primary-600 font-bold mt-2 flex items-center gap-1 opacity-80">
+                  <Zap size={12} /> Updated today
+                </p>
               </div>
 
               <button 
                 onClick={handleLogout}
-                className="flex items-center gap-3 px-4 py-3 w-full text-text-muted hover:bg-red-50 hover:text-red-600 rounded-xl transition-all duration-200"
+                className="flex items-center gap-3.5 px-4 py-3.5 w-full text-slate-500 hover:bg-red-50 hover:text-red-600 rounded-xl transition-all duration-300 font-medium group"
               >
-                <LogOut size={20} />
-                <span className="text-sm font-medium">Logout</span>
+                <LogOut size={22} className="group-hover:-translate-x-1 transition-transform" />
+                <span className="text-sm">Logout</span>
               </button>
             </div>
           )}

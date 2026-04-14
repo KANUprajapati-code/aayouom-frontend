@@ -99,10 +99,10 @@ const Home = () => {
   }
 
   return (
-    <div className="space-y-16 pb-20">
+    <div className="space-y-16 lg:space-y-24 pb-20 lg:pb-28">
       {/* Hero Slider Section */}
-      <section className="relative overflow-hidden bg-white rounded-[40px] border border-surface-border shadow-soft">
-        <div className="relative min-h-[600px] lg:min-h-[700px] flex items-center p-8 lg:p-20">
+      <section className="relative overflow-hidden bg-white rounded-3xl lg:rounded-[40px] border border-surface-border shadow-soft">
+        <div className="relative min-h-[500px] md:min-h-[600px] lg:min-h-[700px] flex flex-col justify-center p-6 sm:p-10 lg:p-20">
           {/* Slider Backgrounds */}
           {activeBanners.map((banner, idx) => (
              <motion.div
@@ -152,17 +152,17 @@ const Home = () => {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.4, duration: 0.8 }}
-                    className="text-6xl lg:text-8xl font-black text-slate-900 leading-[0.95] tracking-tighter"
+                    className="text-4xl sm:text-5xl lg:text-7xl xl:text-8xl font-black text-slate-900 leading-[1.05] tracking-tight"
                   >
                     {banner.title1} <br />
-                    <span className="text-primary-600 italic">{banner.title2}</span>
+                    <span className="text-primary-600 italic block mt-2">{banner.title2}</span>
                   </motion.h1>
                   
                   <motion.p 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5 }}
-                    className="text-xl text-text-muted max-w-lg leading-relaxed font-medium"
+                    className="text-lg sm:text-xl text-slate-500 max-w-lg leading-relaxed font-medium"
                   >
                     {banner.description}
                   </motion.p>
@@ -171,13 +171,13 @@ const Home = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6 }}
-                    className="flex flex-wrap gap-6 pt-4"
+                    className="flex flex-col sm:flex-row flex-wrap gap-4 pt-4"
                   >
-                    <Link to={banner.btn1Link || "/products"} className="btn-primary h-16 px-12 text-lg shadow-2xl shadow-primary-600/30 group">
+                    <Link to={banner.btn1Link || "/products"} className="btn-primary h-14 sm:h-16 px-8 sm:px-12 text-base sm:text-lg shadow-xl shadow-primary-600/20 group w-full sm:w-auto">
                       {banner.btn1Text || "Start Ordering"}
-                      <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform" />
+                      <ArrowRight size={20} className="group-hover:translate-x-1.5 transition-transform" />
                     </Link>
-                    <Link to={banner.btn2Link || "/quick-order"} className="btn-outline h-16 px-12 text-lg hover:bg-slate-50">
+                    <Link to={banner.btn2Link || "/quick-order"} className="btn-outline h-14 sm:h-16 px-8 sm:px-12 text-base sm:text-lg hover:bg-slate-50 w-full sm:w-auto">
                       {banner.btn2Text || "Quick Order"}
                     </Link>
                   </motion.div>
@@ -301,8 +301,8 @@ const Home = () => {
         >
           <div className="space-y-4">
              <div className="px-4 py-1.5 bg-secondary-50 text-secondary-700 rounded-full text-[10px] font-black uppercase tracking-widest border border-secondary-100 w-fit">Clinical Segments</div>
-             <h2 className="text-4xl lg:text-5xl font-black text-slate-900 leading-none">{cms.categoryTitle || "Explore Therapeutic Matrix"}</h2>
-             <p className="text-text-muted text-lg max-w-xl">{cms.categorySubtitle || "Browse our specialized medicinal segments verified for quality and supply consistency."}</p>
+             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight">{cms.categoryTitle || "Explore Therapeutic Matrix"}</h2>
+             <p className="text-slate-500 text-base sm:text-lg max-w-xl">{cms.categorySubtitle || "Browse our specialized medicinal segments verified for quality and supply consistency."}</p>
           </div>
           <Link to="/products" className="group flex items-center gap-3 text-sm font-black text-primary-600 uppercase tracking-widest">
              See Full Catalog <div className="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center group-hover:bg-primary-600 group-hover:text-white transition-all"><ArrowRight size={18} /></div>
@@ -362,7 +362,7 @@ const Home = () => {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 1 }}
-        className="bg-slate-900 rounded-[48px] p-12 lg:p-24 text-center text-white relative overflow-hidden"
+        className="bg-slate-900 rounded-3xl lg:rounded-[48px] p-8 sm:p-12 lg:p-24 text-center text-white relative overflow-hidden"
       >
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary-600 opacity-10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-secondary-500 opacity-5 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2"></div>
