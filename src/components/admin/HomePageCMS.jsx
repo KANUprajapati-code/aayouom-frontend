@@ -57,6 +57,20 @@ const HomePageCMS = () => {
     setFormData((prev) => ({ ...prev, heroBanners: updatedBanners }));
   };
 
+  const handleImageUpload = async (index, file) => {
+    if (!file) return;
+    try {
+      const uploadData = new FormData();
+      uploadData.append('image', file);
+      
+      const { data } = await axios.post('https://ayuom-backend.vercel.app/api/upload', uploadData);
+      handleBannerChange(index, 'imageUrl', data.url);
+    } catch (error) {
+       console.error("Error uploading image:", error);
+       alert("Failed to upload image to Database.");
+    }
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
     setSaving(true);
@@ -115,9 +129,15 @@ const HomePageCMS = () => {
                   {/* Image URL with Preview */}
                   <div className="space-y-2 col-span-1 md:col-span-2">
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Promotional Image URL</label>
-                    <div className="flex gap-4">
-                       <input value={banner.imageUrl} onChange={(e) => handleBannerChange(index, 'imageUrl', e.target.value)} placeholder="https://..." className="flex-grow bg-white p-4 rounded-2xl font-bold text-slate-900 border border-surface-border outline-none focus:border-primary-500 text-sm" />
-                       <div className="w-14 h-14 rounded-2xl bg-white border border-surface-border flex items-center justify-center overflow-hidden shrink-0">
+                    <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
+                       <input value={banner.imageUrl} onChange={(e) => handleBannerChange(index, 'imageUrl', e.target.value)} placeholder="https://... OR Upload File ->" className="flex-grow bg-white p-4 rounded-2xl font-bold text-slate-900 border border-surface-border outline-none focus:border-primary-500 text-sm" />
+                       
+                       <label className="cursor-pointer px-6 py-4 bg-primary-50 text-primary-600 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-primary-100 transition-all flex items-center justify-center shrink-0 border border-primary-100">
+                         <input type="file" accept="image/*" className="hidden" onChange={(e) => { e.target.files[0] && handleImageUpload(index, e.target.files[0]) }} />
+                         Select File
+                       </label>
+
+                       <div className="w-14 h-14 rounded-2xl bg-white border border-surface-border flex items-center justify-center overflow-hidden shrink-0 hidden sm:flex">
                           {banner.imageUrl ? <img loading="lazy" src={banner.imageUrl} alt="preview" className="w-full h-full object-cover" /> : <ImageIcon className="text-slate-200" />}
                        </div>
                     </div>
