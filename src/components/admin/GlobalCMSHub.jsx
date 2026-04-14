@@ -48,27 +48,41 @@ const GlobalCMSHub = () => {
   const handleImageUpload = (index, file) => {
     if (!file) return;
 
-    // Use FileReader to convert image to Base64 to bypass CORS/Vercel boundaries
+    // We must compress the image heavily to avoid Vercel's strict 4.5MB Serverless Payload Limits!
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = async () => {
-      try {
-        const base64Image = reader.result;
-        const token = localStorage.getItem('token');
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = async () => {
+        // Compress using Canvas
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 1200;
+        const scaleSize = MAX_WIDTH / img.width;
+        canvas.width = MAX_WIDTH;
+        canvas.height = img.height * scaleSize;
         
-        // Post standard JSON instead of FormData
-        const { data } = await axios.post('https://ayuom-backend.vercel.app/api/upload', 
-          { base64: base64Image }, 
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         
-        const updated = [...formData.heroBanners];
-        updated[index].imageUrl = data.url;
-        setFormData(prev => ({ ...prev, heroBanners: updated }));
-      } catch (error) {
-         console.error("Error uploading image:", error);
-         alert(error.response?.data?.message || "Failed to upload image. File may be too large.");
-      }
+        // Export heavily compressed webp (size will be < 500KB)
+        const compressedBase64 = canvas.toDataURL('image/webp', 0.8);
+        
+        try {
+          const token = localStorage.getItem('token');
+          const { data } = await axios.post('https://ayuom-backend.vercel.app/api/upload', 
+            { base64: compressedBase64 }, 
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+          
+          const updated = [...formData.heroBanners];
+          updated[index].imageUrl = data.url;
+          setFormData(prev => ({ ...prev, heroBanners: updated }));
+        } catch (error) {
+           console.error("Error uploading image:", error);
+           alert(error.response?.data?.message || "Failed to upload image. Vercel connection error.");
+        }
+      };
     };
   };
 
