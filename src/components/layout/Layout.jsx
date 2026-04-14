@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
+import CartSlider from '../common/CartSlider';
 import { useAuth } from '../../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -12,6 +13,7 @@ const Layout = () => {
 
   return (
     <div className="min-h-screen bg-surface-light flex flex-col font-sans text-text-main">
+      <CartSlider />
       <Navbar onMenuClick={() => setIsSidebarOpen(true)} />
       
       <div className="flex flex-1 max-w-[1600px] mx-auto w-full relative">
