@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Plus, Minus, Info, TrendingUp } from 'lucide-react';
-import SchemeBadge from './SchemeBadge';
+import { ShoppingCart, MessageCircle, Info, TrendingUp, Tag, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const MedicineCard = ({ medicine, onAddToCart }) => {
@@ -17,6 +16,13 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
     isBestDeal = false
   } = medicine;
 
+  const handleWhatsApp = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const message = `Hello Wedome! I'm interested in buying bulk quantities of: *${name}* (Brand: ${brand}). Could you share the best negotiated price and availability?`;
+    window.open(`https://wa.me/919999988888?text=${encodeURIComponent(message)}`, '_blank');
+  };
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
@@ -24,80 +30,110 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
       whileHover={{ y: -5 }}
-      className={`group relative bg-white rounded-2xl border border-surface-border p-4 transition-all duration-300 hover:shadow-medium hover:border-primary-200 ${isBestDeal ? 'ring-1 ring-primary-500/20' : ''}`}
+      className={`group flex flex-col relative bg-white rounded-3xl border border-slate-100 p-5 transition-all duration-500 hover:shadow-2xl hover:shadow-primary-600/10 hover:border-primary-200 h-full overflow-hidden ${isBestDeal ? 'ring-2 ring-primary-500 ring-offset-2' : ''}`}
     >
-      {isBestDeal && (
-        <motion.div 
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="absolute -top-3 left-4 bg-primary-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1 z-10"
-        >
-          <TrendingUp size={12} />
-          BEST DEAL
-        </motion.div>
-      )}
+      {/* Top Floating Badges */}
+      <div className="absolute top-4 left-4 z-10 flex flex-col gap-2 pointer-events-none">
+        {isBestDeal && (
+          <motion.div 
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-rose-500 text-white text-[9px] font-black px-3 py-1.5 rounded-xl shadow-lg shadow-rose-500/30 flex items-center gap-1.5 uppercase tracking-widest backdrop-blur-md"
+          >
+            <TrendingUp size={12} className="animate-pulse" />
+            Super Deal
+          </motion.div>
+        )}
+        
+        {scheme && (
+          <div className="bg-emerald-500 text-white text-[9px] font-black px-3 py-1.5 rounded-xl shadow-lg shadow-emerald-500/30 flex items-center gap-1.5 uppercase tracking-widest backdrop-blur-md border border-emerald-400">
+            <Tag size={12} />
+            {scheme}
+          </div>
+        )}
+      </div>
 
-      <Link to={`/product/${_id}`} className="block relative aspect-square mb-4 bg-surface-light rounded-xl overflow-hidden group-hover:scale-[1.02] transition-transform duration-300">
+      {/* Image Block */}
+      <Link to={`/product/${_id}`} className="block relative h-48 mb-6 bg-slate-50/50 rounded-2xl overflow-hidden group-hover:bg-primary-50/30 transition-colors duration-500 flex items-center justify-center p-6 border border-slate-50">
         <img loading="lazy" src={image || 'https://via.placeholder.com/200'} 
           alt={name} 
-          className="w-full h-full object-contain p-4"
+          className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-700 ease-out"
         />
-        <div className="absolute top-2 right-2 p-1.5 bg-white/80 backdrop-blur-md rounded-lg text-text-muted hover:text-primary-600 border border-surface-border opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <div className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-md rounded-xl text-slate-400 hover:text-primary-600 border border-slate-100 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-sm">
           <Info size={16} />
         </div>
       </Link>
 
-      <div className="space-y-2">
-        <div>
-          <p className="text-[10px] font-bold text-primary-600 uppercase tracking-widest leading-none mb-1">
-            {brand}
+      {/* Details Area */}
+      <div className="flex flex-col flex-grow">
+        <div className="flex justify-between items-start mb-2 gap-2">
+          <p className="text-[10px] font-black text-primary-600 uppercase tracking-widest leading-none bg-primary-50 px-2.5 py-1.5 rounded-lg border border-primary-100/50">
+            {brand || "Generic"}
           </p>
-          <Link to={`/product/${_id}`}>
-            <h3 className="text-sm font-bold text-slate-800 line-clamp-1 group-hover:text-primary-600 transition-colors">
-              {name}
-            </h3>
-          </Link>
+          <div className="flex items-center gap-1 text-slate-400">
+             <ShieldCheck size={14} className="text-emerald-500" />
+             <span className="text-[9px] font-black uppercase tracking-widest">Verified</span>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          {scheme && <SchemeBadge scheme={scheme} />}
-          {discount && <span className="text-[10px] font-bold text-secondary-600 bg-secondary-50 px-1.5 py-0.5 rounded">{discount}% OFF</span>}
-          {stock > 0 && stock < 15 && (
-            <span className="text-[10px] font-bold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded animate-pulse">
-              ONLY {stock} LEFT
-            </span>
-          )}
-        </div>
-
-        <div className="pt-2 border-t border-slate-50">
-          <div className="flex items-end justify-between">
-            <div>
-              <p className="text-[10px] text-text-muted line-through leading-none mb-1">MRP ₹{mrp}</p>
-              <div className="flex items-baseline gap-1">
-                <span className="text-lg font-bold text-slate-900">₹{price}</span>
-                <span className="text-[10px] text-text-muted font-medium">/ unit</span>
+        <Link to={`/product/${_id}`} className="block mb-4">
+          <h3 className="text-lg font-black text-slate-800 line-clamp-2 group-hover:text-primary-600 transition-colors tracking-tight leading-tight">
+            {name}
+          </h3>
+        </Link>
+        
+        <div className="mt-auto pt-4 border-t border-slate-100 border-dashed">
+            {/* Pricing Matrix */}
+            <div className="flex items-end justify-between mb-6">
+              <div>
+                {mrp && (
+                  <p className="text-[11px] text-slate-400 font-bold line-through leading-none mb-1.5 flex items-center gap-2">
+                    MRP ₹{mrp}
+                    {discount && <span className="text-rose-500 bg-rose-50 px-1.5 py-0.5 rounded text-[9px] uppercase tracking-wider not-italic no-underline">Save {discount}%</span>}
+                  </p>
+                )}
+                <div className="flex items-baseline gap-1">
+                  <span className="text-[11px] font-bold text-slate-400">₹</span>
+                  <span className="text-3xl font-black text-slate-900 tracking-tighter">{price}</span>
+                  <span className="text-[10px] uppercase font-black text-slate-400 tracking-widest ml-1">/ Unit</span>
+                </div>
               </div>
             </div>
-            
-            <motion.button 
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                if(onAddToCart) onAddToCart(medicine);
-              }}
-              className="p-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl shadow-lg shadow-primary-500/20 transition-all group/btn"
-            >
-              <Plus size={20} className="group-hover/btn:rotate-90 transition-transform duration-300" />
-            </motion.button>
-          </div>
+
+            {/* Premium Action Buttons */}
+            <div className="flex flex-col gap-3">
+              <motion.button 
+                whileTap={{ scale: 0.98 }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if(onAddToCart) onAddToCart(medicine);
+                }}
+                className="w-full py-3.5 bg-slate-900 hover:bg-black text-white rounded-xl shadow-xl shadow-slate-900/20 transition-all flex items-center justify-center gap-2 group/add"
+              >
+                <ShoppingCart size={18} className="group-hover/add:scale-110 group-hover/add:-translate-y-0.5 transition-transform" />
+                <span className="text-[11px] font-black uppercase tracking-widest">Add to Procurement</span>
+              </motion.button>
+              
+              <motion.button 
+                whileTap={{ scale: 0.98 }}
+                onClick={handleWhatsApp}
+                className="w-full py-3 bg-emerald-50 hover:bg-emerald-500 text-emerald-600 hover:text-white border border-emerald-100 hover:border-emerald-500 rounded-xl transition-all flex items-center justify-center gap-2 group/wa"
+              >
+                <MessageCircle size={18} className="group-hover/wa:scale-110 transition-transform" />
+                <span className="text-[11px] font-black uppercase tracking-widest">WhatsApp Inquiry</span>
+              </motion.button>
+            </div>
         </div>
       </div>
       
+      {/* Out of Stock Overlay */}
       {stock <= 0 && (
-        <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] rounded-2xl flex items-center justify-center z-20">
-          <span className="bg-slate-800 text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest leading-none shadow-premium">OUT OF STOCK</span>
+        <div className="absolute inset-0 bg-white/70 backdrop-blur-sm rounded-3xl flex items-center justify-center z-20">
+          <div className="bg-slate-900 text-white text-[11px] font-black px-6 py-3 rounded-2xl uppercase tracking-[0.2em] shadow-2xl flex flex-col items-center gap-2">
+            <span className="w-2 h-2 bg-rose-500 rounded-full animate-ping"></span>
+            Out of Stock
+          </div>
         </div>
       )}
     </motion.div>
