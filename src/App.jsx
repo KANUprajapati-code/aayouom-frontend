@@ -25,6 +25,7 @@ import WalletDashboard from './pages/WalletDashboard';
 import ReferAndEarn from './pages/ReferAndEarn';
 import Promotions from './pages/Promotions';
 import Profile from './pages/Profile';
+import Support from './pages/Support';
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -53,6 +54,7 @@ function App() {
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/contact" element={<Contact />} />
+                  <Route path="/support" element={<Support />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/login" element={<AdminLogin />} />
                   <Route path="/page/:slug" element={<DynamicPage />} />
