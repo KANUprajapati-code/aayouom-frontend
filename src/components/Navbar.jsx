@@ -84,26 +84,26 @@ const Navbar = () => {
               <Link to="/register" className="ml-2 px-6 py-3 bg-slate-900 text-white rounded-[14px] text-[10px] font-black uppercase tracking-widest hover:bg-primary-600 transition-all shadow-xl shadow-slate-200 active:scale-95">Register</Link>
             </div>
 
-            <button id="navbar-cart-icon" onClick={() => setIsCartSliderOpen(true)} className="relative p-3.5 bg-primary-50 text-primary-600 rounded-2xl hover:bg-primary-600 hover:text-white transition-all shadow-lg shadow-primary-50 active:scale-95 group">
+            <Link id="navbar-cart-icon" to="/cart" onClick={() => setIsCartSliderOpen(false)} className="relative p-3.5 bg-primary-50 text-primary-600 rounded-2xl hover:bg-primary-600 hover:text-white transition-all shadow-lg shadow-primary-50 active:scale-95 group">
               <ShoppingCart className="w-6 h-6" strokeWidth={2} />
               {cart.reduce((total, item) => total + item.quantity, 0) > 0 && (
                 <span className="absolute -top-1 -right-1 bg-secondary-500 text-white text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center border-2 border-white group-hover:scale-110 transition-transform">
                   {cart.reduce((total, item) => total + item.quantity, 0)}
                 </span>
               )}
-            </button>
+            </Link>
           </div>
 
           {/* Mobile Header Actions (Visible only on small screens) */}
           <div className="flex md:hidden items-center gap-4">
-            <button id="mobile-cart-icon" onClick={() => setIsCartSliderOpen(true)} className="relative p-2.5 bg-primary-50 text-primary-600 rounded-xl hover:bg-primary-600 hover:text-white transition-all active:scale-95 group">
+            <Link id="mobile-cart-icon" to="/cart" onClick={() => setIsCartSliderOpen(false)} className="relative p-2.5 bg-primary-50 text-primary-600 rounded-xl hover:bg-primary-600 hover:text-white transition-all active:scale-95 group">
               <ShoppingCart className="w-5 h-5" strokeWidth={2} />
               {cart.reduce((total, item) => total + item.quantity, 0) > 0 && (
                 <span className="absolute -top-1.5 -right-1.5 bg-secondary-500 text-white text-[9px] font-black w-5 h-5 rounded-full flex items-center justify-center border-[1.5px] border-white group-hover:scale-110 transition-transform shadow-sm">
                   {cart.reduce((total, item) => total + item.quantity, 0)}
                 </span>
               )}
-            </button>
+            </Link>
             <button className="p-2.5 bg-slate-100 rounded-xl text-slate-700" onClick={() => setIsMenuOpen(!isMenuOpen)}>
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
