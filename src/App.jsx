@@ -35,9 +35,9 @@ const LoadingFallback = () => (
 
 function App() {
   return (
-    <AuthProvider>
-      <CartProvider>
-        <Router>
+    <Router>
+      <AuthProvider>
+        <CartProvider>
           <div className="min-h-screen">
             <Suspense fallback={<LoadingFallback />}>
               <Routes>
@@ -75,9 +75,9 @@ function App() {
               </Routes>
             </Suspense>
           </div>
-        </Router>
-      </CartProvider>
-    </AuthProvider>
+        </CartProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { ShoppingBag, Send, Phone, User, Building, ClipboardList, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const BulkInquiry = () => {
     const [formData, setFormData] = useState({
@@ -14,6 +15,7 @@ const BulkInquiry = () => {
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -43,7 +45,7 @@ const BulkInquiry = () => {
                     <h1 className="text-3xl font-black text-slate-900 italic tracking-tighter uppercase">Inquiry Successful</h1>
                     <p className="text-slate-500 font-medium">Your bulk procurement request has been registered. Our procurement officer will contact you on WhatsApp/SMS within 2 hours.</p>
                     <button 
-                        onClick={() => window.location.href = '/'}
+                        onClick={() => navigate('/')}
                         className="w-full py-5 bg-slate-900 text-white rounded-2xl font-black uppercase text-xs tracking-widest shadow-2xl active:scale-95 transition-all"
                     >
                         Return Home

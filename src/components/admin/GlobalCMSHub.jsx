@@ -45,6 +45,23 @@ const GlobalCMSHub = () => {
     }
   };
 
+  const handleImageUpload = async (index, file) => {
+    if (!file) return;
+    try {
+      const uploadData = new FormData();
+      uploadData.append('image', file);
+      
+      const { data } = await axios.post('https://ayuom-backend.vercel.app/api/upload', uploadData);
+      
+      const updated = [...formData.heroBanners];
+      updated[index].imageUrl = data.url;
+      setFormData(prev => ({ ...prev, heroBanners: updated }));
+    } catch (error) {
+       console.error("Error uploading image:", error);
+       alert("Failed to upload image to Database.");
+    }
+  };
+
   if (loading) {
     return (
       <div className="py-40 flex flex-col items-center justify-center text-center space-y-6">
@@ -133,17 +150,27 @@ const GlobalCMSHub = () => {
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-2 col-span-full">
-                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Background Image URL</label>
-                           <input 
-                              value={banner.imageUrl || ''} 
-                              onChange={(e) => {
-                                 const updated = [...formData.heroBanners];
-                                 updated[index].imageUrl = e.target.value;
-                                 setFormData(prev => ({ ...prev, heroBanners: updated }));
-                              }}
-                              className="w-full bg-white p-5 rounded-2xl font-bold text-slate-800 border border-slate-100 outline-none focus:border-primary-500 transition-all" 
-                              placeholder="https://images.unsplash.com/..."
-                           />
+                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Promotional Image URL</label>
+                           <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
+                              <input 
+                                 value={banner.imageUrl || ''} 
+                                 onChange={(e) => {
+                                    const updated = [...formData.heroBanners];
+                                    updated[index].imageUrl = e.target.value;
+                                    setFormData(prev => ({ ...prev, heroBanners: updated }));
+                                 }}
+                                 className="flex-grow bg-white p-5 rounded-2xl font-bold text-slate-800 border border-slate-100 outline-none focus:border-primary-500 transition-all" 
+                                 placeholder="https://... OR Upload File ->"
+                              />
+                              <label className="cursor-pointer px-6 py-4 bg-primary-50 text-primary-600 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-primary-100 transition-all flex items-center justify-center shrink-0 border border-primary-100">
+                                <input type="file" accept="image/*" className="hidden" onChange={(e) => { e.target.files[0] && handleImageUpload(index, e.target.files[0]) }} />
+                                Select File
+                              </label>
+
+                              <div className="w-14 h-14 rounded-2xl bg-white border border-slate-100 flex items-center justify-center overflow-hidden shrink-0 hidden sm:flex">
+                                 {banner.imageUrl ? <img loading="lazy" src={banner.imageUrl} alt="preview" className="w-full h-full object-cover" /> : <Layout className="text-slate-200" />}
+                              </div>
+                           </div>
                         </div>
                         <div className="space-y-2">
                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Badge Text</label>
