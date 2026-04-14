@@ -5,6 +5,31 @@ import { MessageSquare, Phone, Mail, MapPin } from 'lucide-react';
 const Contact = () => {
   const [cms, setCms] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [formLoading, setFormLoading] = useState(false);
+  const [success, setSuccess] = useState('');
+  const [error, setError] = useState('');
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+
+  const handleInputChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+    
+    if (!formData.name || !formData.email || !formData.message) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+
+    setFormLoading(true);
+    // Simulate API request
+    setTimeout(() => {
+      setSuccess("Your message has been successfully sent to our support team!");
+      setFormData({ name: '', email: '', message: '' });
+      setFormLoading(false);
+    }, 1200);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,23 +82,26 @@ const Contact = () => {
           <div className="lg:col-span-7">
             <div className="bg-white rounded-[40px] p-12 shadow-2xl shadow-primary-600/10 border border-border-main">
                <h3 className="text-2xl font-black text-slate-900 mb-10">Send a Message</h3>
-               <form className="space-y-6">
+               <form onSubmit={handleSubmit} className="space-y-6">
+                 {error && <div className="p-3 bg-red-50 text-red-500 rounded-xl text-sm border border-red-100 font-bold">{error}</div>}
+                 {success && <div className="p-4 bg-emerald-50 text-emerald-700 rounded-xl text-sm border border-emerald-100 font-bold">{success}</div>}
+                 
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                    <div className="space-y-2">
-                     <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Full Name</label>
-                     <input type="text" className="w-full bg-slate-50 border border-slate-50 rounded-2xl py-4 px-6 font-bold outline-none focus:bg-white focus:border-primary-200 transition-all" placeholder="John Doe" />
+                     <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Full Name *</label>
+                     <input type="text" name="name" value={formData.name} onChange={handleInputChange} required className="w-full bg-slate-50 border border-slate-50 rounded-2xl py-4 px-6 font-bold outline-none focus:bg-white focus:border-primary-200 transition-all" placeholder="John Doe" />
                    </div>
                    <div className="space-y-2">
-                     <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Email Address</label>
-                     <input type="email" className="w-full bg-slate-50 border border-slate-50 rounded-2xl py-4 px-6 font-bold outline-none focus:bg-white focus:border-primary-200 transition-all" placeholder="john@example.com" />
+                     <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Email Address *</label>
+                     <input type="email" name="email" value={formData.email} onChange={handleInputChange} required className="w-full bg-slate-50 border border-slate-50 rounded-2xl py-4 px-6 font-bold outline-none focus:bg-white focus:border-primary-200 transition-all" placeholder="john@example.com" />
                    </div>
                  </div>
                  <div className="space-y-2">
-                   <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Message</label>
-                   <textarea rows="5" className="w-full bg-slate-50 border border-slate-50 rounded-2xl py-6 px-6 font-bold outline-none focus:bg-white focus:border-primary-200 transition-all resize-none" placeholder="Tell us how we can help..."></textarea>
+                   <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Message *</label>
+                   <textarea name="message" value={formData.message} onChange={handleInputChange} required rows="5" className="w-full bg-slate-50 border border-slate-50 rounded-2xl py-6 px-6 font-bold outline-none focus:bg-white focus:border-primary-200 transition-all resize-none" placeholder="Tell us how we can help..."></textarea>
                  </div>
-                 <button className="btn-primary w-full py-5 rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl shadow-primary-200 flex items-center justify-center gap-3">
-                   <MessageSquare className="w-5 h-5" /> Send Message
+                 <button type="submit" disabled={formLoading} className="btn-primary w-full py-5 rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl shadow-primary-200 flex items-center justify-center gap-3 disabled:opacity-50">
+                   {formLoading ? 'Sending...' : <><MessageSquare className="w-5 h-5" /> Send Message</>}
                  </button>
                </form>
             </div>

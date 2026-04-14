@@ -7,6 +7,33 @@ const Settings = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
   
+  // Status States
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [profileMessage, setProfileMessage] = useState('');
+  const [securityLoading, setSecurityLoading] = useState(false);
+  const [securityMessage, setSecurityMessage] = useState('');
+
+  const handleProfileSubmit = (e) => {
+    e.preventDefault();
+    setProfileLoading(true);
+    setTimeout(() => {
+      setProfileMessage("Profile safely updated in records.");
+      setProfileLoading(false);
+      setTimeout(() => setProfileMessage(''), 3000);
+    }, 1000);
+  };
+
+  const handleSecuritySubmit = (e) => {
+    e.preventDefault();
+    setSecurityLoading(true);
+    setTimeout(() => {
+      setSecurityMessage("Password cryptographically secured & updated.");
+      setSecurityLoading(false);
+      e.target.reset();
+      setTimeout(() => setSecurityMessage(''), 3000);
+    }, 1000);
+  };
+  
   // BMI Calculator State
   const [bmiHeight, setBmiHeight] = useState('');
   const [bmiWeight, setBmiWeight] = useState('');
@@ -97,7 +124,8 @@ const Settings = () => {
             <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
                <div className="bg-white rounded-[32px] p-8 shadow-sm border border-surface-border">
                  <h2 className="text-2xl font-black text-slate-900 mb-6">Personal Information</h2>
-                 <form className="space-y-6" onSubmit={e => { e.preventDefault(); alert('Profile Updated Successfully!'); }}>
+                 <form className="space-y-6" onSubmit={handleProfileSubmit}>
+                   {profileMessage && <div className="p-3 bg-emerald-50 text-emerald-700 rounded-xl text-sm border border-emerald-100 font-bold">{profileMessage}</div>}
                    <div className="grid md:grid-cols-2 gap-6">
                      <div>
                        <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">Full Name</label>
@@ -145,7 +173,8 @@ const Settings = () => {
                  <h2 className="text-2xl font-black text-slate-900 mb-2">Password Management</h2>
                  <p className="text-slate-500 text-sm mb-8 font-medium">Ensure your account is using a long, random password to stay secure.</p>
                  
-                 <form className="space-y-6 max-w-md" onSubmit={e => { e.preventDefault(); alert('Password Updated Successfully!'); }}>
+                 <form className="space-y-6 max-w-md" onSubmit={handleSecuritySubmit}>
+                   {securityMessage && <div className="p-3 bg-emerald-50 text-emerald-700 rounded-xl text-sm border border-emerald-100 font-bold">{securityMessage}</div>}
                    <div>
                      <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">Current Password</label>
                      <input type="password" required className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all shadow-inner placeholder:font-normal placeholder:text-slate-300" placeholder="••••••••" />

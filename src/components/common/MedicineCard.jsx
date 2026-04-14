@@ -41,7 +41,6 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
         <img loading="lazy" src={image || 'https://via.placeholder.com/200'} 
           alt={name} 
           className="w-full h-full object-contain p-4"
-          loading="lazy"
         />
         <div className="absolute top-2 right-2 p-1.5 bg-white/80 backdrop-blur-md rounded-lg text-text-muted hover:text-primary-600 border border-surface-border opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <Info size={16} />

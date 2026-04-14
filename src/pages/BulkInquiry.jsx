@@ -13,15 +13,17 @@ const BulkInquiry = () => {
     });
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         try {
+            setError('');
             await axios.post('https://ayuom-backend.vercel.app/api/bulk-orders', formData);
             setSubmitted(true);
-        } catch (error) {
-            alert('Error submitting inquiry. Please try again.');
+        } catch (err) {
+            setError('System error submitting inquiry. Please text our emergency WhatsApp line.');
         } finally {
             setLoading(false);
         }
@@ -67,6 +69,7 @@ const BulkInquiry = () => {
                     className="bg-white rounded-[56px] shadow-3xl p-10 lg:p-16 border border-slate-100"
                 >
                     <form onSubmit={handleSubmit} className="space-y-8">
+                        {error && <div className="p-4 bg-red-50 text-red-500 rounded-2xl border border-red-100 font-bold">{error}</div>}
                         <div className="grid md:grid-cols-2 gap-8">
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2"><User size={12} /> Practitioner Name</label>
