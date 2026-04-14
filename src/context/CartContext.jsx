@@ -33,8 +33,6 @@ export const CartProvider = ({ children }) => {
       }
       return [...prev, { ...product, quantity }];
     });
-
-    setIsCartSliderOpen(true);
   };
 
   const removeFromCart = (id) => {
