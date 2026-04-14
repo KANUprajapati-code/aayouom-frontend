@@ -110,7 +110,14 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
                   if(onAddToCart) onAddToCart(medicine);
                   
                   // Visual Fly to Cart Animation
-                  const cartIcon = document.getElementById('navbar-cart-icon');
+                  let cartIcon = document.getElementById('navbar-cart-icon');
+                  // If desktop icon is hidden by css, fallback to mobile icon
+                  if (cartIcon && cartIcon.getBoundingClientRect().width === 0) {
+                     cartIcon = document.getElementById('mobile-cart-icon');
+                  }
+                  if (!cartIcon) {
+                     cartIcon = document.getElementById('mobile-cart-icon');
+                  }
                   if (cartIcon) {
                     const startX = e.clientX;
                     const startY = e.clientY;

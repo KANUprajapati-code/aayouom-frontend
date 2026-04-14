@@ -94,10 +94,20 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Mobile Menu Toggle */}
-          <button className="md:hidden p-3 bg-slate-100 rounded-2xl" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          {/* Mobile Header Actions (Visible only on small screens) */}
+          <div className="flex md:hidden items-center gap-4">
+            <Link id="mobile-cart-icon" to="/cart" className="relative p-2.5 bg-primary-50 text-primary-600 rounded-xl hover:bg-primary-600 hover:text-white transition-all active:scale-95 group">
+              <ShoppingCart className="w-5 h-5" strokeWidth={2} />
+              {cart.reduce((total, item) => total + item.quantity, 0) > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 bg-secondary-500 text-white text-[9px] font-black w-5 h-5 rounded-full flex items-center justify-center border-[1.5px] border-white group-hover:scale-110 transition-transform shadow-sm">
+                  {cart.reduce((total, item) => total + item.quantity, 0)}
+                </span>
+              )}
+            </Link>
+            <button className="p-2.5 bg-slate-100 rounded-xl text-slate-700" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
       </nav>
 
