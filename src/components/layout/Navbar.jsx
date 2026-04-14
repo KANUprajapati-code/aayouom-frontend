@@ -2,9 +2,11 @@ import React from 'react';
 import { ShoppingCart, Search, Bell, User, Menu, LogIn } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useCart } from '../../context/CartContext';
 
 const Navbar = ({ onMenuClick }) => {
   const { user, isAuthenticated } = useAuth();
+  const { cart } = useCart();
 
   return (
     <nav className="sticky top-0 z-40 bg-white/90 backdrop-blur-lg border-b border-surface-border shadow-sm transition-all">
@@ -41,12 +43,14 @@ const Navbar = ({ onMenuClick }) => {
           </div>
 
           <div className="flex items-center gap-1 sm:gap-3 shrink-0">
-            <button className="p-2 sm:p-2.5 text-text-muted hover:text-primary-600 hover:bg-primary-50 rounded-xl relative transition-colors shadow-sm bg-white border border-transparent hover:border-primary-100">
+            <Link to="/cart" className="flex p-2 sm:p-2.5 text-text-muted hover:text-primary-600 hover:bg-primary-50 rounded-xl relative transition-colors shadow-sm bg-white border border-transparent hover:border-primary-100 cursor-pointer">
               <ShoppingCart size={22} />
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-secondary-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm border border-white">
-                0
-              </span>
-            </button>
+              {cart && cart.reduce((total, item) => total + item.quantity, 0) > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-secondary-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm border border-white">
+                  {cart.reduce((total, item) => total + item.quantity, 0)}
+                </span>
+              )}
+            </Link>
             <button className="hidden sm:flex p-2.5 text-text-muted hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-colors shadow-sm bg-white border border-transparent hover:border-primary-100">
               <Bell size={22} />
             </button>
