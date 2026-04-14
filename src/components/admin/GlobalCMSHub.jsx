@@ -45,21 +45,31 @@ const GlobalCMSHub = () => {
     }
   };
 
-  const handleImageUpload = async (index, file) => {
+  const handleImageUpload = (index, file) => {
     if (!file) return;
-    try {
-      const uploadData = new FormData();
-      uploadData.append('image', file);
-      
-      const { data } = await axios.post('https://ayuom-backend.vercel.app/api/upload', uploadData);
-      
-      const updated = [...formData.heroBanners];
-      updated[index].imageUrl = data.url;
-      setFormData(prev => ({ ...prev, heroBanners: updated }));
-    } catch (error) {
-       console.error("Error uploading image:", error);
-       alert("Failed to upload image to Database.");
-    }
+
+    // Use FileReader to convert image to Base64 to bypass CORS/Vercel boundaries
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = async () => {
+      try {
+        const base64Image = reader.result;
+        const token = localStorage.getItem('token');
+        
+        // Post standard JSON instead of FormData
+        const { data } = await axios.post('https://ayuom-backend.vercel.app/api/upload', 
+          { base64: base64Image }, 
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        
+        const updated = [...formData.heroBanners];
+        updated[index].imageUrl = data.url;
+        setFormData(prev => ({ ...prev, heroBanners: updated }));
+      } catch (error) {
+         console.error("Error uploading image:", error);
+         alert(error.response?.data?.message || "Failed to upload image. File may be too large.");
+      }
+    };
   };
 
   if (loading) {
