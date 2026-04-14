@@ -18,14 +18,7 @@ const HomePageCMS = () => {
       if (!data.heroBanners || data.heroBanners.length === 0) {
         data.heroBanners = [{
           imageUrl: "",
-          badge: "Verified B2B Medical Hub",
-          title1: "Premium Medicine",
-          title2: "Sourcing for Doctors",
-          description: "Accelerate your clinic's supply chain with direct access to top-tier pharmaceuticals, transparent volume schemes, and lightning-fast logistics.",
-          btn1Text: "Start Ordering",
-          btn1Link: "/products",
-          btn2Text: "Quick Order Mode",
-          btn2Link: "/quick-order"
+          linkUrl: "/products"
         }];
       }
       setFormData(data || {});
@@ -50,14 +43,7 @@ const HomePageCMS = () => {
   const addBanner = () => {
     const newBanner = {
       imageUrl: "",
-      badge: "New Promo Heading",
-      title1: "Featured Heading",
-      title2: "Professional Offer",
-      description: "Enter a compelling description for this hero slide here.",
-      btn1Text: "View Products",
-      btn1Link: "/products",
-      btn2Text: "Contact Us",
-      btn2Link: "/contact"
+      linkUrl: ""
     };
     setFormData((prev) => ({ ...prev, heroBanners: [...prev.heroBanners, newBanner] }));
   };
@@ -128,53 +114,18 @@ const HomePageCMS = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
                   {/* Image URL with Preview */}
                   <div className="space-y-2 col-span-1 md:col-span-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Slide Background Image URL</label>
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Promotional Image URL</label>
                     <div className="flex gap-4">
                        <input value={banner.imageUrl} onChange={(e) => handleBannerChange(index, 'imageUrl', e.target.value)} placeholder="https://..." className="flex-grow bg-white p-4 rounded-2xl font-bold text-slate-900 border border-surface-border outline-none focus:border-primary-500 text-sm" />
-                       <div className="w-14 h-14 rounded-2xl bg-white border border-surface-border flex items-center justify-center overflow-hidden">
+                       <div className="w-14 h-14 rounded-2xl bg-white border border-surface-border flex items-center justify-center overflow-hidden shrink-0">
                           {banner.imageUrl ? <img loading="lazy" src={banner.imageUrl} alt="preview" className="w-full h-full object-cover" /> : <ImageIcon className="text-slate-200" />}
                        </div>
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Badge Text (Top Label)</label>
-                    <input value={banner.badge} onChange={(e) => handleBannerChange(index, 'badge', e.target.value)} className="w-full bg-white p-4 rounded-2xl font-bold text-slate-900 border border-surface-border outline-none focus:border-primary-500 text-sm" />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Title Line 1</label>
-                    <input value={banner.title1} onChange={(e) => handleBannerChange(index, 'title1', e.target.value)} className="w-full bg-white p-4 rounded-2xl font-bold text-slate-900 border border-surface-border outline-none focus:border-primary-500 text-sm" />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Title Line 2 (Accent)</label>
-                    <input value={banner.title2} onChange={(e) => handleBannerChange(index, 'title2', e.target.value)} className="w-full bg-white p-4 rounded-2xl font-bold text-slate-900 border border-surface-border outline-none focus:border-primary-500 text-sm" />
-                  </div>
-
-                  <div className="space-y-2">
-                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Description</label>
-                     <textarea rows="2" value={banner.description} onChange={(e) => handleBannerChange(index, 'description', e.target.value)} className="w-full bg-white p-4 rounded-2xl font-bold text-slate-600 border border-surface-border outline-none focus:border-primary-500 text-sm resize-none"></textarea>
-                  </div>
-
-                  {/* Buttons */}
-                  <div className="grid grid-cols-2 gap-4 col-span-1 md:col-span-2 pt-2 border-t border-slate-200/50 mt-2">
-                    <div className="space-y-2">
-                        <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Btn 1 Text</label>
-                        <input value={banner.btn1Text} onChange={(e) => handleBannerChange(index, 'btn1Text', e.target.value)} className="w-full bg-white p-3 rounded-xl font-bold text-slate-900 border border-surface-border text-[11px]" />
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Btn 1 Link</label>
-                        <input value={banner.btn1Link} onChange={(e) => handleBannerChange(index, 'btn1Link', e.target.value)} className="w-full bg-white p-3 rounded-xl font-bold text-slate-900 border border-surface-border text-[11px]" />
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Btn 2 Text</label>
-                        <input value={banner.btn2Text} onChange={(e) => handleBannerChange(index, 'btn2Text', e.target.value)} className="w-full bg-white p-3 rounded-xl font-bold text-slate-900 border border-surface-border text-[11px]" />
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Btn 2 Link</label>
-                        <input value={banner.btn2Link} onChange={(e) => handleBannerChange(index, 'btn2Link', e.target.value)} className="w-full bg-white p-3 rounded-xl font-bold text-slate-900 border border-surface-border text-[11px]" />
-                    </div>
+                  <div className="space-y-2 col-span-1 md:col-span-2">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">On-Click Redirect URL (Optional)</label>
+                    <input value={banner.linkUrl} onChange={(e) => handleBannerChange(index, 'linkUrl', e.target.value)} placeholder="/products?category=cardiac" className="w-full bg-white p-4 rounded-2xl font-bold text-slate-900 border border-surface-border outline-none focus:border-primary-500 text-sm" />
                   </div>
                 </div>
               </div>
@@ -182,35 +133,7 @@ const HomePageCMS = () => {
           </div>
         </div>
 
-        {/* HERO INFO CARDS SECTION */}
-        <div className="bg-white rounded-[40px] border border-surface-border shadow-soft p-10">
-          <h3 className="text-xl font-black text-orange-600 mb-6 uppercase tracking-widest flex items-center gap-3"><Zap size={20} /> Hero Info Cards</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-             <div className="p-6 bg-orange-50/30 rounded-3xl border border-orange-100 space-y-4">
-                <p className="text-[10px] font-black text-orange-600 uppercase tracking-widest">Card 1 (Left)</p>
-                <div className="space-y-2">
-                   <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Title</label>
-                   <input name="card1Title" value={formData?.card1Title || ''} onChange={handleChange} className="w-full bg-white p-4 rounded-2xl font-bold text-slate-900 border border-orange-100 outline-none focus:border-orange-500 text-sm" />
-                </div>
-                <div className="space-y-2">
-                   <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Description</label>
-                   <textarea rows="2" name="card1Desc" value={formData?.card1Desc || ''} onChange={handleChange} className="w-full bg-white p-4 rounded-2xl font-bold text-slate-600 border border-orange-100 outline-none focus:border-orange-500 text-sm resize-none"></textarea>
-                </div>
-             </div>
-             
-             <div className="p-6 bg-emerald-50/30 rounded-3xl border border-emerald-100 space-y-4">
-                <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Card 2 (Right)</p>
-                <div className="space-y-2">
-                   <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Title</label>
-                   <input name="card2Title" value={formData?.card2Title || ''} onChange={handleChange} className="w-full bg-white p-4 rounded-2xl font-bold text-slate-900 border border-emerald-100 outline-none focus:border-emerald-500 text-sm" />
-                </div>
-                <div className="space-y-2">
-                   <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Description</label>
-                   <textarea rows="2" name="card2Desc" value={formData?.card2Desc || ''} onChange={handleChange} className="w-full bg-white p-4 rounded-2xl font-bold text-slate-600 border border-emerald-100 outline-none focus:border-emerald-500 text-sm resize-none"></textarea>
-                </div>
-             </div>
-          </div>
-        </div>
+
 
         {/* Existing Sections for Titles/Subtitle */}
         <div className="bg-white rounded-[40px] border border-surface-border shadow-soft p-10">
