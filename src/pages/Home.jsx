@@ -126,7 +126,7 @@ const Home = () => {
                     {banner.badge && <span className="text-secondary-400 font-black tracking-widest uppercase text-[10px] md:text-xs mb-2">{banner.badge}</span>}
                     {banner.title1 && <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white leading-tight">{banner.title1}</h1>}
                     {banner.title2 && <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-primary-400 leading-tight mb-4">{banner.title2}</h1>}
-                    {banner.description && <p className="text-slate-200 text-xs max-w-lg mb-8 line-clamp-3 md:line-clamp-none">{banner.description}</p>}
+                    {banner.description && <p className="text-slate-200 text-sm md:text-lg max-w-lg mb-8 line-clamp-3 md:line-clamp-none">{banner.description}</p>}
                     
                     <div className="flex flex-wrap gap-4">
                        {(banner.btn1Text || banner.linkUrl) && (
