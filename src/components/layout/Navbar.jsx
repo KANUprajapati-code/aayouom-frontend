@@ -20,12 +20,7 @@ const Navbar = ({ onMenuClick }) => {
               <Menu size={24} />
             </button>
             <Link to="/" className="flex items-center gap-2 ml-2">
-              <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold">
-                W
-              </div>
-              <span className="text-xl font-bold text-slate-800">
-                Wedome<span className="text-primary-600">Doctors</span>
-              </span>
+              <img src="/logo.png" alt="Logo" className="h-8 object-contain" />
             </Link>
           </div>
 
