@@ -20,7 +20,7 @@ const Navbar = ({ onMenuClick }) => {
               <Menu size={24} />
             </button>
             <Link to="/" className="flex items-center gap-2 ml-2">
-              <img src="/logo.png" alt="Logo" className="h-8 object-contain" />
+              <img src="/logo.png" alt="Logo" className="h-12 md:h-14 object-contain mix-blend-multiply" />
             </Link>
           </div>
 
