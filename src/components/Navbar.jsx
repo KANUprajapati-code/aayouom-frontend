@@ -47,12 +47,7 @@ const Navbar = () => {
         <div className="max-w-7xl mx-auto px-4 h-24 flex items-center justify-between gap-8">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 shrink-0 group">
-            <div className="w-12 h-12 bg-primary-600 rounded-[18px] flex items-center justify-center text-white font-black text-2xl shadow-xl shadow-primary-200 group-hover:rotate-12 transition-transform duration-500">
-              W
-            </div>
-            <span className="font-black text-3xl tracking-tighter text-slate-900">
-              We<span className="text-secondary-500">dome</span>
-            </span>
+            <img src="/favicon.png" alt="Logo" className="h-12 object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-md" />
           </Link>
 
           {/* Large Search Bar (Amazon Style) */}
