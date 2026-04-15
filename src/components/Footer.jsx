@@ -12,7 +12,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-20 mb-24 relative z-10">
         <div className="space-y-10">
           <Link to="/" className="flex items-center gap-3">
-            <img src="/favicon.png" alt="Logo" className="h-12 object-contain" />
+            <img src="/logo.png" alt="Logo" className="h-12 object-contain" />
           </Link>
           <p className="text-white/70 font-bold leading-relaxed text-lg">
             Supplying premium healthcare essentials and wellness products across India. Trusted quality, delivered instantly.

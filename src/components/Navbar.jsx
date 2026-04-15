@@ -47,7 +47,7 @@ const Navbar = () => {
         <div className="max-w-7xl mx-auto px-4 h-24 flex items-center justify-between gap-8">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 shrink-0 group">
-            <img src="/favicon.png" alt="Logo" className="h-12 object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-md" />
+            <img src="/logo.png" alt="Logo" className="h-12 object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-md" />
           </Link>
 
           {/* Large Search Bar (Amazon Style) */}
