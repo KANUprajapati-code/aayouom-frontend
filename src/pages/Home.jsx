@@ -123,19 +123,19 @@ const Home = () => {
 
                  {/* Text Layer */}
                  <div className="absolute inset-0 z-10 flex flex-col justify-center px-6 md:px-16 lg:px-24">
-                    {banner.badge && <span className="text-secondary-400 font-black tracking-widest uppercase text-[10px] md:text-xs mb-2">{banner.badge}</span>}
-                    {banner.title1 && <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white leading-tight">{banner.title1}</h1>}
-                    {banner.title2 && <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-primary-400 leading-tight mb-4">{banner.title2}</h1>}
-                    {banner.description && <p className="text-slate-200 text-sm md:text-lg max-w-lg mb-8 line-clamp-3 md:line-clamp-none">{banner.description}</p>}
+                    {banner.badge && <span className="text-secondary-400 font-black tracking-widest uppercase text-[10px] mb-2">{banner.badge}</span>}
+                    {banner.title1 && <h1 className="text-[10px] font-black text-white leading-tight">{banner.title1}</h1>}
+                    {banner.title2 && <h1 className="text-[10px] font-black text-primary-400 leading-tight mb-4">{banner.title2}</h1>}
+                    {banner.description && <p className="text-slate-200 text-[10px] max-w-lg mb-4 line-clamp-3 md:line-clamp-none">{banner.description}</p>}
                     
-                    <div className="flex flex-wrap gap-4">
+                    <div className="flex flex-wrap gap-4 font-sans text-[10px]">
                        {(banner.btn1Text || banner.linkUrl) && (
-                         <Link to={banner.btn1Link || banner.linkUrl || '/products'} className="bg-primary-600 text-white px-6 py-3 rounded-full font-bold hover:bg-primary-500 transition-colors shadow-lg">
+                         <Link to={banner.btn1Link || banner.linkUrl || '/products'} className="bg-primary-600 text-white px-4 py-2 rounded-full font-bold hover:bg-primary-500 transition-colors shadow-lg">
                             {banner.btn1Text || 'Shop Now'}
                          </Link>
                        )}
                        {banner.btn2Text && (
-                         <Link to={banner.btn2Link || '/products'} className="bg-white text-slate-900 px-6 py-3 rounded-full font-bold hover:bg-slate-100 transition-colors shadow-lg">
+                         <Link to={banner.btn2Link || '/products'} className="bg-white text-slate-900 px-4 py-2 rounded-full font-bold hover:bg-slate-100 transition-colors shadow-lg">
                             {banner.btn2Text}
                          </Link>
                        )}
