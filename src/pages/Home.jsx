@@ -96,7 +96,7 @@ const Home = () => {
   return (
     <div className="space-y-16 lg:space-y-24 pb-20 lg:pb-28">
       {/* Hero Slider Section */}
-      <section className="relative overflow-hidden bg-slate-50 border border-surface-border lg:rounded-3xl shadow-soft aspect-[16/9] md:aspect-[21/9] lg:aspect-[3/1] max-h-[600px] w-full group">
+      <section className="relative overflow-hidden bg-slate-50 border border-surface-border lg:rounded-3xl shadow-soft h-[60vh] lg:h-[70vh] min-h-[500px] max-h-[800px] w-full group font-sans">
         <div className="absolute inset-0 w-full h-full">
            {activeBanners.map((banner, idx) => (
              <motion.div
