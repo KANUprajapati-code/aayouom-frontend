@@ -224,7 +224,11 @@ const AdminDashboard = () => {
            </nav>
         </div>
         
-        <div className="p-6 border-t border-slate-100 bg-slate-50/50">
+        <div className="p-6 border-t border-slate-100 bg-slate-50/50 space-y-3">
+           <Link to="/" className="w-full flex items-center justify-center gap-3 py-3 bg-blue-600 text-white hover:bg-blue-700 rounded-xl font-bold text-xs transition-all shadow-md">
+              <Globe size={16} />
+              <span>Back to Website</span>
+           </Link>
            <button onClick={handleLogout} className="w-full flex items-center justify-center gap-3 py-3 bg-white text-rose-600 hover:bg-rose-50 rounded-xl font-bold text-xs transition-all border border-rose-100">
               <LogOut size={16} />
               <span>Logout Account</span>
