@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Outfit:wght@100..900&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -39,7 +40,9 @@
   --radius-3xl: 24px;
   --radius-large: 20px;
 
-  --font-sans: "Inter", "Outfit", sans-serif;
+  /* Premium Typography System */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-heading: "Outfit", sans-serif;
 
   --shadow-soft: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
   --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
@@ -47,41 +50,51 @@
 }
 
 @layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply bg-slate-50 text-text-main font-sans;
+    @apply bg-slate-50 text-text-main font-sans leading-relaxed text-[15px];
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-black tracking-tight text-slate-900 italic uppercase;
+  }
+
+  h1 { @apply text-5xl md:text-7xl leading-[1.05]; }
+  h2 { @apply text-3xl md:text-5xl leading-tight; }
+  h3 { @apply text-xl md:text-3xl font-extrabold; }
+  
+  p {
+    @apply text-slate-500 font-medium;
   }
 }
 
 @layer components {
+  .logo-text {
+    @apply font-heading font-black tracking-tighter text-2xl uppercase italic;
+  }
+
   .glass {
-    @apply bg-white border border-surface-border shadow-soft;
+    @apply bg-white/80 backdrop-blur-md border border-surface-border shadow-soft;
   }
 
   .btn-primary {
-    @apply bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2.5 px-5 rounded-lg transition-all duration-200 shadow-sm active:scale-95 flex items-center justify-center gap-2;
+    @apply bg-primary-600 hover:bg-primary-700 text-white font-bold py-3.5 px-8 rounded-2xl transition-all duration-300 shadow-xl shadow-primary-600/20 active:scale-95 flex items-center justify-center gap-3 text-xs uppercase tracking-widest;
   }
 
   .btn-secondary {
-    @apply bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold py-2.5 px-5 rounded-lg transition-all duration-200 shadow-sm active:scale-95 flex items-center justify-center gap-2;
-  }
-
-  .btn-outline {
-    @apply border border-primary-600 text-primary-600 hover:bg-primary-50 font-semibold py-2.5 px-5 rounded-lg transition-all active:scale-95 flex items-center justify-center gap-2;
-  }
-
-  .btn-ghost {
-    @apply text-text-muted hover:text-primary-600 hover:bg-primary-50 font-medium py-2 px-4 rounded-lg transition-all flex items-center gap-2;
+    @apply bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold py-3.5 px-8 rounded-2xl transition-all duration-300 shadow-sm active:scale-95 flex items-center justify-center gap-3 text-xs uppercase tracking-widest;
   }
 
   .card {
-    @apply bg-white rounded-xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-all duration-200;
+    @apply bg-white rounded-[32px] p-8 shadow-sm border border-slate-100 hover:border-primary-500/20 hover:shadow-premium transition-all duration-500;
   }
 
-  .badge-scheme {
-    @apply bg-accent-amber/10 text-accent-amber text-xs font-bold py-1 px-3 rounded-full border border-accent-amber/20;
-  }
-
-  .badge-discount {
-    @apply bg-accent-rose/10 text-accent-rose text-xs font-bold py-1 px-3 rounded-full border border-accent-rose/20;
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24;
   }
 }
