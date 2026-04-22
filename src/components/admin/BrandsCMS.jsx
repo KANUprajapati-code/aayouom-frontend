@@ -47,21 +47,18 @@ const BrandsCMS = () => {
     if (!file) return;
 
     setUploading(true);
-    const formData = new FormData();
-    formData.append('image', file);
-
     try {
-      const res = await axios.post(`${API_BASE_URL}/upload`, formData, {
-        headers: {
-          ...getAuthConfig().headers,
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      setCurrentBrand({ ...currentBrand, logoUrl: res.data.url });
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = async (event) => {
+        const base64 = event.target.result;
+        const res = await axios.post(`${API_BASE_URL}/upload`, { base64 }, getAuthConfig());
+        setCurrentBrand({ ...currentBrand, logoUrl: res.data.url });
+        setUploading(false);
+      };
     } catch (error) {
       console.error('Upload failed:', error);
       alert('Upload failed. Please try again.');
-    } finally {
       setUploading(false);
     }
   };
