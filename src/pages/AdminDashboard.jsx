@@ -84,11 +84,13 @@ const AdminDashboard = () => {
     { id: 'doctors', label: 'Doctors', icon: ShieldCheck },
     { id: 'doctorbookings', label: 'Doctor Bookings', icon: Activity },
     { id: 'categories', label: 'Categories', icon: Package },
+    { id: 'schemes', label: 'Schemes CMS', icon: Zap },
     { id: 'consultationcat', label: 'Consultation Categories', icon: Zap },
     { id: 'promocodes', label: 'Promo Codes', icon: Tag },
     { id: 'wallet', label: 'Wallet Management', icon: Wallet },
     { id: 'bulkorders', label: 'Bulk Orders', icon: shoppingBagIcon },
     { id: 'homecms', label: 'Home CMS', icon: Globe },
+    { id: 'pages', label: 'Pages CMS', icon: FileText },
     { id: 'aboutcms', label: 'About CMS', icon: FileText },
     { id: 'messages', label: 'Messages', icon: Bell }
   ];
