@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Plus, Edit, Trash2, Save, X, Search, Database, LayoutGrid } from 'lucide-react';
+import { Plus, Edit, Trash2, Save, X, Search, Database, LayoutGrid, Sparkles } from 'lucide-react';
+import API_BASE_URL from '../../config/api';
 
 const ProductsCMS = () => {
   const [products, setProducts] = useState([]);
@@ -41,8 +42,8 @@ const ProductsCMS = () => {
     setLoading(true);
     try {
       const [prodRes, catRes] = await Promise.all([
-         axios.get('https://ayuom-backend.vercel.app/api/products'),
-         axios.get('https://ayuom-backend.vercel.app/api/categories').catch(() => ({ data: [] }))
+         axios.get(`${API_BASE_URL}/products`),
+         axios.get(`${API_BASE_URL}/categories`).catch(() => ({ data: [] }))
       ]);
       if (prodRes.data && prodRes.data.length) {
         setProducts(prodRes.data);
@@ -120,7 +121,7 @@ const ProductsCMS = () => {
         
         try {
           const token = localStorage.getItem('token');
-          const { data } = await axios.post('https://ayuom-backend.vercel.app/api/upload', 
+          const { data } = await axios.post(`${API_BASE_URL}/upload`, 
             { base64: compressedBase64 }, 
             { headers: { Authorization: `Bearer ${token}` } }
           );
@@ -158,16 +159,16 @@ const ProductsCMS = () => {
     e.preventDefault();
     try {
       if (!categories.includes(formData.category)) {
-          await axios.post('https://ayuom-backend.vercel.app/api/categories', { name: formData.category, slug: formData.category.toLowerCase().replace(/\s+/g, '-') }, getAuthConfig()).catch(err => console.log(err));
+          await axios.post(`${API_BASE_URL}/categories`, { name: formData.category, slug: formData.category.toLowerCase().replace(/\s+/g, '-') }, getAuthConfig()).catch(err => console.log(err));
           setCategories(prev => [...prev, formData.category]);
       }
 
       if (modalMode === 'add') {
-        const res = await axios.post('https://ayuom-backend.vercel.app/api/products', formData, getAuthConfig());
+        const res = await axios.post(`${API_BASE_URL}/products`, formData, getAuthConfig());
         setProducts([res.data, ...products]);
         alert('Product added completely!');
       } else {
-        const res = await axios.put(`https://ayuom-backend.vercel.app/api/products/${currentProductId}`, formData, getAuthConfig());
+        const res = await axios.put(`${API_BASE_URL}/products/${currentProductId}`, formData, getAuthConfig());
         setProducts(products.map(p => p._id === currentProductId ? res.data : p));
         alert('Product modified safely!');
       }
@@ -180,7 +181,7 @@ const ProductsCMS = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Erase this item completely from standard inventory and schemes?')) return;
     try {
-      await axios.delete(`https://ayuom-backend.vercel.app/api/products/${id}`, getAuthConfig());
+      await axios.delete(`${API_BASE_URL}/products/${id}`, getAuthConfig());
       setProducts(products.filter(p => p._id !== id));
     } catch (err) {
       alert('Error deleting data: ' + (err.response?.data?.message || err.message));
@@ -198,118 +199,127 @@ const ProductsCMS = () => {
   });
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-8">
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-10">
       {/* Header section with search and add product */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8 bg-white/40 backdrop-blur-md p-10 rounded-[40px] border border-white/40 shadow-soft">
          <div>
-            <h2 className="text-3xl font-black text-slate-900 italic tracking-tighter uppercase leading-none">Products Inventory</h2>
-            <p className="text-slate-400 mt-2 font-bold uppercase tracking-widest text-[10px]">Manage clinical stock and medicinal records</p>
+            <h2 className="text-4xl font-black text-text-main italic tracking-tighter uppercase leading-none flex items-center gap-4">
+              <div className="p-3 bg-gradient-to-br from-unicorn-cyan to-unicorn-magenta rounded-2xl shadow-unicorn">
+                 <Database size={24} className="text-white" />
+              </div>
+              Inventory Control
+            </h2>
+            <p className="text-text-silver mt-3 font-black uppercase tracking-[0.3em] text-[10px]">Synchronized Multi-Node Medicinal Ledger</p>
          </div>
-         <div className="flex items-center gap-4">
-            <div className="flex items-center gap-3 bg-slate-50 border border-slate-100 px-5 py-3 rounded-2xl w-64 focus-within:bg-white focus-within:border-primary-500 transition-all">
-               <Search size={16} className="text-slate-400" />
+         <div className="flex flex-wrap items-center gap-6">
+            <div className="flex items-center gap-4 bg-white/50 backdrop-blur border border-white/20 px-6 py-4 rounded-3xl w-80 focus-within:bg-white focus-within:shadow-medium transition-all group">
+               <Search size={18} className="text-text-silver group-focus-within:text-unicorn-cyan" />
                <input 
                  type="text" 
-                 placeholder="Search medicines..." 
-                 className="bg-transparent border-none outline-none text-xs font-bold w-full text-slate-800 placeholder:text-slate-300" 
+                 placeholder="Search clinical archives..." 
+                 className="bg-transparent border-none outline-none text-[11px] font-black w-full text-text-main placeholder:text-text-silver uppercase tracking-widest" 
                  value={searchQuery} 
                  onChange={e => setSearchQuery(e.target.value)} 
                />
             </div>
-            <button onClick={() => handleOpenModal('add')} className="bg-slate-900 hover:bg-black text-white px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl flex items-center gap-2 transition-all active:scale-95">
-               <Plus className="w-4 h-4" /> Create Product
+            <button onClick={() => handleOpenModal('add')} className="bg-text-main hover:bg-black text-white px-10 py-5 rounded-3xl text-[10px] font-black uppercase tracking-[0.2em] shadow-premium flex items-center gap-3 transition-all active:scale-95 group">
+               <Plus className="w-5 h-5 group-hover:rotate-90 transition-transform" /> Instantiate Product
             </button>
          </div>
       </div>
 
       {/* Stats Bar */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-         <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-6">
-            <div className="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center font-black text-lg shadow-sm border border-emerald-100">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+         <div className="bg-white/40 backdrop-blur-md p-8 rounded-[40px] border border-white/40 shadow-soft flex items-center gap-8 relative overflow-hidden group">
+            <div className="absolute -right-4 -top-4 w-20 h-20 bg-unicorn-cyan/5 rounded-full blur-2xl"></div>
+            <div className="w-16 h-16 bg-unicorn-cyan/10 text-unicorn-cyan rounded-2xl flex items-center justify-center font-black text-xl shadow-inner border border-unicorn-cyan/20">
                {products.length}
             </div>
             <div>
-               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Total SKUs</p>
-               <p className="text-sm font-black text-slate-800 uppercase italic">Clinical Node Active</p>
+               <p className="text-[10px] font-black text-text-silver uppercase tracking-[0.2em] mb-1">Total Active SKUs</p>
+               <p className="text-sm font-black text-text-main uppercase italic">Global Sync Ready</p>
             </div>
          </div>
-         <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-6">
-            <div className="w-14 h-14 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center font-black text-lg shadow-sm border border-rose-100">
+         <div className="bg-white/40 backdrop-blur-md p-8 rounded-[40px] border border-white/40 shadow-soft flex items-center gap-8 relative overflow-hidden group">
+            <div className="absolute -right-4 -top-4 w-20 h-20 bg-rose-500/5 rounded-full blur-2xl"></div>
+            <div className="w-16 h-16 bg-rose-500/10 text-rose-500 rounded-2xl flex items-center justify-center font-black text-xl shadow-inner border border-rose-500/20">
                {products.filter(p => !p.stock || p.stock <= 0).length}
             </div>
             <div>
-               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Exhausted Items</p>
-               <p className="text-sm font-black text-slate-800 uppercase italic">Restock Required</p>
+               <p className="text-[10px] font-black text-text-silver uppercase tracking-[0.2em] mb-1">Exhausted Nodes</p>
+               <p className="text-sm font-black text-text-main uppercase italic">Re-instantiation Required</p>
             </div>
          </div>
-         <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-6">
-            <div className="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center font-black text-lg shadow-sm border border-amber-100">
+         <div className="bg-white/40 backdrop-blur-md p-8 rounded-[40px] border border-white/40 shadow-soft flex items-center gap-8 relative overflow-hidden group">
+            <div className="absolute -right-4 -top-4 w-20 h-20 bg-unicorn-magenta/5 rounded-full blur-2xl"></div>
+            <div className="w-16 h-16 bg-unicorn-magenta/10 text-unicorn-magenta rounded-2xl flex items-center justify-center font-black text-xl shadow-inner border border-unicorn-magenta/20">
                {products.filter(p => p.stock > 0 && p.stock < 10).length}
             </div>
             <div>
-               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Critical Stock</p>
-               <p className="text-sm font-black text-slate-800 uppercase italic">Sub-optimal levels</p>
+               <p className="text-[10px] font-black text-text-silver uppercase tracking-[0.2em] mb-1">Critical Levels</p>
+               <p className="text-sm font-black text-text-main uppercase italic">Sub-optimal Flux</p>
             </div>
          </div>
       </div>
 
       {/* Main Table Container */}
-      <div className="bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white/40 backdrop-blur-md rounded-[56px] border border-white/40 shadow-soft overflow-hidden">
         <table className="w-full text-left">
-          <thead className="bg-slate-50/50 border-b border-slate-100">
+          <thead className="bg-white/30 border-b border-white/20">
             <tr>
-              <th className="px-10 py-6 text-[10px] font-black uppercase tracking-widest text-slate-400 w-1/3">Medicine Designation</th>
-              <th className="px-10 py-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Clinical Segment</th>
-              <th className="px-10 py-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Inventory Status</th>
-              <th className="px-10 py-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Placements</th>
-              <th className="px-10 py-6 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Actions</th>
+              <th className="px-12 py-8 text-[10px] font-black uppercase tracking-[0.4em] text-text-silver w-1/3">Medicine Designation</th>
+              <th className="px-12 py-8 text-[10px] font-black uppercase tracking-[0.4em] text-text-silver">Segment</th>
+              <th className="px-12 py-8 text-[10px] font-black uppercase tracking-[0.4em] text-text-silver">Inventory Status</th>
+              <th className="px-12 py-8 text-[10px] font-black uppercase tracking-[0.4em] text-text-silver">Placements</th>
+              <th className="px-12 py-8 text-[10px] font-black uppercase tracking-[0.4em] text-text-silver text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-50">
+          <tbody className="divide-y divide-white/10">
             {loading ? (
                <tr>
-                 <td colSpan="5" className="px-10 py-20 text-center text-slate-300 text-xs font-bold uppercase tracking-widest animate-pulse">Querying Grid Nodes...</td>
+                 <td colSpan="5" className="px-12 py-32 text-center text-text-silver text-xs font-black uppercase tracking-[0.5em] animate-pulse">Querying Quantum Ledger...</td>
                </tr>
             ) : filteredProducts.length === 0 ? (
                <tr>
-                 <td colSpan="5" className="px-10 py-20 text-center text-slate-300 text-xs font-bold uppercase tracking-widest">No records matched your query parameters.</td>
+                 <td colSpan="5" className="px-12 py-32 text-center text-text-silver text-xs font-black uppercase tracking-[0.5em]">No matching records found in active nodes.</td>
                </tr>
             ) : filteredProducts.map(p => (
-              <tr key={p._id} className="hover:bg-slate-50/50 transition-all group">
-                <td className="px-10 py-6 flex items-center gap-6">
-                   <div className="w-14 h-14 bg-white rounded-xl p-2 border border-slate-100 shadow-sm group-hover:scale-105 transition-transform flex items-center justify-center shrink-0">
-                      <img loading="lazy" src={p.image} className="max-w-full max-h-full object-contain" alt="" />
+              <tr key={p._id} className="hover:bg-white/30 transition-all group">
+                <td className="px-12 py-8 flex items-center gap-8">
+                   <div className="w-16 h-16 bg-white/60 rounded-3xl p-3 border border-white/40 shadow-sm group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 flex items-center justify-center shrink-0 overflow-hidden relative">
+                      <div className="absolute inset-0 bg-gradient-to-br from-unicorn-cyan/10 to-unicorn-magenta/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      <img loading="lazy" src={p.image} className="max-w-full max-h-full object-contain relative z-10" alt="" />
                    </div>
                    <div className="min-w-0">
-                      <p className="text-slate-900 font-black uppercase text-sm italic tracking-tighter truncate">{p.name}</p>
-                      <p className="text-[10px] font-black text-slate-400 tracking-widest mt-1">ID: {p._id.slice(-6).toUpperCase()}</p>
+                      <p className="text-text-main font-black uppercase text-base italic tracking-tighter truncate leading-tight group-hover:text-unicorn-cyan transition-colors">{p.name}</p>
+                      <p className="text-[10px] font-black text-text-silver tracking-[0.2em] mt-2 font-mono">ID: {p._id.slice(-8).toUpperCase()}</p>
                    </div>
                 </td>
-                <td className="px-10 py-6">
-                   <span className="px-4 py-1.5 bg-slate-100 border border-slate-200 text-slate-600 rounded-lg text-[10px] font-bold uppercase tracking-widest">
+                <td className="px-12 py-8">
+                   <span className="px-5 py-2 bg-text-main/5 border border-white/20 text-text-main rounded-xl text-[10px] font-black uppercase tracking-[0.2em] italic">
                       {p.category}
                    </span>
                 </td>
-                <td className="px-10 py-6">
-                   <div className="flex flex-col gap-1.5">
-                      <p className={`text-sm font-black ${p.stock <= 0 ? 'text-rose-600' : p.stock < 10 ? 'text-amber-600' : 'text-emerald-700'}`}>
+                <td className="px-12 py-8">
+                   <div className="flex flex-col gap-2">
+                      <p className={`text-base font-black italic ${p.stock <= 0 ? 'text-rose-500' : p.stock < 10 ? 'text-secondary-500' : 'text-unicorn-cyan'}`}>
                          {p.stock} Units
                       </p>
-                      <div className="h-1 w-20 bg-slate-100 rounded-full overflow-hidden">
-                         <div className={`h-full transition-all duration-1000 ${p.stock <= 0 ? 'bg-rose-500' : p.stock < 10 ? 'bg-amber-500' : 'bg-emerald-500'}`} style={{ width: `${Math.min(100, (p.stock || 0) * 2)}%` }}></div>
+                      <div className="h-2 w-28 bg-white/40 rounded-full overflow-hidden shadow-inner">
+                         <div className={`h-full transition-all duration-1000 ${p.stock <= 0 ? 'bg-rose-500' : p.stock < 10 ? 'bg-secondary-500' : 'bg-gradient-to-r from-unicorn-cyan to-unicorn-purple'}`} style={{ width: `${Math.min(100, (p.stock || 0) * 2)}%` }}></div>
                       </div>
                    </div>
                 </td>
-                <td className="px-10 py-6">
-                   <div className="flex items-center gap-2">
-                       {p.showOnShop && <span className="w-5 h-5 rounded-md bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center text-[10px] font-black" title="Shop">S</span>}
-                       {p.showOnHome && <span className="w-5 h-5 rounded-md bg-orange-50 text-orange-600 border border-orange-100 flex items-center justify-center text-[10px] font-black" title="Home Banner">H</span>}
-                       {p.showOnSchemes && <span className="w-5 h-5 rounded-md bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center text-[10px] font-black" title="Active Scheme">A</span>}
+                <td className="px-12 py-8">
+                   <div className="flex items-center gap-3">
+                       {p.showOnShop && <div className="w-8 h-8 rounded-xl bg-unicorn-cyan/10 text-unicorn-cyan border border-unicorn-cyan/20 flex items-center justify-center text-xs font-black shadow-sm" title="Shop">S</div>}
+                       {p.showOnHome && <div className="w-8 h-8 rounded-xl bg-unicorn-magenta/10 text-unicorn-magenta border border-unicorn-magenta/20 flex items-center justify-center text-xs font-black shadow-sm" title="Home">H</div>}
+                       {p.showOnSchemes && <div className="w-8 h-8 rounded-xl bg-unicorn-purple/10 text-unicorn-purple border border-unicorn-purple/20 flex items-center justify-center text-xs font-black shadow-sm" title="Schemes">A</div>}
                    </div>
                 </td>
-                <td className="px-10 py-6 text-right space-x-2 whitespace-nowrap">
-                   <button onClick={() => handleOpenModal('edit', p)} className="p-2.5 bg-slate-50 hover:bg-slate-900 rounded-xl text-slate-400 hover:text-white transition-all border border-slate-100"><Edit className="w-4 h-4" /></button>
-                   <button onClick={() => handleDelete(p._id)} className="p-2.5 bg-slate-50 hover:bg-rose-500 rounded-xl text-slate-400 hover:text-white transition-all border border-slate-100"><Trash2 className="w-4 h-4" /></button>
+                <td className="px-12 py-8 text-right space-x-3 whitespace-nowrap">
+                   <button onClick={() => handleOpenModal('edit', p)} className="p-4 bg-white/40 hover:bg-text-main hover:text-white rounded-2xl text-text-silver transition-all border border-white/20 shadow-sm"><Edit className="w-5 h-5" /></button>
+                   <button onClick={() => handleDelete(p._id)} className="p-4 bg-white/40 hover:bg-rose-500 hover:text-white rounded-2xl text-text-silver transition-all border border-white/20 shadow-sm"><Trash2 className="w-5 h-5" /></button>
                 </td>
               </tr>
             ))}
@@ -318,104 +328,88 @@ const ProductsCMS = () => {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xl animate-in fade-in duration-300">
-          <div className="bg-white rounded-[56px] w-full max-w-3xl overflow-hidden shadow-3xl border border-white/20 animate-in zoom-in-95 duration-300">
-             <div className="p-12 border-b border-surface-border flex justify-between items-center bg-surface-light">
-                <div className="space-y-1">
-                   <h2 className="text-3xl font-black text-primary-600 italic uppercase tracking-tighter leading-none">{modalMode === 'add' ? 'Instantiate Record' : 'Modify Record'}</h2>
-                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Global Master Editor</p>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-950/40 backdrop-blur-2xl animate-in fade-in duration-500">
+          <div className="bg-white/80 backdrop-blur-3xl rounded-[64px] w-full max-w-4xl overflow-hidden shadow-unicorn border border-white/40 animate-in zoom-in-95 duration-500 relative">
+             <div className="absolute top-0 right-0 w-64 h-64 bg-unicorn-cyan/5 rounded-full blur-[100px] pointer-events-none"></div>
+             <div className="absolute bottom-0 left-0 w-64 h-64 bg-unicorn-magenta/5 rounded-full blur-[100px] pointer-events-none"></div>
+             
+             <div className="p-16 border-b border-white/20 flex justify-between items-center relative z-10">
+                <div className="space-y-3">
+                   <h2 className="text-4xl font-black text-text-main italic uppercase tracking-tighter leading-none">{modalMode === 'add' ? 'Instantiate Record' : 'Modify Record'}</h2>
+                   <p className="text-[10px] font-black text-text-silver uppercase tracking-[0.4em]">Master Ethereal Editor Alpha</p>
                 </div>
-                <button onClick={() => setShowModal(false)} className="p-4 bg-white rounded-2xl hover:bg-rose-500 hover:text-white transition-all text-slate-300 shadow-premium group">
-                   <X className="group-hover:rotate-90 transition-transform" />
+                <button onClick={() => setShowModal(false)} className="p-6 bg-white/40 rounded-3xl hover:bg-rose-500 hover:text-white transition-all text-text-silver shadow-soft group">
+                   <X className="group-hover:rotate-90 transition-transform" size={24} />
                 </button>
              </div>
-             <form onSubmit={handleSubmit} className="p-12 space-y-10 max-h-[70vh] overflow-y-auto custom-scrollbar">
+             <form onSubmit={handleSubmit} className="p-16 space-y-12 max-h-[65vh] overflow-y-auto custom-scrollbar relative z-10">
                 {/* SECTION 1: Basic Information */}
                 <div>
-                   <h3 className="text-sm font-black text-slate-800 uppercase tracking-widest mb-6 flex items-center gap-2"><div className="w-1.5 h-4 bg-primary-600 rounded-full"></div> Basic Information</h3>
-                   <div className="space-y-6">
-                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Medicine Nomenclature</label>
-                        <input required type="text" placeholder="e.g. AUGMENTIN 625 DUO" className="w-full bg-surface-light p-5 rounded-2xl font-black text-slate-900 border border-surface-border outline-none focus:bg-white focus:border-primary-500 transition-all uppercase text-sm tracking-tight placeholder:text-slate-300" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+                   <h3 className="text-xs font-black text-text-main uppercase tracking-[0.4em] mb-8 flex items-center gap-4 italic"><Sparkles className="text-unicorn-cyan" size={16}/> Essential Schematics</h3>
+                   <div className="space-y-8">
+                     <div className="space-y-3">
+                        <label className="text-[10px] font-black text-text-silver uppercase tracking-[0.3em] ml-2">Medicine Nomenclature</label>
+                        <input required type="text" placeholder="e.g. AUGMENTIN 625 DUO" className="w-full bg-white/50 p-6 rounded-3xl font-black text-text-main border border-white/40 outline-none focus:bg-white focus:shadow-unicorn transition-all uppercase text-base tracking-tight placeholder:text-text-silver/40" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
                      </div>
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="space-y-2">
-                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Manufacturing Brand (Required)</label>
-                           <input required type="text" placeholder="e.g. GSK, Cipla, Generic..." className="w-full bg-surface-light p-5 rounded-2xl font-black text-slate-900 border border-surface-border outline-none focus:bg-white focus:border-primary-500 transition-all text-sm tracking-tight placeholder:text-slate-300" value={formData.brand} onChange={e => setFormData({...formData, brand: e.target.value})} />
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div className="space-y-3">
+                           <label className="text-[10px] font-black text-text-silver uppercase tracking-[0.3em] ml-2">Manufacturing Brand</label>
+                           <input required type="text" placeholder="e.g. GSK, CIPLA..." className="w-full bg-white/50 p-6 rounded-3xl font-black text-text-main border border-white/40 outline-none focus:bg-white focus:shadow-unicorn transition-all text-base tracking-tight placeholder:text-text-silver/40" value={formData.brand} onChange={e => setFormData({...formData, brand: e.target.value})} />
                         </div>
-                        <div className="space-y-2">
-                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Therapeutic Segment / Category</label>
-                           <select required className="w-full bg-surface-light p-5 rounded-2xl font-black text-slate-900 border border-surface-border outline-none focus:bg-white transition-all appearance-none cursor-pointer" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}>
+                        <div className="space-y-3">
+                           <label className="text-[10px] font-black text-text-silver uppercase tracking-[0.3em] ml-2">Therapeutic Segment</label>
+                           <select required className="w-full bg-white/50 p-6 rounded-3xl font-black text-text-main border border-white/40 outline-none focus:bg-white transition-all appearance-none cursor-pointer" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}>
                              {categories.length === 0 && <option value="General">General</option>}
                              {categories.map(c => <option key={c} value={c}>{c}</option>)}
                            </select>
                         </div>
                      </div>
-                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Clinical Description</label>
-                        <textarea rows="3" placeholder="Enter dosage instructions, uses, and contraindications..." className="w-full bg-surface-light p-5 rounded-2xl font-bold text-slate-700 border border-surface-border outline-none focus:bg-white focus:border-primary-500 transition-all text-sm tracking-tight placeholder:text-slate-300 resize-none" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})}></textarea>
+                     <div className="space-y-3">
+                        <label className="text-[10px] font-black text-text-silver uppercase tracking-[0.3em] ml-2">Clinical Brief</label>
+                        <textarea rows="3" placeholder="Enter clinical directives, contraindications, and active compounds..." className="w-full bg-white/50 p-6 rounded-3xl font-bold text-text-main border border-white/40 outline-none focus:bg-white focus:shadow-unicorn transition-all text-sm tracking-tight placeholder:text-text-silver/40 resize-none" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})}></textarea>
                      </div>
                    </div>
                 </div>
 
-                <div className="h-px w-full bg-surface-border"></div>
+                <div className="h-px w-full bg-gradient-to-r from-transparent via-white/40 to-transparent"></div>
 
                 {/* SECTION 2: Commerce & Pricing */}
-                <div>
-                   <h3 className="text-sm font-black text-emerald-800 uppercase tracking-widest mb-6 flex items-center gap-2"><div className="w-1.5 h-4 bg-emerald-500 rounded-full"></div> Commerce & Pricing</h3>
-                   <div className="grid grid-cols-2 gap-8">
-                       <div className="space-y-2">
-                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Base Procurement Price (₹)</label>
-                          <input required type="number" placeholder="0.00" className="w-full bg-emerald-50/50 p-5 rounded-2xl font-black text-emerald-900 border border-emerald-100 outline-none focus:bg-emerald-50 focus:border-emerald-500 transition-all uppercase text-sm tracking-tight placeholder:text-slate-300" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} />
-                       </div>
-                       <div className="space-y-2">
-                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Original MRP (₹)</label>
-                          <input type="number" placeholder="0.00" className="w-full bg-surface-light p-5 rounded-2xl font-black text-slate-900 border border-surface-border outline-none focus:bg-white focus:border-primary-500 transition-all uppercase text-sm tracking-tight placeholder:text-slate-300" value={formData.originalPrice} onChange={e => setFormData({...formData, originalPrice: e.target.value})} />
-                       </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                   <div>
+                     <h3 className="text-xs font-black text-unicorn-cyan uppercase tracking-[0.4em] mb-8 flex items-center gap-4 italic">Pricing Matrix</h3>
+                     <div className="grid grid-cols-2 gap-6">
+                         <div className="space-y-3">
+                            <label className="text-[10px] font-black text-text-silver uppercase tracking-[0.3em] ml-2">Sale Terminal Price (₹)</label>
+                            <input required type="number" placeholder="0.00" className="w-full bg-unicorn-cyan/5 p-6 rounded-3xl font-black text-unicorn-cyan border border-unicorn-cyan/10 outline-none focus:bg-white focus:shadow-unicorn transition-all text-base tracking-tight placeholder:text-unicorn-cyan/30" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} />
+                         </div>
+                         <div className="space-y-3">
+                            <label className="text-[10px] font-black text-text-silver uppercase tracking-[0.3em] ml-2">Master MRP (₹)</label>
+                            <input type="number" placeholder="0.00" className="w-full bg-white/50 p-6 rounded-3xl font-black text-text-main border border-white/40 outline-none focus:bg-white focus:shadow-unicorn transition-all text-base tracking-tight placeholder:text-text-silver/40" value={formData.originalPrice} onChange={e => setFormData({...formData, originalPrice: e.target.value})} />
+                         </div>
+                     </div>
+                   </div>
+                   <div>
+                     <h3 className="text-xs font-black text-secondary-500 uppercase tracking-[0.4em] mb-8 flex items-center gap-4 italic">Flux Management</h3>
+                     <div className="space-y-3">
+                        <label className="text-[10px] font-black text-text-silver uppercase tracking-[0.3em] ml-2">Current Unit Count</label>
+                        <input required type="number" placeholder="000" className="w-full bg-white/50 p-6 rounded-3xl font-black text-text-main border border-white/40 outline-none focus:bg-white focus:shadow-unicorn transition-all text-2xl tracking-tighter" value={formData.stock} onChange={e => setFormData({...formData, stock: e.target.value})} />
+                     </div>
                    </div>
                 </div>
 
-                <div className="h-px w-full bg-surface-border"></div>
-
-                {/* SECTION 3: Inventory Management */}
-                <div>
-                   <h3 className="text-sm font-black text-amber-800 uppercase tracking-widest mb-6 flex items-center gap-2">
-                      <div className="w-1.5 h-4 bg-amber-500 rounded-full"></div> 
-                      <Database className="w-4 h-4" /> Inventory Management
-                   </h3>
-                   <div className="bg-amber-50/30 border border-amber-100 p-8 rounded-[32px] space-y-4">
-                      <div className="space-y-2">
-                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Current Stock Count</label>
-                         <input 
-                           required 
-                           type="number" 
-                           placeholder="Enter available units (e.g. 500)" 
-                           className="w-full bg-white p-6 rounded-2xl font-black text-slate-900 border border-amber-200 outline-none focus:border-amber-500 transition-all text-lg tracking-tight shadow-sm" 
-                           value={formData.stock} 
-                           onChange={e => setFormData({...formData, stock: e.target.value})} 
-                         />
-                      </div>
-                      <p className="text-[10px] font-bold text-amber-600/60 uppercase tracking-widest px-2">
-                         Setting this to 0 will automatically mark the product as "Out of Stock" on the frontend.
-                      </p>
-                   </div>
-                </div>
-
-                <div className="h-px w-full bg-surface-border"></div>
+                <div className="h-px w-full bg-gradient-to-r from-transparent via-white/40 to-transparent"></div>
 
                 {/* SECTION 4: Media Assets */}
                 <div>
-                   <h3 className="text-sm font-black text-blue-800 uppercase tracking-widest mb-6 flex items-center gap-2"><div className="w-1.5 h-4 bg-blue-500 rounded-full"></div> Media Assets Gallery (Max 5)</h3>
-                   <div className="space-y-4 bg-blue-50/50 p-6 rounded-[32px] border border-blue-100">
-                      
-                      {/* Image Preview Strip */}
+                   <h3 className="text-xs font-black text-unicorn-magenta uppercase tracking-[0.4em] mb-8 flex items-center gap-4 italic">Visual Encoding (Max 5)</h3>
+                   <div className="bg-white/40 p-8 rounded-[40px] border border-white/40 space-y-6">
                       {formData.images && formData.images.length > 0 && (
-                        <div className="flex flex-wrap gap-4 mb-4">
+                        <div className="flex flex-wrap gap-6">
                           {formData.images.map((imgUrl, idx) => (
-                            <div key={idx} className="relative w-24 h-24 bg-white rounded-2xl border border-blue-200 overflow-hidden shadow-sm group">
-                              <img src={imgUrl} className="w-full h-full object-contain p-2" alt={`Slot ${idx+1}`} />
-                              <button type="button" onClick={() => handleRemoveImage(idx)} className="absolute top-1 right-1 w-6 h-6 bg-white/90 backdrop-blur text-rose-500 rounded-full border border-rose-100 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-rose-500 hover:text-white">
-                                <X size={14} />
+                            <div key={idx} className="relative w-28 h-28 bg-white/60 rounded-[28px] border border-white/40 overflow-hidden shadow-soft group">
+                              <img src={imgUrl} className="w-full h-full object-contain p-3" alt={`Slot ${idx+1}`} />
+                              <button type="button" onClick={() => handleRemoveImage(idx)} className="absolute top-2 right-2 w-8 h-8 bg-white/80 backdrop-blur-md text-rose-500 rounded-full border border-rose-100 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-rose-500 hover:text-white">
+                                <X size={16} />
                               </button>
                             </div>
                           ))}
@@ -423,63 +417,56 @@ const ProductsCMS = () => {
                       )}
 
                       {(!formData.images || formData.images.length < 5) && (
-                        <div>
-                          <label className={`flex flex-col items-center justify-center w-full h-24 border-2 border-dashed ${uploadingImage ? 'border-primary-400 bg-primary-50' : 'border-blue-200 bg-white hover:bg-blue-50 hover:border-blue-400'} rounded-2xl cursor-pointer transition-all group`}>
-                             <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                               {uploadingImage ? (
-                                 <div className="text-primary-600 font-bold text-[10px] uppercase tracking-widest animate-pulse flex flex-col items-center gap-2">
-                                   <div className="w-4 h-4 border-2 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
-                                   Compressing & Uploading...
-                                 </div>
-                               ) : (
-                                 <>
-                                   <Plus className="w-6 h-6 text-blue-400 group-hover:text-blue-500 mb-2 transition-colors" />
-                                   <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Select Image File</p>
-                                 </>
-                               )}
-                             </div>
-                             <input type="file" className="hidden" accept="image/*" disabled={uploadingImage} onChange={(e) => handleImageUpload(e.target.files[0])} />
-                          </label>
-                        </div>
+                        <label className={`flex flex-col items-center justify-center w-full h-32 border-3 border-dashed ${uploadingImage ? 'border-unicorn-cyan/40 bg-unicorn-cyan/5' : 'border-white/60 bg-white/40 hover:bg-white/80 hover:border-unicorn-cyan/60'} rounded-[40px] cursor-pointer transition-all group`}>
+                          {uploadingImage ? (
+                            <div className="text-unicorn-cyan font-black text-[10px] uppercase tracking-[0.4em] animate-pulse flex flex-col items-center gap-4">
+                              <div className="w-6 h-6 border-3 border-unicorn-cyan border-t-transparent rounded-full animate-spin"></div>
+                              Encoding Assets...
+                            </div>
+                          ) : (
+                            <>
+                              <Plus className="w-8 h-8 text-text-silver group-hover:text-unicorn-cyan group-hover:scale-110 transition-all" />
+                              <p className="text-[10px] font-black text-text-silver uppercase tracking-[0.4em] mt-3">Upload Media DNA</p>
+                            </>
+                          )}
+                          <input type="file" className="hidden" accept="image/*" disabled={uploadingImage} onChange={(e) => handleImageUpload(e.target.files[0])} />
+                        </label>
                       )}
-                      
-                      <p className="text-[9px] font-bold text-blue-400 uppercase tracking-widest">The first image will act as the primary Master UI thumbnail.</p>
                    </div>
                 </div>
 
-                <div className="h-px w-full bg-surface-border"></div>
+                <div className="h-px w-full bg-gradient-to-r from-transparent via-white/40 to-transparent"></div>
 
-                {/* SECTION 4: Placements */}
+                {/* SECTION 5: Placements */}
                 <div>
-                   <h3 className="text-sm font-black text-purple-800 uppercase tracking-widest mb-6 flex items-center gap-2"><div className="w-1.5 h-4 bg-purple-500 rounded-full"></div> UI Placement Assignments</h3>
-                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      <label className={`flex items-center gap-4 p-5 rounded-2xl border transition-all cursor-pointer shadow-sm ${formData.showOnShop ? 'bg-purple-50 border-purple-200 shadow-purple-500/10' : 'bg-surface-light border-surface-border opacity-70'}`}>
-                         <input type="checkbox" className="w-5 h-5 accent-purple-600 cursor-pointer" checked={formData.showOnShop} onChange={e => setFormData({...formData, showOnShop: e.target.checked})} />
+                   <h3 className="text-xs font-black text-unicorn-purple uppercase tracking-[0.4em] mb-8 flex items-center gap-4 italic">UI Node Deployment</h3>
+                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                      <label className={`flex items-center gap-6 p-8 rounded-[32px] border transition-all cursor-pointer shadow-soft group ${formData.showOnShop ? 'bg-unicorn-cyan/10 border-unicorn-cyan/40 shadow-unicorn/10' : 'bg-white/40 border-white/40 opacity-70'}`}>
+                         <input type="checkbox" className="w-6 h-6 accent-unicorn-cyan cursor-pointer" checked={formData.showOnShop} onChange={e => setFormData({...formData, showOnShop: e.target.checked})} />
                          <div>
-                            <p className="font-black text-slate-800 text-sm outline-none">Shop Database</p>
-                            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Main Catalog</p>
+                            <p className="font-black text-text-main text-base italic group-hover:translate-x-1 transition-transform">Catalog</p>
+                            <p className="text-[9px] text-text-silver font-black uppercase tracking-[0.2em] mt-1">Main Database</p>
                          </div>
                       </label>
-                      <label className={`flex items-center gap-4 p-5 rounded-2xl border transition-all cursor-pointer shadow-sm ${formData.showOnHome ? 'bg-orange-50 border-orange-200 shadow-orange-500/10' : 'bg-surface-light border-surface-border opacity-70'}`}>
-                         <input type="checkbox" className="w-5 h-5 accent-orange-600 cursor-pointer" checked={formData.showOnHome} onChange={e => setFormData({...formData, showOnHome: e.target.checked})} />
+                      <label className={`flex items-center gap-6 p-8 rounded-[32px] border transition-all cursor-pointer shadow-soft group ${formData.showOnHome ? 'bg-unicorn-magenta/10 border-unicorn-magenta/40 shadow-unicorn/10' : 'bg-white/40 border-white/40 opacity-70'}`}>
+                         <input type="checkbox" className="w-6 h-6 accent-unicorn-magenta cursor-pointer" checked={formData.showOnHome} onChange={e => setFormData({...formData, showOnHome: e.target.checked})} />
                          <div>
-                            <p className="font-black text-slate-800 text-sm">Home Promoted</p>
-                            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Landing Page</p>
+                            <p className="font-black text-text-main text-base italic group-hover:translate-x-1 transition-transform">Promoted</p>
+                            <p className="text-[9px] text-text-silver font-black uppercase tracking-[0.2em] mt-1">Landing Node</p>
                          </div>
                       </label>
-                      <label className={`flex items-center gap-4 p-5 rounded-2xl border transition-all cursor-pointer shadow-sm ${formData.showOnSchemes ? 'bg-emerald-50 border-emerald-200 shadow-emerald-500/10' : 'bg-surface-light border-surface-border opacity-70'}`}>
-                         <input type="checkbox" className="w-5 h-5 accent-emerald-600 cursor-pointer" checked={formData.showOnSchemes} onChange={e => setFormData({...formData, showOnSchemes: e.target.checked})} />
+                      <label className={`flex items-center gap-6 p-8 rounded-[32px] border transition-all cursor-pointer shadow-soft group ${formData.showOnSchemes ? 'bg-unicorn-purple/10 border-unicorn-purple/40 shadow-unicorn/10' : 'bg-white/40 border-white/40 opacity-70'}`}>
+                         <input type="checkbox" className="w-6 h-6 accent-unicorn-purple cursor-pointer" checked={formData.showOnSchemes} onChange={e => setFormData({...formData, showOnSchemes: e.target.checked})} />
                          <div>
-                            <p className="font-black text-slate-800 text-sm">Schemes Active</p>
-                            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Bulk Offers</p>
+                            <p className="font-black text-text-main text-base italic group-hover:translate-x-1 transition-transform">Active Scheme</p>
+                            <p className="text-[9px] text-text-silver font-black uppercase tracking-[0.2em] mt-1">Primary Tier</p>
                          </div>
                       </label>
                    </div>
-                   <p className="text-[10px] font-bold text-slate-400 mt-4 px-2">Note: Toggling "Schemes Active" will immediately register this medicine under the primary promotional tier sitewide.</p>
                 </div>
 
-                <button type="submit" className="w-full bg-slate-900 py-6 rounded-[28px] font-black uppercase tracking-widest text-white shadow-2xl flex items-center justify-center gap-4 active:scale-95 transition-all text-sm hover:bg-black group">
-                   <Save className="w-5 h-5 group-hover:scale-110 transition-transform" /> Commit Changes to Database Hub
+                <button type="submit" className="w-full bg-text-main py-8 rounded-[40px] font-black uppercase tracking-[0.5em] text-white shadow-premium flex items-center justify-center gap-6 active:scale-95 transition-all text-xs hover:bg-black group">
+                   <Save className="w-6 h-6 group-hover:scale-125 transition-transform" /> Commit Changes to Hub
                 </button>
              </form>
           </div>
