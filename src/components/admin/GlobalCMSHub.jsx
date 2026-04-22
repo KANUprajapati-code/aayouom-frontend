@@ -3,7 +3,8 @@ import axios from 'axios';
 import { 
   Save, Layout, ShieldCheck, Zap, Mail, Phone, 
   MapPin, Globe, Instagram, PhoneCall, Sparkles, 
-  Upload, Trash2, Plus, Wand2, Info, Image as ImageIcon
+  Upload, Trash2, Plus, Wand2, Info, Image as ImageIcon,
+  Package
 } from 'lucide-react';
 import API_BASE_URL from '../../config/api';
 

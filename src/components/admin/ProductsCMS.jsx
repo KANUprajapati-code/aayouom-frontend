@@ -3,14 +3,14 @@ import axios from 'axios';
 import { Plus, Edit, Trash2, Save, X, Search, Database, LayoutGrid, Sparkles } from 'lucide-react';
 import API_BASE_URL from '../../config/api';
 
-const ProductsCMS = () => {
+const ProductsCMS = ({ initialFilter = 'All' }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState('add');
   const [currentProductId, setCurrentProductId] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeFilter, setActiveFilter] = useState('All');
+  const [activeFilter, setActiveFilter] = useState(initialFilter);
 
   const [formData, setFormData] = useState({
     name: '',

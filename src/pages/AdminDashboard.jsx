@@ -30,6 +30,7 @@ const AdminDashboard = () => {
   const [products, setProducts] = useState([]);
   const [pendingUsers, setPendingUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [categoryFilter, setCategoryFilter] = useState('All');
   
   const navigate = useNavigate();
   
@@ -138,115 +139,68 @@ const AdminDashboard = () => {
                       </div>
                       <div className="h-64 flex items-end justify-between px-6 pt-10 border-b border-l border-white/20 relative z-10">
                          {['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'].map((m) => (
-                            <div key={m} className="flex flex-col items-center gap-4 group">
-                               <motion.div 
-                                 initial={{ height: 0 }}
-                                 animate={{ height: "100%" }}
-                                 className="w-14 h-40 bg-unicorn-cyan/5 rounded-t-2xl group-hover:bg-unicorn-magenta/10 transition-all relative overflow-hidden"
-                               >
-                                  <motion.div 
-                                    initial={{ y: 200 }}
-                                    animate={{ y: m === 'Apr' ? 0 : 50 }}
-                                    transition={{ duration: 1.5, ease: "easeOut" }}
-                                    className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-unicorn-purple to-unicorn-cyan h-3/4 opacity-40 group-hover:opacity-60"
-                                  ></motion.div>
-                               </motion.div>
-                               <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">{m}</span>
-                            </div>
+                           <div key={m} className="flex flex-col items-center gap-4 group/bar">
+                              <div className="relative w-12 flex flex-col justify-end">
+                                 <motion.div 
+                                   initial={{ height: 0 }}
+                                   animate={{ height: `${Math.random() * 100 + 40}%` }}
+                                   className="w-full bg-gradient-to-t from-unicorn-indigo via-unicorn-purple to-unicorn-cyan rounded-t-xl group-hover/bar:brightness-110 transition-all shadow-lg"
+                                 ></motion.div>
+                              </div>
+                              <span className="text-[9px] font-black text-text-silver uppercase tracking-widest">{m}</span>
+                           </div>
                          ))}
-                      </div>
-                   </div>
-                   
-                   <div className="bg-white/40 backdrop-blur-md rounded-[40px] border border-white/40 shadow-soft overflow-hidden">
-                      <div className="p-10 border-b border-white/20 flex items-center justify-between">
-                         <div>
-                            <h3 className="text-2xl font-black text-text-main tracking-tighter italic uppercase">Recent Activity</h3>
-                            <p className="text-[10px] font-black text-text-muted mt-2 uppercase tracking-[0.2em]">Latest Transactional Ledger</p>
-                         </div>
-                         <button onClick={() => setActiveTab('orders')} className="px-6 py-3 bg-white/50 rounded-2xl text-[10px] font-black uppercase text-secondary-500 tracking-widest hover:bg-secondary-500 hover:text-white transition-all border border-white/20 shadow-sm flex items-center gap-2">
-                            View All <ArrowUpRight size={14} />
-                         </button>
-                      </div>
-                      <div className="p-10">
-                         <table className="w-full text-left">
-                            <thead>
-                               <tr className="text-[10px] font-black uppercase text-text-silver tracking-[0.2em]">
-                                  <th className="pb-8">ID</th>
-                                  <th className="pb-8">Customer</th>
-                                  <th className="pb-8">Date</th>
-                                  <th className="pb-8">Amount</th>
-                                  <th className="pb-8 text-right">Status</th>
-                               </tr>
-                            </thead>
-                            <tbody className="divide-y divide-white/10 text-sm font-bold text-text-main">
-                               {[1,2,3].map(i => (
-                                  <tr key={i} className="group">
-                                     <td className="py-6 text-text-silver font-mono">#ORD-{6900 + i}</td>
-                                     <td className="py-6 italic font-black">Anonymous User</td>
-                                     <td className="py-6 text-text-muted">Apr {8-i}, 2026</td>
-                                     <td className="py-6 font-black text-unicorn-magenta">₹{999+(i*100)}</td>
-                                     <td className="py-6 text-right">
-                                        <span className="px-4 py-2 bg-unicorn-cyan/10 text-unicorn-cyan rounded-xl text-[10px] font-black uppercase border border-unicorn-cyan/20">Pending</span>
-                                     </td>
-                                  </tr>
-                               ))}
-                            </tbody>
-                         </table>
                       </div>
                    </div>
                 </div>
 
-                <div className="bg-white/40 backdrop-blur-md p-10 rounded-[40px] border border-white/40 shadow-soft">
-                   <div className="flex items-center gap-4 mb-10 text-secondary-500">
-                      <div className="w-12 h-12 bg-secondary-500/10 rounded-2xl flex items-center justify-center">
-                        <Bell className="w-6 h-6 animate-pulse" />
-                      </div>
-                      <h3 className="text-xl font-black tracking-tighter uppercase italic">Inventory Pulse</h3>
-                   </div>
-                   <div className="space-y-6">
-                      {loading ? (
-                         <div className="py-10 text-center animate-pulse">
-                            <div className="w-8 h-8 border-2 border-unicorn-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                            <p className="text-[10px] font-black text-text-silver uppercase tracking-widest">Scanning Grid...</p>
-                         </div>
-                      ) : lowStockItems.length === 0 ? (
-                         <div className="py-20 text-center">
-                            <div className="w-20 h-20 bg-unicorn-cyan/5 rounded-[32px] flex items-center justify-center mx-auto mb-6 border border-unicorn-cyan/10">
-                               <CheckCircle2 size={40} className="text-unicorn-cyan opacity-40" />
-                            </div>
-                            <p className="text-[11px] font-black text-text-silver uppercase tracking-[0.2em]">Inventory Optimal</p>
-                         </div>
-                      ) : lowStockItems.map(item => (
-                         <motion.div key={item._id} whileHover={{ x: 5 }} className="p-5 bg-white/30 rounded-3xl border border-white/40 group hover:bg-white/60 transition-all border-l-4 border-l-secondary-500 shadow-sm">
-                            <div className="flex justify-between items-start mb-3">
-                               <div>
-                                  <p className="text-xs font-black text-text-main uppercase tracking-tight truncate max-w-[150px] italic">{item.name}</p>
-                                  <p className="text-[9px] font-black text-text-silver uppercase tracking-widest mt-1">SKU: {item._id.slice(-8).toUpperCase()}</p>
+                <div className="space-y-8">
+                    <div className="bg-white/40 backdrop-blur-md p-10 rounded-[40px] border border-white/40 shadow-soft overflow-hidden relative">
+                       <h3 className="text-sm font-black text-text-main uppercase tracking-[0.3em] mb-8 flex items-center gap-3">
+                          <Activity className="text-unicorn-magenta" size={16} /> Critical Alerts
+                       </h3>
+                       <div className="space-y-6">
+                          {lowStockItems.length > 0 ? lowStockItems.map(p => (
+                            <div key={p._id} className="flex items-center justify-between p-4 bg-white/40 rounded-2xl border border-white/20">
+                               <div className="space-y-1">
+                                  <p className="text-[10px] font-black text-text-main uppercase truncate w-32">{p.name}</p>
+                                  <p className="text-[9px] font-black text-rose-500 uppercase tracking-widest">STOCK: {p.stock}</p>
                                </div>
-                               <div className={`text-xs font-black px-3 py-1 rounded-lg ${item.stock <= 0 ? 'bg-rose-500/10 text-rose-500' : 'bg-secondary-500/10 text-secondary-500'}`}>
-                                  {item.stock} left
-                               </div>
+                               <button onClick={() => { setCategoryFilter(p.category); setActiveTab('products'); }} className="p-2 bg-text-main text-white rounded-xl hover:bg-black transition-all">
+                                  <Plus size={14} />
+                               </button>
                             </div>
-                            <div className="h-1.5 bg-white/50 rounded-full overflow-hidden">
-                               <motion.div 
-                                 initial={{ width: 0 }}
-                                 animate={{ width: `${Math.max(10, (item.stock || 0) * 10)}%` }}
-                                 className="h-full bg-gradient-to-r from-secondary-500 to-unicorn-magenta"
-                               ></motion.div>
-                            </div>
-                         </motion.div>
-                      ))}
-                   </div>
-                   <button onClick={() => setActiveTab('products')} className="w-full mt-10 py-5 bg-text-main hover:bg-black text-white rounded-3xl font-black uppercase text-[10px] tracking-[0.3em] transition-all shadow-xl active:scale-95">
-                      Open Warehouse
-                   </button>
-                </div>
-             </div>
-          </motion.section>
+                          )) : (
+                            <p className="text-[10px] font-black text-text-muted text-center py-4 uppercase tracking-widest opacity-40 italic">System Nominal • All Stocks Valid</p>
+                          )}
+                       </div>
+                    </div>
+
+                    <button 
+                      onClick={() => setActiveTab('users')} 
+                      className="w-full p-10 bg-gradient-to-br from-unicorn-indigo via-unicorn-purple to-unicorn-magenta rounded-[40px] shadow-unicorn hover:scale-[1.02] active:scale-95 transition-all text-white group flex flex-col items-center gap-5 overflow-hidden relative"
+                    >
+                       <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-2xl group-hover:scale-125 transition-transform"></div>
+                       <Users size={32} className="relative z-10" />
+                       <div className="text-center relative z-10">
+                          <p className="text-[10px] font-black uppercase tracking-[0.4em] opacity-80 mb-1">Onboarding Grid</p>
+                          <h4 className="text-lg font-black uppercase italic tracking-tighter">{pendingUsers.length} Pending Authentications</h4>
+                       </div>
+                    </button>
+                 </div>
+              </div>
+           </motion.section>
         );
-      case 'products': return <ProductsCMS />;
+      case 'products': return <ProductsCMS initialFilter={categoryFilter} />;
       case 'homecms': return <GlobalCMSHub />;
-      case 'categories': return <CategoriesCMS />;
+      case 'categories': return (
+        <CategoriesCMS 
+          onManageProducts={(categoryName) => {
+            setCategoryFilter(categoryName);
+            setActiveTab('products');
+          }} 
+        />
+      );
       case 'schemes': return <SchemesCMS />;
       case 'pages': return <PagesCMS />;
       case 'bulkorders': return <BulkOrderCMS />;
@@ -258,8 +212,8 @@ const AdminDashboard = () => {
         return (
           <div className="py-40 flex flex-col items-center justify-center text-center space-y-8 animate-in fade-in zoom-in duration-700">
              <div className="w-32 h-32 bg-white/20 backdrop-blur-xl border border-white/20 rounded-[48px] flex items-center justify-center text-white shadow-unicorn relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-br from-unicorn-cyan via-unicorn-purple to-unicorn-magenta opacity-20 group-hover:opacity-40 transition-opacity"></div>
-                <Wand2 size={56} className="relative z-10 animate-pulse text-white" />
+                 <div className="absolute inset-0 bg-gradient-to-br from-unicorn-cyan via-unicorn-purple to-unicorn-magenta opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                 <Wand2 size={56} className="relative z-10 animate-pulse text-white" />
              </div>
              <div className="space-y-2">
                <h2 className="text-3xl font-black text-text-main uppercase italic tracking-tighter">{activeTab.replace(/([A-Z])/g, ' $1')} Node</h2>
@@ -272,30 +226,28 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex text-text-main font-sans overflow-hidden">
-      {/* BACKGROUND EFFECTS */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-unicorn-cyan/10 rounded-full blur-[120px]"></div>
-         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-unicorn-magenta/10 rounded-full blur-[120px]"></div>
-         <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-unicorn-purple/5 rounded-full blur-[100px]"></div>
-      </div>
-
-      {/* SIDEBAR */}
-      <aside className="w-80 bg-text-main text-white flex flex-col fixed h-full z-50 overflow-y-auto border-r border-white/5 shadow-2xl relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-slate-950 to-purple-950 opacity-95"></div>
+    <div className="flex bg-slate-50 min-h-screen text-text-main selection:bg-unicorn-magenta/30 selection:text-text-main">
+      <div className="fixed inset-0 z-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-unicorn-cyan/5 via-transparent to-transparent opacity-60 pointer-events-none"></div>
+      
+      {/* SIDEBAR NAVIGATION */}
+      <aside className="w-80 h-screen fixed left-0 top-0 bg-slate-900 border-r border-white/5 flex flex-col z-50 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-unicorn-indigo/10 via-transparent to-unicorn-magenta/10 opacity-40"></div>
         
-        <div className="p-10 relative z-10">
-           <div className="flex flex-col gap-2 mb-12">
-              <div className="flex items-center gap-3">
-                 <div className="w-10 h-10 bg-gradient-to-br from-unicorn-cyan to-unicorn-magenta rounded-xl flex items-center justify-center shadow-unicorn">
-                    <Sparkles className="w-6 h-6 text-white" />
-                 </div>
-                 <h2 className="text-2xl font-black italic tracking-tighter uppercase leading-none">Unicorn<br/><span className="text-unicorn-cyan text-xs tracking-[0.4em] not-italic font-bold">Admin Hub</span></h2>
-              </div>
-           </div>
-           
+        <div className="p-12 relative z-10">
+           <Link to="/" className="flex items-center gap-4 group">
+            <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-unicorn group-hover:rotate-12 transition-transform duration-500">
+              <Zap className="text-text-main w-6 h-6" fill="currentColor" />
+            </div>
+            <div>
+              <h1 className="text-xl font-black text-white italic tracking-tighter leading-none">WEDOME</h1>
+              <span className="text-[8px] font-black text-unicorn-cyan uppercase tracking-[0.5em] mt-1 block">Hyper-Nexus</span>
+            </div>
+           </Link>
+        </div>
+
+        <div className="flex-grow overflow-y-auto px-6 py-6 scrollbar-hide relative z-10">
            <nav className="space-y-2">
-              <p className="text-[10px] font-black text-text-silver uppercase tracking-[0.4em] mb-6 opacity-40 px-4">Core Protocol</p>
+              <p className="px-6 py-4 text-[9px] font-black text-text-silver/40 uppercase tracking-[0.4em]">Administrative Modules</p>
               {menuItems.map((item) => (
                 <button 
                   key={item.id} 
