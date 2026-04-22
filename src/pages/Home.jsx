@@ -10,30 +10,36 @@ import {
   ArrowRight,
   Plus,
   Briefcase,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Building2,
+  Filter
 } from 'lucide-react';
 import MedicineCard from '../components/common/MedicineCard';
 import { useCart } from '../context/CartContext';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Home = () => {
   const { addToCart } = useCart();
   const [homeProducts, setHomeProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [selectedBrand, setSelectedBrand] = useState(null);
   const [cms, setCms] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [prodRes, cmsRes, catRes] = await Promise.all([
-          axios.get('https://ayuom-backend.vercel.app/api/products?placement=home'),
+        const [prodRes, cmsRes, catRes, brandsRes] = await Promise.all([
+          axios.get(`https://ayuom-backend.vercel.app/api/products?placement=home${selectedBrand ? `&brand=${selectedBrand}` : ''}`),
           axios.get('https://ayuom-backend.vercel.app/api/content/homepage').catch(() => ({ data: {} })),
-          axios.get('https://ayuom-backend.vercel.app/api/categories').catch(() => ({ data: [] }))
+          axios.get('https://ayuom-backend.vercel.app/api/categories').catch(() => ({ data: [] })),
+          axios.get('https://ayuom-backend.vercel.app/api/products/brands').catch(() => ({ data: [] }))
         ]);
         setHomeProducts(Array.isArray(prodRes.data) ? prodRes.data : []);
         setCms(cmsRes.data || {});
         setCategories(Array.isArray(catRes.data) ? catRes.data : []);
+        setBrands(Array.isArray(brandsRes.data) ? brandsRes.data : []);
       } catch (err) {
         console.error('Failed to fetch home data:', err);
       } finally {
@@ -41,15 +47,7 @@ const Home = () => {
       }
     };
     fetchData();
-  }, []);
-
-  const categoryHighlights = (Array.isArray(categories) ? categories : []).map(cat => {
-    const featuredProduct = homeProducts.find(p => p.category === cat.name);
-    return {
-      category: cat.name,
-      product: featuredProduct
-    };
-  }).filter(h => h.product);
+  }, [selectedBrand]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -82,265 +80,193 @@ const Home = () => {
     ? cms.heroBanners
     : [{
       imageUrl: "https://via.placeholder.com/1600x500?text=Upload+Promotional+Banner+From+Admin",
-      linkUrl: "/products"
+      linkUrl: "/products",
+      title1: "Premium Healthcare Matrix",
+      title2: "Institutional Scale Supply",
+      description: "Direct procurement platform for registered medical practitioners."
     }];
 
-  if (loading) {
+  if (loading && homeProducts.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
+        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-300 animate-pulse">Authenticating Marketplace Registry...</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-16 lg:space-y-24 pb-20 lg:pb-28">
-      {/* Hero Slider Section */}
-      <section className="relative overflow-hidden bg-slate-50 border border-surface-border lg:rounded-3xl shadow-soft h-[60vh] lg:h-[70vh] min-h-[500px] max-h-[800px] w-full group font-sans">
+    <div className="space-y-16 lg:space-y-24 pb-20 lg:pb-28 font-sans">
+      {/* 1. Hero Slider Section */}
+      <section className="relative overflow-hidden bg-slate-900 lg:rounded-[48px] h-[55vh] md:h-[65vh] lg:h-[75vh] w-full group shadow-2xl">
         <div className="absolute inset-0 w-full h-full">
-          {activeBanners.map((banner, idx) => (
+          <AnimatePresence mode="wait">
             <motion.div
-              key={idx}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: currentSlide === idx ? 1 : 0 }}
+              key={currentSlide}
+              initial={{ opacity: 0, scale: 1.05 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
               transition={{ duration: 1 }}
-              className="absolute inset-0 z-0 w-full h-full"
+              className="absolute inset-0 w-full h-full"
             >
-              {/* Background Layer */}
               <div className="absolute inset-0 z-0">
-                {banner.imageUrl ? (
-                  <img loading="lazy" src={banner.imageUrl} alt={`Promotional Banner ${idx + 1}`} className="w-full h-full object-cover lg:object-fill" />
+                {activeBanners[currentSlide].imageUrl ? (
+                  <img src={activeBanners[currentSlide].imageUrl} alt="" className="w-full h-full object-cover opacity-40" />
                 ) : (
-                  <div className="w-full h-full bg-slate-100 flex flex-col items-center justify-center text-slate-300">
-                    <ImageIcon size={64} />
-                    <span className="mt-4 font-black tracking-widest uppercase text-xs sm:text-sm">Admin: Upload Image Banner</span>
+                  <div className="w-full h-full bg-slate-800 flex items-center justify-center">
+                    <ImageIcon size={64} className="text-slate-700" />
                   </div>
                 )}
+                <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/40 to-transparent"></div>
               </div>
 
-              {/* Gradient overlay for readability */}
-              <div className="absolute inset-0 z-0 bg-gradient-to-r from-slate-900/80 via-slate-900/40 to-transparent"></div>
-
-              {/* Text Layer */}
-              <div className="absolute inset-0 z-10 flex flex-col justify-center px-6 md:px-16 lg:px-24">
-                {banner.badge && <span className="text-secondary-400 font-black tracking-widest uppercase text-[20px] mb-2">{banner.badge}</span>}
-                {banner.title1 && <h1 className="text-[20px] font-black text-white leading-tight">{banner.title1}</h1>}
-                {banner.title2 && <h1 className="text-[20px] font-black text-primary-400 leading-tight mb-4">{banner.title2}</h1>}
-                {banner.description && <p className="text-slate-200 text-[20px] max-w-lg mb-4 line-clamp-3 md:line-clamp-none">{banner.description}</p>}
-
-                <div className="flex flex-wrap gap-4 font-sans text-[20px]">
-                  {(banner.btn1Text || banner.linkUrl) && (
-                    <Link to={banner.btn1Link || banner.linkUrl || '/products'} className="bg-primary-600 text-white px-4 py-2 rounded-full font-bold hover:bg-primary-500 transition-colors shadow-lg">
-                      {banner.btn1Text || 'Shop Now'}
-                    </Link>
-                  )}
-                  {banner.btn2Text && (
-                    <Link to={banner.btn2Link || '/products'} className="bg-white text-slate-900 px-4 py-2 rounded-full font-bold hover:bg-slate-100 transition-colors shadow-lg">
-                      {banner.btn2Text}
-                    </Link>
-                  )}
-                </div>
+              <div className="relative z-10 h-full flex flex-col justify-center px-8 md:px-20 max-w-4xl space-y-6 md:space-y-8">
+                {activeBanners[currentSlide].badge && (
+                   <motion.span initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="text-blue-400 font-black tracking-[0.3em] uppercase text-[10px] bg-blue-400/10 px-4 py-1.5 rounded-full border border-blue-400/20 w-fit">{activeBanners[currentSlide].badge}</motion.span>
+                )}
+                <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-4xl md:text-7xl font-black text-white italic leading-[1.05] tracking-tighter">
+                  {activeBanners[currentSlide].title1} <br />
+                  <span className="text-blue-500">{activeBanners[currentSlide].title2}</span>
+                </motion.h1>
+                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="text-lg md:text-xl text-slate-300 font-medium max-w-xl leading-relaxed">
+                  {activeBanners[currentSlide].description}
+                </motion.p>
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+                  <Link to={activeBanners[currentSlide].btn1Link || "/products"} className="inline-flex items-center gap-3 px-10 py-5 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] shadow-2xl shadow-blue-600/30 transition-all active:scale-95">
+                    {activeBanners[currentSlide].btn1Text || 'Enter Marketplace'} <ArrowRight size={18} />
+                  </Link>
+                </motion.div>
               </div>
-              {/* Make whole slide clickable if linkUrl is present but no specific buttons */}
-              {banner.linkUrl && !banner.btn1Text && !banner.btn2Text && (
-                <Link to={banner.linkUrl} className="absolute inset-0 z-20"></Link>
-              )}
             </motion.div>
-          ))}
+          </AnimatePresence>
 
-          {/* Navigation Arrows */}
-          <div className="absolute inset-y-0 left-4 md:left-8 flex items-center z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button
-              onClick={() => setCurrentSlide(prev => (prev - 1 + activeBanners.length) % activeBanners.length)}
-              className="w-10 h-10 md:w-14 md:h-14 rounded-full bg-white/80 backdrop-blur-sm shadow-premium border border-white flex items-center justify-center text-slate-700 hover:text-primary-600 hover:scale-110 active:scale-95 transition-all"
-            >
-              <ArrowRight size={24} className="rotate-180" />
-            </button>
-          </div>
-
-          <div className="absolute inset-y-0 right-4 md:right-8 flex items-center z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button
-              onClick={() => setCurrentSlide(prev => (prev + 1) % activeBanners.length)}
-              className="w-10 h-10 md:w-14 md:h-14 rounded-full bg-white/80 backdrop-blur-sm shadow-premium border border-white flex items-center justify-center text-slate-700 hover:text-primary-600 hover:scale-110 active:scale-95 transition-all"
-            >
-              <ArrowRight size={24} />
-            </button>
-          </div>
-
-          {/* Slider Dots */}
+          {/* Dots Navigation */}
           {activeBanners.length > 1 && (
-            <div className="absolute bottom-6 inset-x-0 flex justify-center gap-2 z-20">
+            <div className="absolute bottom-10 inset-x-0 flex justify-center gap-3 z-20">
               {activeBanners.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrentSlide(i)}
-                  className={`h-2 transition-all duration-300 rounded-full ${currentSlide === i ? 'w-10 bg-white shadow-lg' : 'w-2 bg-white/50 hover:bg-white'} border border-black/10`}
-                />
+                <button key={i} onClick={() => setCurrentSlide(i)} className={`h-1.5 rounded-full transition-all duration-500 ${currentSlide === i ? 'w-12 bg-blue-500' : 'w-2 bg-white/20 hover:bg-white/40'}`}></button>
               ))}
             </div>
           )}
         </div>
       </section>
 
-      {/* Featured Schemes Slider/Grid */}
-      <motion.section
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-        className="space-y-8"
-      >
-        <div className="flex items-end justify-between px-2">
-          <div>
-            <h2 className="text-3xl font-black text-slate-900">{cms.schemesTitle || "Top Schemes Today"}</h2>
-            <p className="text-text-muted mt-2 text-lg">{cms.schemesSubtitle || "Specially curated high-margin offers for your practice."}</p>
+      {/* 2. Top Schemes Product Grid */}
+      <section className="space-y-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 px-2">
+          <div className="space-y-3">
+             <div className="w-12 h-1.5 bg-blue-600 rounded-full"></div>
+            <h2 className="text-4xl md:text-5xl font-black text-slate-950 italic tracking-tighter">PREMIUM SCHEMES</h2>
+            <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px] ml-1">Direct institutional supply for verified partners</p>
           </div>
-          <Link to="/products" className="text-primary-600 font-black flex items-center gap-2 hover:gap-3 transition-all">
-            Browse All Schemes <ArrowRight size={20} />
-          </Link>
+          <Link to="/products" className="px-8 py-3.5 bg-slate-900 hover:bg-black text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl transition-all">Full Catalog &rarr;</Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {homeProducts.length === 0 && <p className="text-slate-400">Loading home products...</p>}
-          {homeProducts.map((p, i) => (
+          {homeProducts.map((p) => (
             <MedicineCard key={p._id} medicine={p} onAddToCart={addToCart} />
           ))}
+          {homeProducts.length === 0 && <div className="col-span-full py-20 text-center text-slate-400 uppercase font-bold tracking-widest text-xs border-2 border-dashed border-slate-100 rounded-[40px]">No products match the active filter pipeline.</div>}
         </div>
-      </motion.section>
+      </section>
 
-      {/* Category Explorer Grid */}
-      <section className="space-y-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="flex flex-col md:flex-row md:items-end justify-between gap-6"
-        >
-          <div className="space-y-4">
-            <div className="px-4 py-1.5 bg-secondary-50 text-secondary-700 rounded-full text-[10px] font-black uppercase tracking-widest border border-secondary-100 w-fit">Clinical Segments</div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight">{cms.categoryTitle || "Explore Therapeutic Matrix"}</h2>
-            <p className="text-slate-500 text-base sm:text-lg max-w-xl">{cms.categorySubtitle || "Browse our specialized medicinal segments verified for quality and supply consistency."}</p>
-          </div>
-          <Link to="/products" className="group flex items-center gap-3 text-sm font-black text-primary-600 uppercase tracking-widest">
-            See Full Catalog <div className="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center group-hover:bg-primary-600 group-hover:text-white transition-all"><ArrowRight size={18} /></div>
-          </Link>
-        </motion.div>
+      {/* 3. NEW: Brand Category Shortner (Brand Filter) */}
+      <section className="space-y-10 py-16 bg-slate-100/50 rounded-[48px] px-8 border border-slate-200">
+         <div className="flex flex-col items-center text-center space-y-4">
+            <div className="flex items-center gap-2 text-blue-600 font-black text-[10px] uppercase tracking-[0.3em]">
+               <Building2 size={14} /> Corporate Partners
+            </div>
+            <h2 className="text-3xl md:text-4xl font-black text-slate-950 tracking-tighter italic">FILTER BY TRUSTED BRANDS</h2>
+            <p className="text-slate-500 text-sm font-semibold max-w-2xl">Direct therapeutic supply from India's leading pharmaceutical innovators. Select a node to view brand-specific inventory.</p>
+         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-          {categories.length === 0 && [1, 2, 3, 4].map(i => (
-            <div key={i} className="aspect-[4/5] bg-slate-100 animate-pulse rounded-[32px]"></div>
-          ))}
-          {categories.map((cat, index) => (
-            <motion.div
-              key={cat._id || index}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.05 }}
-              className="relative aspect-[3/4] group overflow-hidden rounded-[32px] border border-surface-border bg-white shadow-soft cursor-pointer"
+         <div className="flex flex-wrap justify-center gap-6">
+            <button 
+               onClick={() => setSelectedBrand(null)}
+               className={`group flex flex-col items-center gap-4 transition-all ${!selectedBrand ? 'scale-110' : 'opacity-60 hover:opacity-100'}`}
             >
-              {/* Background Image / Placeholder */}
-              <div className="absolute inset-0 z-0">
-                {cat.imageUrl ? (
-                  <img loading="lazy" src={cat.imageUrl} alt={cat.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                ) : (
-                  <div className="w-full h-full bg-primary-50 flex items-center justify-center text-primary-200">
-                    <Zap size={80} />
+               <div className={`w-20 h-20 rounded-full border-2 flex items-center justify-center transition-all ${!selectedBrand ? 'bg-slate-900 border-slate-900 text-white shadow-2xl' : 'bg-white border-slate-200 text-slate-400'}`}>
+                  <Filter size={24} />
+               </div>
+               <span className="text-[10px] font-black uppercase tracking-widest">All Brands</span>
+            </button>
+
+            {brands.map((brand) => (
+               <button 
+                  key={brand}
+                  onClick={() => setSelectedBrand(brand === selectedBrand ? null : brand)}
+                  className={`group flex flex-col items-center gap-4 transition-all ${selectedBrand === brand ? 'scale-110' : 'opacity-60 hover:opacity-100'}`}
+               >
+                  <div className={`w-20 h-20 rounded-full border-2 flex items-center justify-center transition-all overflow-hidden ${selectedBrand === brand ? 'bg-blue-600 border-blue-600 text-white shadow-2xl shadow-blue-600/30' : 'bg-white border-slate-200 text-slate-900'}`}>
+                     <span className="text-xl font-black italic">{brand.charAt(0)}</span>
                   </div>
-                )}
-                {/* Subtle Overlays */}
-                <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent"></div>
-              </div>
+                  <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${selectedBrand === brand ? 'text-blue-600' : 'text-slate-400'}`}>{brand}</span>
+               </button>
+            ))}
+         </div>
+      </section>
 
-              {/* Content */}
-              <div className="absolute inset-0 z-10 p-8 flex flex-col justify-end">
-                <div className="space-y-3 transform lg:translate-y-4 lg:group-hover:translate-y-0 transition-transform duration-500">
-                  <p className="text-[10px] font-black text-white/60 uppercase tracking-widest italic">{cat.brands?.length || 0} Brands Syncing</p>
-                  <h3 className="text-2xl font-black text-white tracking-tighter uppercase leading-none">{cat.name}</h3>
-                  <div className="h-0.5 w-12 bg-primary-500 group-hover:w-full transition-all duration-700"></div>
-                  <Link to={`/products?category=${cat.name}`} className="block">
-                    <span className="inline-flex py-3 text-[10px] font-black text-white uppercase tracking-widest opacity-0 lg:group-hover:opacity-100 transition-opacity flex items-center gap-2">
-                      Enter Segment <ChevronRight size={14} />
-                    </span>
-                  </Link>
-                </div>
-              </div>
+      {/* 4. Therapeutic Matrix (Category Explorer) */}
+      <section className="space-y-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 px-2">
+          <div className="space-y-3">
+             <div className="w-12 h-1.5 bg-blue-600 rounded-full"></div>
+            <h2 className="text-4xl md:text-5xl font-black text-slate-950 italic tracking-tighter uppercase">Clinical Segments</h2>
+            <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px] ml-1">Browse our specialized therapeutic matrix for hospital-grade supplies</p>
+          </div>
+        </div>
 
-              {/* Absolute Link Layer for whole card */}
-              <Link to={`/products?category=${cat.name}`} className="absolute inset-0 z-20" aria-label={`View ${cat.name}`}></Link>
-            </motion.div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          {categories.map((cat, index) => (
+            <Link 
+               key={cat._id || index}
+               to={`/products?category=${cat.name}`}
+               className="relative aspect-[3/4] group overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-soft transition-all duration-500 hover:shadow-2xl hover:shadow-blue-600/10 hover:border-blue-600/30"
+            >
+               <div className="absolute inset-0 z-0">
+                  {cat.imageUrl ? (
+                    <img src={cat.imageUrl} alt={cat.name} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                  ) : (
+                    <div className="w-full h-full bg-slate-50 flex items-center justify-center text-slate-200">
+                       <Zap size={64} />
+                    </div>
+                  )}
+                  <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-slate-950 to-transparent"></div>
+               </div>
+               <div className="absolute inset-0 z-10 p-8 flex flex-col justify-end">
+                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-blue-400 mb-2">{cat.name === 'Medicines' ? 'Critical Care' : 'Specialized'}</span>
+                  <h3 className="text-2xl font-black text-white italic tracking-tighter uppercase leading-none">{cat.name}</h3>
+                  <div className="h-1 w-8 bg-blue-600 mt-4 group-hover:w-full transition-all duration-500 rounded-full"></div>
+               </div>
+            </Link>
           ))}
         </div>
       </section>
 
-      {/* Trust & Quality Section */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1 }}
-        className="bg-slate-900 rounded-3xl lg:rounded-[48px] p-8 sm:p-12 lg:p-24 text-center text-white relative overflow-hidden"
-      >
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary-600 opacity-10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-secondary-500 opacity-5 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2"></div>
+      {/* 5. Trust & Information Section */}
+      <section className="bg-slate-950 rounded-[48px] p-12 md:p-24 text-center relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-600 opacity-10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
+        <div className="relative z-10 max-w-4xl mx-auto space-y-16">
+          <div className="space-y-4">
+            <h2 className="text-4xl lg:text-6xl font-black text-white italic tracking-tighter leading-tight" dangerouslySetInnerHTML={{ __html: cms.trustTitle || "Trusted Infrastructure for <br /> Medical Procurement" }}></h2>
+            <p className="text-xl text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed">
+              {cms.trustSubtitle || "Providing a secure, high-focus platform for hospitals and independent clinics to source authentic pharmaceuticals at institutional scale."}
+            </p>
+          </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto space-y-12">
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="space-y-4"
-          >
-            <motion.h2 variants={itemVariants} className="text-4xl lg:text-6xl font-black leading-tight tracking-tight" dangerouslySetInnerHTML={{ __html: cms.trustTitle || "The Trusted Hub for <br />Healthcare Procurement" }}></motion.h2>
-            <motion.p variants={itemVariants} className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-              {cms.trustSubtitle || "We provide a secure, professional-grade platform for hospitals and independent clinics to source authentic pharmaceuticals at scale."}
-            </motion.p>
-          </motion.div>
-
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid md:grid-cols-3 gap-12 lg:gap-20"
-          >
-            <motion.div variants={itemVariants} className="space-y-4">
-              <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-primary-400 mx-auto border border-white/10 backdrop-blur-md overflow-hidden">
-                {cms?.trustItem1Img ? (
-                  <img loading="lazy" src={cms.trustItem1Img} alt="" className="w-full h-full object-cover" />
-                ) : (
-                  <ShieldCheck size={32} />
-                )}
+          <div className="grid md:grid-cols-3 gap-12 lg:gap-20">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="space-y-4 flex flex-col items-center">
+                <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-blue-400 border border-white/10 backdrop-blur-md overflow-hidden">
+                   {cms?.[`trustItem${i}Img`] ? <img src={cms[`trustItem${i}Img`]} alt="" className="w-full h-full object-cover" /> : <ShieldCheck size={32} />}
+                </div>
+                <h4 className="text-xl font-black text-white uppercase italic">{cms[`trustItem${i}Title`] || "Service Node"}</h4>
+                <p className="text-slate-500 text-sm font-semibold">{cms[`trustItem${i}Desc`] || "Optimized logistics and authenticated supply chain protocols."}</p>
               </div>
-              <h4 className="text-xl font-black">{cms.trustItem1Title || "Quality Assured"}</h4>
-              <p className="text-slate-500 text-sm">{cms.trustItem1Desc || "Every batch verified for authenticity and storage standards."}</p>
-            </motion.div>
-            <motion.div variants={itemVariants} className="space-y-4">
-              <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-primary-400 mx-auto border border-white/10 backdrop-blur-md overflow-hidden">
-                {cms?.trustItem2Img ? (
-                  <img loading="lazy" src={cms.trustItem2Img} alt="" className="w-full h-full object-cover" />
-                ) : (
-                  <Zap size={32} />
-                )}
-              </div>
-              <h4 className="text-xl font-black">{cms.trustItem2Title || "Express Delivery"}</h4>
-              <p className="text-slate-500 text-sm">{cms.trustItem2Desc || "Priority shipping for clinics within 24-48 hours nationwide."}</p>
-            </motion.div>
-            <motion.div variants={itemVariants} className="space-y-4">
-              <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-primary-400 mx-auto border border-white/10 backdrop-blur-md overflow-hidden">
-                {cms?.trustItem3Img ? (
-                  <img loading="lazy" src={cms.trustItem3Img} alt="" className="w-full h-full object-cover" />
-                ) : (
-                  <Briefcase size={32} />
-                )}
-              </div>
-              <h4 className="text-xl font-black">{cms.trustItem3Title || "B2B Compliance"}</h4>
-              <p className="text-slate-500 text-sm">{cms.trustItem3Desc || "Optimized for VAT/GST invoices and professional record-keeping."}</p>
-            </motion.div>
-          </motion.div>
+            ))}
+          </div>
         </div>
-      </motion.section>
+      </section>
     </div>
   );
 };
