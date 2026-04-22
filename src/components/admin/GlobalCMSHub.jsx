@@ -4,7 +4,7 @@ import {
   Save, Layout, ShieldCheck, Zap, Mail, Phone, 
   MapPin, Globe, Instagram, PhoneCall, Sparkles, 
   Upload, Trash2, Plus, Info, Image as ImageIcon,
-  Package
+  Package, Settings
 } from 'lucide-react';
 import API_BASE_URL from '../../config/api';
 
