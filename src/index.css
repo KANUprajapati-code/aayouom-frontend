@@ -1,81 +1,72 @@
 @import "tailwindcss";
 
 @theme {
-  /* Unicorn Iridescent Palette */
-  --color-primary-50: #fef2f2;
-  --color-primary-100: #fee2e2;
-  --color-primary-200: #fecaca;
-  --color-primary-300: #fca5a5;
-  --color-primary-400: #f87171;
-  --color-primary-500: #ef4444;
-  --color-primary-600: #dc2626;
-  --color-primary-700: #b91c1c;
-  --color-primary-800: #991b1b;
-  --color-primary-900: #7f1d1d;
+  /* Professional Medical Palette */
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
 
-  /* Magic Purple & Pink Hub */
-  --color-unicorn-magenta: #ff00ff;
-  --color-unicorn-purple: #9d50bb;
-  --color-unicorn-indigo: #6e48aa;
-  --color-unicorn-cyan: #00d2ff;
-  --color-unicorn-pink: #fbc2eb;
+  --color-secondary-50: #f8fafc;
+  --color-secondary-100: #f1f5f9;
+  --color-secondary-200: #e2e8f0;
+  --color-secondary-300: #cbd5e1;
+  --color-secondary-400: #94a3b8;
+  --color-secondary-500: #64748b;
+  --color-secondary-600: #475569;
   
-  --color-secondary-50: #fdf2f8;
-  --color-secondary-100: #fce7f3;
-  --color-secondary-200: #fbcfe8;
-  --color-secondary-300: #f9a8d4;
-  --color-secondary-400: #f472b6;
-  --color-secondary-500: #ec4899; /* Main Pink Action */
-  --color-secondary-600: #db2777;
-  
-  --color-accent-blue: #38bdf8;
-  --color-accent-teal: #2dd4bf;
-  --color-accent-orange: #fb923c;
-  --color-accent-yellow: #fbbf24;
+  --color-accent-emerald: #10b981;
+  --color-accent-amber: #f59e0b;
+  --color-accent-rose: #f43f5e;
   
   --color-surface-white: #ffffff;
-  --color-surface-light: #fdfaff;
-  --color-surface-muted: #f5f3ff;
-  --color-surface-border: rgba(255, 255, 255, 0.2);
+  --color-surface-light: #f8fafc;
+  --color-surface-muted: #f1f5f9;
+  --color-surface-border: #e2e8f0;
   
-  --color-text-main: #1e1b4b; /* Deep Indigo text */
-  --color-text-muted: #6366f1;
+  --color-text-main: #0f172a;
+  --color-text-muted: #64748b;
   --color-text-silver: #94a3b8;
   
-  --radius-xl: 16px;
-  --radius-2xl: 24px;
-  --radius-3xl: 32px;
-  --radius-large: 28px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-3xl: 24px;
+  --radius-large: 20px;
 
-  --font-sans: "Outfit", "Inter", sans-serif;
+  --font-sans: "Inter", "Outfit", sans-serif;
 
-  --shadow-soft: 0 4px 20px -2px rgba(99, 102, 241, 0.1);
-  --shadow-medium: 0 10px 30px -5px rgba(168, 85, 247, 0.15);
-  --shadow-premium: 0 20px 50px -12px rgba(236, 72, 153, 0.2);
-  --shadow-unicorn: 0 0 20px rgba(255, 0, 255, 0.2), 0 0 40px rgba(0, 210, 255, 0.2);
+  --shadow-soft: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-premium: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
 }
 
 @layer base {
   body {
-    @apply bg-white text-text-main font-sans;
+    @apply bg-slate-50 text-text-main font-sans;
   }
 }
 
 @layer components {
   .glass {
-    @apply bg-white/80 backdrop-blur-xl border border-surface-border;
+    @apply bg-white border border-surface-border shadow-soft;
   }
 
   .btn-primary {
-    @apply bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 shadow-soft active:scale-95 flex items-center justify-center gap-2;
+    @apply bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2.5 px-5 rounded-lg transition-all duration-200 shadow-sm active:scale-95 flex items-center justify-center gap-2;
   }
 
   .btn-secondary {
-    @apply bg-secondary-500 hover:bg-secondary-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 shadow-soft active:scale-95 flex items-center justify-center gap-2;
+    @apply bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold py-2.5 px-5 rounded-lg transition-all duration-200 shadow-sm active:scale-95 flex items-center justify-center gap-2;
   }
 
   .btn-outline {
-    @apply border-2 border-primary-600 text-primary-600 hover:bg-primary-50 font-semibold py-3 px-6 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2;
+    @apply border border-primary-600 text-primary-600 hover:bg-primary-50 font-semibold py-2.5 px-5 rounded-lg transition-all active:scale-95 flex items-center justify-center gap-2;
   }
 
   .btn-ghost {
@@ -83,14 +74,14 @@
   }
 
   .card {
-    @apply bg-white rounded-2xl p-6 shadow-soft border border-surface-border hover:shadow-medium hover:border-primary-200 transition-all duration-300;
+    @apply bg-white rounded-xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-all duration-200;
   }
 
   .badge-scheme {
-    @apply bg-accent-orange/10 text-accent-orange text-xs font-bold py-1 px-3 rounded-full border border-accent-orange/20;
+    @apply bg-accent-amber/10 text-accent-amber text-xs font-bold py-1 px-3 rounded-full border border-accent-amber/20;
   }
 
   .badge-discount {
-    @apply bg-secondary-100 text-secondary-600 text-xs font-bold py-1 px-3 rounded-full border border-secondary-200;
+    @apply bg-accent-rose/10 text-accent-rose text-xs font-bold py-1 px-3 rounded-full border border-accent-rose/20;
   }
 }

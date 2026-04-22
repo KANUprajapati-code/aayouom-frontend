@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Package, Edit, Trash2, Plus, X, Save, Sparkles, Wand2, Database, ExternalLink } from 'lucide-react';
+import { Package, Edit, Trash2, Plus, X, Save, Database, ExternalLink } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import API_BASE_URL from '../../config/api';
 
@@ -69,17 +69,17 @@ const CategoriesCMS = ({ onManageProducts }) => {
       }
       setShowModal(false);
     } catch (err) {
-      alert('Error saving category: ' + (err.response?.data?.message || err.message));
+      alert('Error saving category.');
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Delete this therapeutic segment from the database?')) return;
+    if (!window.confirm('Are you sure?')) return;
     try {
       await axios.delete(`${API_BASE_URL}/categories/${id}`, getAuthConfig());
       setCategories(categories.filter(c => c._id !== id));
     } catch (err) {
-      alert('Error deleting category: ' + (err.response?.data?.message || err.message));
+      alert('Error deleting category.');
     }
   };
 
@@ -87,111 +87,76 @@ const CategoriesCMS = ({ onManageProducts }) => {
     return products.filter(p => p.category === categoryName).length;
   };
 
+  if (loading) return <div className="py-20 text-center text-slate-400 font-bold uppercase tracking-widest text-xs">Scanning Segments...</div>;
+
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-6 duration-700 space-y-12 pb-24 font-sans">
-       <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-10 bg-white/40 backdrop-blur-md p-12 rounded-[56px] border border-white/40 shadow-soft relative overflow-hidden group">
-          <div className="absolute -left-10 -top-10 w-48 h-48 bg-unicorn-cyan/5 rounded-full blur-[100px] pointer-events-none"></div>
-          <div className="relative z-10">
-            <h2 className="text-5xl font-black text-text-main italic tracking-tighter uppercase leading-none flex items-center gap-5">
-              <div className="p-4 bg-gradient-to-br from-unicorn-indigo via-unicorn-purple to-unicorn-magenta rounded-3xl shadow-unicorn">
-                 <Package size={32} className="text-white" />
-              </div>
-              Category Matrix
+    <div className="space-y-8 animate-in fade-in duration-500 pb-20">
+       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+          <div>
+            <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-3">
+               <Package className="text-blue-600" /> Therapy Matrix
             </h2>
-            <p className="text-text-silver mt-4 font-black uppercase tracking-[0.4em] text-[11px] opacity-60">Therapeutic Segment Neural Mapper • v2.0</p>
+            <p className="text-slate-500 text-sm mt-1">Manage therapeutic clinical segments and brand associations.</p>
           </div>
-          <button onClick={() => handleOpenModal('add')} className="bg-text-main hover:bg-black text-white px-12 py-5 rounded-[28px] text-[12px] font-black uppercase tracking-[0.3em] shadow-premium flex items-center gap-4 transition-all active:scale-95 group relative z-10">
-             <Plus className="w-5 h-5 group-hover:rotate-90 transition-transform" /> Instantiate Category
+          <button onClick={() => handleOpenModal('add')} className="bg-slate-900 hover:bg-slate-800 text-white font-bold px-8 py-3 rounded-xl shadow-lg flex items-center gap-2 transition-all">
+             <Plus size={18} /> Add Segment
           </button>
        </div>
        
-       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          <AnimatePresence>
-            {loading ? (
-               <p className="text-text-silver font-black uppercase tracking-[0.5em] col-span-full py-20 text-center animate-pulse">Scanning Neural Nodes...</p>
-            ) : categories.length === 0 ? (
-               <p className="text-text-silver font-black uppercase tracking-[0.5em] col-span-full py-20 text-center animate-pulse">No segments detected in database.</p>
-            ) : categories.map((cat) => (
-              <motion.div 
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                key={cat._id} 
-                className="bg-white/40 backdrop-blur-md p-10 rounded-[48px] border border-white/40 shadow-soft hover:bg-white hover:shadow-premium transition-all duration-500 overflow-hidden relative group"
-              >
-                <div className="absolute -right-10 -bottom-10 w-32 h-32 bg-unicorn-cyan/5 rounded-full blur-[50px] group-hover:scale-150 transition-transform duration-700"></div>
-                <div className="flex items-start justify-between mb-8 relative z-10">
-                  <div className="w-16 h-16 bg-white shadow-soft rounded-3xl flex items-center justify-center border border-white group-hover:rotate-6 group-hover:shadow-unicorn transition-all duration-500 overflow-hidden">
-                    {cat.imageUrl ? <img loading="lazy" src={cat.imageUrl} alt="" className="w-full h-full object-cover" /> : <Package size={28} className="text-unicorn-cyan" />}
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <button onClick={() => handleOpenModal('edit', cat)} className="p-4 bg-white/60 hover:bg-text-main hover:text-white rounded-2xl text-text-silver shadow-sm transition-all border border-white/40"><Edit size={18} /></button>
-                    <button onClick={() => handleDelete(cat._id)} className="p-4 bg-white/60 hover:bg-rose-500 hover:text-white rounded-2xl text-text-silver shadow-sm transition-all border border-white/40"><Trash2 size={18} /></button>
+       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {categories.map((cat) => (
+            <div key={cat._id} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all group">
+              <div className="flex items-start justify-between mb-6">
+                <div className="w-12 h-12 bg-slate-50 border border-slate-100 rounded-xl overflow-hidden flex items-center justify-center">
+                  {cat.imageUrl ? <img src={cat.imageUrl} className="w-full h-full object-cover" /> : <Package size={24} className="text-slate-300" />}
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={() => handleOpenModal('edit', cat)} className="p-2 text-slate-400 hover:text-blue-600 transition-colors"><Edit size={16} /></button>
+                  <button onClick={() => handleDelete(cat._id)} className="p-2 text-slate-400 hover:text-rose-600 transition-colors"><Trash2 size={16} /></button>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <h3 className="font-bold text-slate-900 uppercase tracking-tight">{cat.name}</h3>
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className="text-[10px] font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded">{getProductCount(cat.name)} Items</span>
+                    <span className="text-[10px] font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded">{cat.brands?.length || 0} Brands</span>
                   </div>
                 </div>
-
-                <div className="space-y-6 relative z-10">
-                  <div>
-                    <h3 className="text-2xl font-black text-text-main tracking-tighter uppercase italic leading-none group-hover:text-unicorn-cyan transition-colors">{cat.name}</h3>
-                    <div className="flex items-center gap-3 mt-4">
-                      <div className="px-3 py-1 bg-unicorn-cyan/10 text-unicorn-cyan rounded-lg text-[9px] font-black uppercase tracking-widest">{getProductCount(cat.name)} Products</div>
-                      <div className="px-3 py-1 bg-unicorn-magenta/10 text-unicorn-magenta rounded-lg text-[9px] font-black uppercase tracking-widest">{cat.brands?.length || 0} Brands</div>
-                    </div>
-                  </div>
-                  
-                  <div className="pt-6 border-t border-white/20">
-                    <p className="text-[10px] font-black text-text-silver uppercase tracking-widest leading-relaxed line-clamp-2">
-                       {cat.brands?.join(' • ') || 'No brands linked to this sector.'}
-                    </p>
-                  </div>
-
-                  <button 
-                    onClick={() => onManageProducts(cat.name)}
-                    className="w-full py-4 bg-slate-50 hover:bg-text-main hover:text-white rounded-[24px] border border-slate-100 flex items-center justify-center gap-3 transition-all font-black text-[10px] uppercase tracking-[0.2em] shadow-sm group/btn"
-                  >
-                    <Database size={14} className="text-unicorn-cyan group-hover/btn:text-white transition-colors" /> Manage Core Inventory
-                    <ExternalLink size={12} className="opacity-40 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
-                  </button>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+                <p className="text-[10px] text-slate-400 leading-relaxed line-clamp-2 uppercase font-semibold">
+                   {cat.brands?.join(' • ') || 'No brands linked.'}
+                </p>
+                <button onClick={() => onManageProducts(cat.name)} className="w-full py-2.5 bg-slate-50 hover:bg-slate-900 hover:text-white rounded-lg border border-slate-100 text-[10px] font-bold uppercase tracking-widest transition-all">
+                   Manage Inventory
+                </button>
+              </div>
+            </div>
+          ))}
        </div>
 
        {showModal && (
-         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-950/40 backdrop-blur-2xl animate-in fade-in duration-500">
-            <div className="bg-white/80 backdrop-blur-3xl rounded-[64px] w-full max-w-2xl overflow-hidden shadow-unicorn border border-white/40 animate-in zoom-in-95 duration-500">
-               <div className="p-12 border-b border-white/20 flex justify-between items-center bg-white/40">
+         <div className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6 animate-in fade-in">
+            <div className="bg-white rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl border border-slate-200">
+               <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                  <h2 className="font-bold text-slate-900">{modalMode === 'add' ? 'New Segment' : 'Edit Segment'}</h2>
+                  <button onClick={() => setShowModal(false)} className="text-slate-400 hover:text-slate-900"><X size={20} /></button>
+               </div>
+               <form onSubmit={handleSubmit} className="p-8 space-y-6">
                   <div className="space-y-2">
-                     <h2 className="text-3xl font-black text-text-main italic uppercase tracking-tighter leading-none">{modalMode === 'add' ? 'Construct Segment' : 'Modify Topology'}</h2>
-                     <p className="text-[10px] font-black text-text-silver uppercase tracking-[0.4em]">Database Entry Protocol</p>
+                     <label className="text-xs font-bold text-slate-500">Segment Name</label>
+                     <input required type="text" className="w-full bg-slate-50 p-4 rounded-xl border border-slate-200 font-bold outline-none focus:bg-white focus:border-blue-600 transition-all uppercase" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value.toUpperCase() })} />
                   </div>
-                  <button onClick={() => setShowModal(false)} className="p-5 bg-white/40 rounded-2xl hover:bg-rose-500 hover:text-white transition-all text-text-silver shadow-soft group">
-                     <X size={24} className="group-hover:rotate-90 transition-transform" />
-                  </button>
-               </div>
-
-               <div className="p-12 space-y-10">
-                  <form onSubmit={handleSubmit} className="space-y-10">
-                     <div className="space-y-4">
-                        <label className="text-[10px] font-black text-text-silver uppercase tracking-[0.4em] ml-4">Segment Designation</label>
-                        <input required type="text" placeholder="e.g. INFECTIOUS DISEASES" className="w-full bg-white/50 p-6 rounded-3xl font-black text-text-main border border-white focus:bg-white focus:shadow-unicorn focus:border-unicorn-cyan outline-none transition-all uppercase italic text-lg tracking-tighter" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value.toUpperCase() })} />
-                     </div>
-                     <div className="space-y-4">
-                        <label className="text-[10px] font-black text-text-silver uppercase tracking-[0.4em] ml-4">Asset Image Pointer (URL)</label>
-                        <input type="text" placeholder="https://assets.wedome.in/images/segment-01.png" className="w-full bg-white/50 p-6 rounded-3xl font-black text-unicorn-indigo border border-white focus:bg-white focus:shadow-unicorn outline-none transition-all text-sm" value={formData.imageUrl} onChange={e => setFormData({ ...formData, imageUrl: e.target.value })} />
-                     </div>
-                     <div className="space-y-4">
-                        <label className="text-[10px] font-black text-text-silver uppercase tracking-[0.4em] ml-4">Brand Cluster Mapping (Comma Separated)</label>
-                        <textarea rows="4" placeholder="Cipla, Mankind, Sun Pharma..." className="w-full bg-white/50 p-8 rounded-[40px] font-bold text-text-main border border-white focus:bg-white focus:shadow-unicorn outline-none transition-all resize-none text-sm tracking-tight leading-relaxed" value={formData.brandsStr} onChange={e => setFormData({ ...formData, brandsStr: e.target.value })} />
-                     </div>
-
-                     <button type="submit" className="w-full bg-text-main py-8 rounded-[32px] font-black uppercase tracking-[0.5em] text-white shadow-premium flex items-center justify-center gap-5 active:scale-95 transition-all text-[11px] group">
-                        <Save className="w-5 h-5 group-hover:scale-125 transition-transform" /> Commit Segment to Ledger
-                     </button>
-                  </form>
-               </div>
+                  <div className="space-y-2">
+                     <label className="text-xs font-bold text-slate-500">Icon URL</label>
+                     <input type="text" className="w-full bg-slate-50 p-4 rounded-xl border border-slate-200 outline-none focus:bg-white focus:border-blue-600 transition-all text-sm" value={formData.imageUrl} onChange={e => setFormData({ ...formData, imageUrl: e.target.value })} />
+                  </div>
+                  <div className="space-y-2">
+                     <label className="text-xs font-bold text-slate-500">Brands (Comma Separated)</label>
+                     <textarea rows="4" className="w-full bg-slate-50 p-4 rounded-xl border border-slate-200 outline-none focus:bg-white focus:border-blue-600 transition-all text-sm resize-none" value={formData.brandsStr} onChange={e => setFormData({ ...formData, brandsStr: e.target.value })} />
+                  </div>
+                  <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold text-xs uppercase tracking-widest shadow-lg transition-all active:scale-95">Save Segment</button>
+               </form>
             </div>
          </div>
        )}
