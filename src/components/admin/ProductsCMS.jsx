@@ -18,6 +18,7 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
   });
 
   const [categories, setCategories] = useState([]);
+  const [brandList, setBrandList] = useState([]);
 
   const getAuthConfig = () => {
     const token = localStorage.getItem('token');
@@ -31,12 +32,14 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [prodRes, catRes] = await Promise.all([
+      const [prodRes, catRes, brandRes] = await Promise.all([
          axios.get(`${API_BASE_URL}/products`),
-         axios.get(`${API_BASE_URL}/categories`).catch(() => ({ data: [] }))
+         axios.get(`${API_BASE_URL}/categories`).catch(() => ({ data: [] })),
+         axios.get(`${API_BASE_URL}/brands`).catch(() => ({ data: [] }))
       ]);
       setProducts(prodRes.data || []);
       setCategories(catRes.data?.map(c => c.name) || ['Medicines', 'Wellness']);
+      setBrandList(brandRes.data || []);
     } catch (err) {
       console.error('Fetch error:', err);
     } finally {
@@ -178,7 +181,17 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
                        </div>
                        <div className="space-y-2">
                           <label className="text-xs font-bold text-slate-500">Brand</label>
-                          <input required className="w-full bg-slate-50 p-4 rounded-xl border border-slate-100 outline-none focus:bg-white focus:border-blue-600 transition-all font-bold" value={formData.brand} onChange={e => setFormData({ ...formData, brand: e.target.value })} />
+                          <select 
+                            required 
+                            className="w-full bg-slate-50 p-4 rounded-xl border border-slate-100 outline-none focus:bg-white focus:border-blue-600 transition-all font-bold" 
+                            value={formData.brand} 
+                            onChange={e => setFormData({ ...formData, brand: e.target.value })}
+                          >
+                             <option value="">Select Brand</option>
+                             {brandList.map(b => (
+                               <option key={b._id} value={b.name}>{b.name}</option>
+                             ))}
+                          </select>
                        </div>
                     </div>
                     {/* ... other standard form fields follow ... */}

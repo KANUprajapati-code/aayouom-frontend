@@ -19,6 +19,7 @@ import ProductsCMS from '../components/admin/ProductsCMS';
 import CategoriesCMS from '../components/admin/CategoriesCMS';
 import SchemesCMS from '../components/admin/SchemesCMS';
 import PagesCMS from '../components/admin/PagesCMS';
+import BrandsCMS from '../components/admin/BrandsCMS';
 import BulkOrderCMS from '../components/admin/BulkOrderCMS';
 import AboutCMS from '../components/admin/AboutCMS';
 import UserApprovalCMS from '../components/admin/UserApprovalCMS';
@@ -84,6 +85,7 @@ const AdminDashboard = () => {
     { id: 'doctors', label: 'Doctors', icon: ShieldCheck },
     { id: 'doctorbookings', label: 'Doctor Bookings', icon: Activity },
     { id: 'categories', label: 'Categories', icon: Package },
+    { id: 'brands', label: 'Brands CMS', icon: Building2 },
     { id: 'schemes', label: 'Schemes CMS', icon: Zap },
     { id: 'consultationcat', label: 'Consultation Categories', icon: Zap },
     { id: 'promocodes', label: 'Promo Codes', icon: Tag },
@@ -186,6 +188,7 @@ const AdminDashboard = () => {
           }} 
         />
       );
+      case 'brands': return <BrandsCMS />;
       case 'schemes': return <SchemesCMS />;
       case 'pages': return <PagesCMS />;
       case 'bulkorders': return <BulkOrderCMS />;

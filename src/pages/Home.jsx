@@ -34,7 +34,7 @@ const Home = () => {
           axios.get(`https://ayuom-backend.vercel.app/api/products?placement=home${selectedBrand ? `&brand=${selectedBrand}` : ''}`),
           axios.get('https://ayuom-backend.vercel.app/api/content/homepage').catch(() => ({ data: {} })),
           axios.get('https://ayuom-backend.vercel.app/api/categories').catch(() => ({ data: [] })),
-          axios.get('https://ayuom-backend.vercel.app/api/products/brands').catch(() => ({ data: [] }))
+          axios.get('https://ayuom-backend.vercel.app/api/brands').catch(() => ({ data: [] }))
         ]);
         setHomeProducts(Array.isArray(prodRes.data) ? prodRes.data : []);
         setCms(cmsRes.data || {});
@@ -48,21 +48,6 @@ const Home = () => {
     };
     fetchData();
   }, [selectedBrand]);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
-  };
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -90,13 +75,13 @@ const Home = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
-        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-300 animate-pulse">Authenticating Marketplace Registry...</p>
+        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-300 animate-pulse">Syncing Hub Registry...</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-16 lg:space-y-24 pb-20 lg:pb-28 font-sans">
+    <div className="space-y-16 lg:space-y-28 pb-20 lg:pb-32 font-sans overflow-x-hidden">
       {/* 1. Hero Slider Section */}
       <section className="relative overflow-hidden bg-slate-900 lg:rounded-[48px] h-[55vh] md:h-[65vh] lg:h-[75vh] w-full group shadow-2xl">
         <div className="absolute inset-0 w-full h-full">
@@ -152,7 +137,7 @@ const Home = () => {
       </section>
 
       {/* 2. Top Schemes Product Grid */}
-      <section className="space-y-12">
+      <section className="space-y-12 px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 px-2">
           <div className="space-y-3">
              <div className="w-12 h-1.5 bg-blue-600 rounded-full"></div>
@@ -170,47 +155,11 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 3. NEW: Brand Category Shortner (Brand Filter) */}
-      <section className="space-y-10 py-16 bg-slate-100/50 rounded-[48px] px-8 border border-slate-200">
-         <div className="flex flex-col items-center text-center space-y-4">
-            <div className="flex items-center gap-2 text-blue-600 font-black text-[10px] uppercase tracking-[0.3em]">
-               <Building2 size={14} /> Corporate Partners
-            </div>
-            <h2 className="text-3xl md:text-4xl font-black text-slate-950 tracking-tighter italic">FILTER BY TRUSTED BRANDS</h2>
-            <p className="text-slate-500 text-sm font-semibold max-w-2xl">Direct therapeutic supply from India's leading pharmaceutical innovators. Select a node to view brand-specific inventory.</p>
-         </div>
-
-         <div className="flex flex-wrap justify-center gap-6">
-            <button 
-               onClick={() => setSelectedBrand(null)}
-               className={`group flex flex-col items-center gap-4 transition-all ${!selectedBrand ? 'scale-110' : 'opacity-60 hover:opacity-100'}`}
-            >
-               <div className={`w-20 h-20 rounded-full border-2 flex items-center justify-center transition-all ${!selectedBrand ? 'bg-slate-900 border-slate-900 text-white shadow-2xl' : 'bg-white border-slate-200 text-slate-400'}`}>
-                  <Filter size={24} />
-               </div>
-               <span className="text-[10px] font-black uppercase tracking-widest">All Brands</span>
-            </button>
-
-            {brands.map((brand) => (
-               <button 
-                  key={brand}
-                  onClick={() => setSelectedBrand(brand === selectedBrand ? null : brand)}
-                  className={`group flex flex-col items-center gap-4 transition-all ${selectedBrand === brand ? 'scale-110' : 'opacity-60 hover:opacity-100'}`}
-               >
-                  <div className={`w-20 h-20 rounded-full border-2 flex items-center justify-center transition-all overflow-hidden ${selectedBrand === brand ? 'bg-blue-600 border-blue-600 text-white shadow-2xl shadow-blue-600/30' : 'bg-white border-slate-200 text-slate-900'}`}>
-                     <span className="text-xl font-black italic">{brand.charAt(0)}</span>
-                  </div>
-                  <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${selectedBrand === brand ? 'text-blue-600' : 'text-slate-400'}`}>{brand}</span>
-               </button>
-            ))}
-         </div>
-      </section>
-
-      {/* 4. Therapeutic Matrix (Category Explorer) */}
-      <section className="space-y-12">
+      {/* 3. Therapeutic Matrix (Category Explorer) */}
+      <section className="space-y-12 px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 px-2">
           <div className="space-y-3">
-             <div className="w-12 h-1.5 bg-blue-600 rounded-full"></div>
+             <div className="w-12 h-1.5 bg-emerald-500 rounded-full"></div>
             <h2 className="text-4xl md:text-5xl font-black text-slate-950 italic tracking-tighter uppercase">Clinical Segments</h2>
             <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px] ml-1">Browse our specialized therapeutic matrix for hospital-grade supplies</p>
           </div>
@@ -243,25 +192,65 @@ const Home = () => {
         </div>
       </section>
 
+      {/* 4. Brand Category Shortner (Moved BELOW Categories) */}
+      <section className="space-y-12 py-20 bg-slate-50 rounded-[64px] px-8 sm:px-12 border border-slate-100 shadow-sm mx-4 sm:mx-8">
+         <div className="flex flex-col items-center text-center space-y-4">
+            <div className="flex items-center gap-2 text-blue-600 font-black text-[10px] uppercase tracking-[0.3em]">
+               <Building2 size={16} /> Partner Ecosystem
+            </div>
+            <h2 className="text-4xl font-black text-slate-950 tracking-tighter italic uppercase">Marketplace Key Nodes (Brands)</h2>
+            <p className="text-slate-500 text-sm font-semibold max-w-2xl leading-relaxed">Direct institutional supply from the world's leading pharmaceutical brands. Click a brand node to view their dedicated medicine matrix.</p>
+         </div>
+
+         <div className="flex flex-wrap justify-center gap-8 lg:gap-12">
+            <button 
+               onClick={() => setSelectedBrand(null)}
+               className={`group flex flex-col items-center gap-5 transition-all ${!selectedBrand ? 'scale-110' : 'opacity-60 hover:opacity-100'}`}
+            >
+               <div className={`w-24 h-24 rounded-[32px] border-2 flex items-center justify-center transition-all duration-500 ${!selectedBrand ? 'bg-slate-900 border-slate-900 text-white shadow-2xl' : 'bg-white border-slate-200 text-slate-400'}`}>
+                  <Filter size={28} />
+               </div>
+               <span className="text-[10px] font-black uppercase tracking-widest text-slate-600 italic">Entire Fleet</span>
+            </button>
+
+            {brands.map((brand) => (
+               <button 
+                  key={brand._id}
+                  onClick={() => setSelectedBrand(brand.name === selectedBrand ? null : brand.name)}
+                  className={`group flex flex-col items-center gap-5 transition-all ${selectedBrand === brand.name ? 'scale-110' : 'opacity-60 hover:opacity-100'}`}
+               >
+                  <div className={`w-24 h-24 rounded-[32px] border-2 flex items-center justify-center transition-all duration-500 overflow-hidden ${selectedBrand === brand.name ? 'bg-blue-600 border-blue-600 text-white shadow-2xl shadow-blue-600/30' : 'bg-white border-slate-200 text-slate-900'}`}>
+                     {brand.logoUrl ? (
+                         <img src={brand.logoUrl} alt={brand.name} className="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform duration-500" />
+                     ) : (
+                         <span className="text-2xl font-black italic uppercase tracking-tighter">{brand.name.charAt(0)}</span>
+                     )}
+                  </div>
+                  <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${selectedBrand === brand.name ? 'text-blue-600 font-black italic' : 'text-slate-400'}`}>{brand.name}</span>
+               </button>
+            ))}
+         </div>
+      </section>
+
       {/* 5. Trust & Information Section */}
-      <section className="bg-slate-950 rounded-[48px] p-12 md:p-24 text-center relative overflow-hidden">
+      <section className="bg-slate-950 lg:rounded-[64px] p-12 md:p-24 text-center relative overflow-hidden mx-4 sm:mx-8">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-600 opacity-10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
         <div className="relative z-10 max-w-4xl mx-auto space-y-16">
           <div className="space-y-4">
-            <h2 className="text-4xl lg:text-6xl font-black text-white italic tracking-tighter leading-tight" dangerouslySetInnerHTML={{ __html: cms.trustTitle || "Trusted Infrastructure for <br /> Medical Procurement" }}></h2>
-            <p className="text-xl text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed">
+            <h2 className="text-4xl lg:text-7xl font-black text-white italic tracking-tighter leading-[1.1] uppercase" dangerouslySetInnerHTML={{ __html: cms.trustTitle || "Trusted Infrastructure for <br /> Medical Procurement" }}></h2>
+            <p className="text-xl text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed italic">
               {cms.trustSubtitle || "Providing a secure, high-focus platform for hospitals and independent clinics to source authentic pharmaceuticals at institutional scale."}
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-12 lg:gap-20">
             {[1, 2, 3].map(i => (
-              <div key={i} className="space-y-4 flex flex-col items-center">
-                <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-blue-400 border border-white/10 backdrop-blur-md overflow-hidden">
+              <div key={i} className="space-y-4 flex flex-col items-center group">
+                <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-blue-400 border border-white/10 backdrop-blur-md overflow-hidden group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 shadow-xl">
                    {cms?.[`trustItem${i}Img`] ? <img src={cms[`trustItem${i}Img`]} alt="" className="w-full h-full object-cover" /> : <ShieldCheck size={32} />}
                 </div>
-                <h4 className="text-xl font-black text-white uppercase italic">{cms[`trustItem${i}Title`] || "Service Node"}</h4>
-                <p className="text-slate-500 text-sm font-semibold">{cms[`trustItem${i}Desc`] || "Optimized logistics and authenticated supply chain protocols."}</p>
+                <h4 className="text-xl font-black text-white uppercase italic tracking-tight">{cms[`trustItem${i}Title`] || "Service Node"}</h4>
+                <p className="text-slate-500 text-sm font-semibold leading-relaxed">{cms[`trustItem${i}Desc`] || "Optimized logistics and authenticated supply chain protocols."}</p>
               </div>
             ))}
           </div>
