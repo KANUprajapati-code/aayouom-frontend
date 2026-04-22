@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Plus, Pencil, Trash2, X, Check, Upload, Building2, Search, XCircle, Loader2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, X, Check, Upload, Building2, Search, XCircle, Loader2, Image as ImageIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const BrandsCMS = () => {
