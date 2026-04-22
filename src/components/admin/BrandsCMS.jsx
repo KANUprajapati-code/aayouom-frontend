@@ -21,9 +21,9 @@ const BrandsCMS = () => {
   const API_BASE_URL = 'https://ayuom-backend.vercel.app/api';
 
   const getAuthConfig = () => {
-    const adminToken = localStorage.getItem('adminToken');
+    const token = localStorage.getItem('token');
     return {
-      headers: { Authorization: `Bearer ${adminToken}` }
+      headers: { Authorization: `Bearer ${token}` }
     };
   };
 
