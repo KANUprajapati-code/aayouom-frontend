@@ -56,7 +56,7 @@ const Promotions = () => {
   );
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-32 pb-20 px-4 md:px-8">
+    <div className="min-h-screen bg-slate-50 pt-20 md:pt-32 pb-32 md:pb-20 px-4 md:px-8">
       <div className="max-w-6xl mx-auto space-y-12">
         
         {/* Header Section */}
@@ -166,7 +166,7 @@ const Promotions = () => {
               className="grid gap-6"
             >
               {offers.length > 0 ? offers.map((offer, i) => (
-                <div key={offer._id} className="bg-white rounded-[40px] border border-slate-100 p-8 md:p-12 shadow-2xl shadow-slate-200/50 flex flex-col md:flex-row gap-12 items-center hover:scale-[1.01] transition-transform">
+                <div key={offer._id} className="bg-white rounded-[32px] md:rounded-[40px] border border-slate-100 p-6 md:p-12 shadow-2xl shadow-slate-200/50 flex flex-col md:flex-row gap-8 md:gap-12 items-center hover:scale-[1.01] transition-transform">
                    <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 shrink-0 shadow-inner">
                       <Zap size={48} strokeWidth={2.5} className="group-hover:animate-pulse" />
                    </div>
@@ -198,7 +198,7 @@ const Promotions = () => {
         <motion.div 
            initial={{ opacity: 0 }}
            whileInView={{ opacity: 1 }}
-           className="bg-slate-900 rounded-[50px] p-12 text-center space-y-8 relative overflow-hidden"
+           className="bg-slate-900 rounded-[32px] md:rounded-[50px] p-8 md:p-12 text-center space-y-6 md:space-y-8 relative overflow-hidden"
         >
            <div className="relative z-10 space-y-4">
               <h2 className="text-4xl font-black text-white tracking-tighter">Never miss a <span className="text-emerald-500 italic">deal.</span></h2>

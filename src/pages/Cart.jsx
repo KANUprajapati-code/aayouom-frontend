@@ -81,50 +81,50 @@ const Cart = () => {
 
             <div className="divide-y divide-slate-50">
               {cart.map(item => (
-                <div key={item._id} className="p-4 md:p-6 grid md:grid-cols-12 gap-6 items-center group">
-                  <div className="col-span-6 flex gap-4">
-                    <div className="w-20 h-20 bg-surface-light rounded-xl overflow-hidden shrink-0">
+                <div key={item._id} className="p-4 md:p-6 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 items-center group relative">
+                  <div className="col-span-1 md:col-span-6 flex gap-3 md:gap-4 w-full pr-8 md:pr-0">
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-surface-light rounded-xl overflow-hidden shrink-0">
                       <img loading="lazy" src={item.image} alt={item.name} className="w-full h-full object-contain p-2" />
                     </div>
                     <div className="space-y-1">
                       <p className="text-[10px] font-bold text-primary-600 uppercase tracking-widest">{item.brand}</p>
-                      <h3 className="font-bold text-slate-900 group-hover:text-primary-600 transition-colors">{item.name}</h3>
-                      <div className="flex flex-wrap gap-2 pt-1">
+                      <h3 className="text-sm md:text-base font-bold text-slate-900 group-hover:text-primary-600 transition-colors line-clamp-2">{item.name}</h3>
+                      <div className="flex flex-wrap items-center gap-2 pt-1">
                         <SchemeBadge scheme={item.scheme} type='green' />
                         <span className="text-[10px] font-bold text-secondary-600">₹{item.price} / unit</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="col-span-3 flex justify-center">
+                  <div className="col-span-1 md:col-span-3 flex justify-start md:justify-center mt-2 md:mt-0">
                     <div className="inline-flex items-center gap-3 p-1 bg-surface-light rounded-xl border border-surface-border">
                       <button 
                         onClick={() => updateQuantity(item._id, item.quantity - 1)}
-                        className="p-1.5 hover:bg-white hover:text-red-600 rounded-lg transition-all shadow-sm"
+                        className="p-1 md:p-1.5 hover:bg-white hover:text-red-600 rounded-lg transition-all shadow-sm"
                       >
-                        <Minus size={16} />
+                        <Minus size={14} className="md:w-4 md:h-4" />
                       </button>
-                      <span className="text-sm font-bold text-slate-900 w-8 text-center">{item.quantity}</span>
+                      <span className="text-sm font-bold text-slate-900 w-6 md:w-8 text-center">{item.quantity}</span>
                       <button 
                         onClick={() => updateQuantity(item._id, item.quantity + 1)}
-                        className="p-1.5 hover:bg-white hover:text-primary-600 rounded-lg transition-all shadow-sm"
+                        className="p-1 md:p-1.5 hover:bg-white hover:text-primary-600 rounded-lg transition-all shadow-sm"
                       >
-                        <Plus size={16} />
+                        <Plus size={14} className="md:w-4 md:h-4" />
                       </button>
                     </div>
                   </div>
 
-                  <div className="col-span-2 text-right">
-                    <p className="text-[10px] text-text-muted line-through">₹{(item.mrp * item.quantity).toLocaleString()}</p>
-                    <p className="text-base font-black text-slate-900">₹{(item.price * item.quantity).toLocaleString()}</p>
+                  <div className="col-span-1 md:col-span-2 flex items-center justify-between md:block md:text-right mt-2 md:mt-0">
+                    <p className="text-[10px] text-text-muted line-through md:block inline mr-2 md:mr-0">₹{(item.mrp * item.quantity).toLocaleString()}</p>
+                    <p className="text-sm md:text-base font-black text-slate-900 inline md:block">₹{(item.price * item.quantity).toLocaleString()}</p>
                   </div>
 
-                  <div className="col-span-1 flex justify-end">
+                  <div className="absolute top-4 right-4 md:static md:col-span-1 flex justify-end">
                     <button 
                       onClick={() => removeFromCart(item._id)}
-                      className="p-2 text-slate-300 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
+                      className="p-1.5 md:p-2 text-slate-300 hover:text-red-600 hover:bg-red-50 rounded-lg md:rounded-xl transition-all"
                     >
-                      <Trash2 size={20} />
+                      <Trash2 size={18} className="md:w-5 md:h-5" />
                     </button>
                   </div>
                 </div>

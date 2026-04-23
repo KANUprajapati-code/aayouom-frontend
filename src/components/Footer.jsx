@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
-    <footer className="bg-primary-600 text-white pt-32 pb-16 relative overflow-hidden lg:rounded-t-[100px]">
+    <footer className="bg-primary-600 text-white pt-16 md:pt-32 pb-32 md:pb-16 relative overflow-hidden lg:rounded-t-[100px] rounded-t-[40px]">
       {/* Abstract Globs */}
       <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-white rounded-full blur-[150px] opacity-10" />
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-secondary-500 rounded-full blur-[150px] opacity-10" />
 
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-20 mb-24 relative z-10">
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-20 mb-12 md:mb-24 relative z-10">
         <div className="space-y-10">
           <Link to="/" className="flex items-center gap-3">
             <img src="/logo.png" alt="Logo" className="h-12 object-contain" />

@@ -101,7 +101,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-32 pb-20 px-4 md:px-8">
+    <div className="min-h-screen bg-slate-50 pt-20 md:pt-32 pb-32 md:pb-20 px-4 md:px-8">
       <div className="max-w-4xl mx-auto space-y-10">
         
         <div className="text-center space-y-4">
@@ -114,7 +114,7 @@ const Profile = () => {
           {/* Profile Details Form */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-[32px] p-8 border border-slate-100 shadow-xl shadow-slate-200/50"
+            className="bg-white rounded-[32px] p-6 md:p-8 border border-slate-100 shadow-xl shadow-slate-200/50"
           >
             <div className="flex items-center gap-3 mb-8">
               <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl">
@@ -192,7 +192,7 @@ const Profile = () => {
           {/* Password Form */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-            className="bg-slate-900 rounded-[32px] p-8 border border-slate-800 shadow-xl shadow-slate-900/50 text-white relative overflow-hidden"
+            className="bg-slate-900 rounded-[32px] p-6 md:p-8 border border-slate-800 shadow-xl shadow-slate-900/50 text-white relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500 rounded-full blur-[100px] opacity-20 -mr-32 -mt-32" />
             

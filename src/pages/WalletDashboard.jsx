@@ -94,7 +94,7 @@ const WalletDashboard = () => {
   );
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-32 pb-20 px-4 md:px-8">
+    <div className="min-h-screen bg-slate-50 pt-20 md:pt-32 pb-32 md:pb-20 px-4 md:px-8">
       <div className="max-w-6xl mx-auto space-y-8">
         
         {/* Header Section */}
@@ -124,7 +124,7 @@ const WalletDashboard = () => {
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-emerald-600 rounded-[32px] p-8 text-white relative overflow-hidden shadow-2xl shadow-emerald-100"
+            className="bg-emerald-600 rounded-[32px] p-6 md:p-8 text-white relative overflow-hidden shadow-2xl shadow-emerald-100"
           >
             <div className="relative z-10">
               <div className="flex justify-between items-center mb-6">
@@ -149,7 +149,7 @@ const WalletDashboard = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white rounded-[32px] p-8 border border-slate-100 shadow-xl shadow-slate-200/50"
+            className="bg-white rounded-[32px] p-6 md:p-8 border border-slate-100 shadow-xl shadow-slate-200/50"
           >
             <div className="flex justify-between items-center mb-6">
               <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">Loyalty Points</p>
@@ -171,7 +171,7 @@ const WalletDashboard = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white rounded-[32px] p-8 border border-slate-100 shadow-xl shadow-slate-200/50 flex flex-col justify-between"
+            className="bg-white rounded-[32px] p-6 md:p-8 border border-slate-100 shadow-xl shadow-slate-200/50 flex flex-col justify-between"
           >
             <div>
               <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest mb-4">Your Referral Code</p>
@@ -196,7 +196,7 @@ const WalletDashboard = () => {
 
         {/* Transaction History */}
         <div className="bg-white rounded-[40px] border border-slate-100 shadow-2xl shadow-slate-200/50 overflow-hidden">
-          <div className="p-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
+          <div className="p-6 md:p-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
             <div className="flex items-center gap-3">
               <div className="p-3 bg-white rounded-2xl shadow-sm text-slate-900">
                 <History size={20} />
@@ -273,7 +273,7 @@ const WalletDashboard = () => {
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="bg-white rounded-[40px] p-10 max-w-md w-full relative z-[110] shadow-2xl"
+              className="bg-white rounded-[40px] p-6 md:p-10 max-w-md w-full relative z-[110] shadow-2xl mx-4 md:mx-0"
             >
               <h3 className="text-2xl font-black text-slate-900 tracking-tighter mb-2">Request Withdrawal</h3>
               <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest mb-8">Funds will be credited to your account</p>
@@ -331,7 +331,7 @@ const WalletDashboard = () => {
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="bg-white rounded-[40px] p-10 max-w-md w-full relative z-[110] shadow-2xl"
+              className="bg-white rounded-[40px] p-6 md:p-10 max-w-md w-full relative z-[110] shadow-2xl mx-4 md:mx-0"
             >
               <h3 className="text-2xl font-black text-slate-900 tracking-tighter mb-2">Redeem Points</h3>
               <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest mb-8">Convert loyalty points to wallet balance</p>

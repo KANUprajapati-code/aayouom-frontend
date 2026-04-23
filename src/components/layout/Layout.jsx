@@ -4,6 +4,8 @@ import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import { useAuth } from '../../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import Footer from '../Footer';
+import MobileNav from '../MobileNav';
 
 const Layout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -20,7 +22,7 @@ const Layout = () => {
           onClose={() => setIsSidebarOpen(false)} 
         />
         
-        <main className="flex-1 w-full px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10 overflow-x-hidden min-w-0">
+        <main className="flex-1 w-full px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10 overflow-x-hidden min-w-0 pb-24 md:pb-10">
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}
@@ -35,6 +37,9 @@ const Layout = () => {
           </AnimatePresence>
         </main>
       </div>
+      
+      <Footer />
+      <MobileNav />
     </div>
   );
 };

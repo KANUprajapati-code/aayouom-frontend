@@ -212,7 +212,7 @@ const Schemes = () => {
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
             {products.map((product, idx) => (
-              <div key={product._id} className="bg-white rounded-[32px] p-6 border border-slate-200 hover:border-blue-600/30 hover:shadow-lg transition-all duration-300 flex flex-col group relative">
+              <div key={product._id} className="bg-white rounded-[24px] md:rounded-[32px] p-4 md:p-6 border border-slate-200 hover:border-blue-600/30 hover:shadow-lg transition-all duration-300 flex flex-col group relative">
                 <div className="absolute top-4 left-4 z-20 bg-blue-600 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1.5 rounded-lg shadow-lg">
                   {idx % 2 === 0 ? 'Buy 10 Get 2' : '15% Bulk Off'}
                 </div>
@@ -236,7 +236,7 @@ const Schemes = () => {
       )}
 
       {/* Call to Action */}
-      <section className="relative bg-slate-950 rounded-[40px] p-12 md:p-24 overflow-hidden text-center group">
+      <section className="relative bg-slate-950 rounded-[32px] md:rounded-[40px] p-8 md:p-12 lg:p-24 overflow-hidden text-center group">
          <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600 opacity-10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
          <div className="relative z-10 max-w-3xl mx-auto space-y-8">
             <h3 className="text-3xl md:text-5xl font-black text-white italic tracking-tighter leading-tight">Secure Professional <br /> <span className="text-blue-500">Bulk Validations?</span></h3>

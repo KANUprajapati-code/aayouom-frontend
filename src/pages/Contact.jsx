@@ -57,7 +57,7 @@ const Contact = () => {
 
   return (
     <div className="bg-white min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 py-24">
+      <div className="max-w-7xl mx-auto px-4 py-12 md:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
           <div className="lg:col-span-5 animate-in fade-in slide-in-from-left-4 duration-700">
             <span className="text-primary-600 font-black uppercase tracking-widest text-[10px] mb-4 block underline decoration-primary-200 underline-offset-8 transition-all">Get In Touch</span>
@@ -80,7 +80,7 @@ const Contact = () => {
           </div>
 
           <div className="lg:col-span-7">
-            <div className="bg-white rounded-[40px] p-12 shadow-2xl shadow-primary-600/10 border border-border-main">
+            <div className="bg-white rounded-[32px] md:rounded-[40px] p-6 md:p-12 shadow-2xl shadow-primary-600/10 border border-border-main">
                <h3 className="text-2xl font-black text-slate-900 mb-10">Send a Message</h3>
                <form onSubmit={handleSubmit} className="space-y-6">
                  {error && <div className="p-3 bg-red-50 text-red-500 rounded-xl text-sm border border-red-100 font-bold">{error}</div>}

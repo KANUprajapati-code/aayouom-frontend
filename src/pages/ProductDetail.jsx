@@ -123,7 +123,7 @@ Link: ${window.location.origin}/product/${medicine._id}`;
              <p className="text-sm text-text-muted font-medium italic">{medicine.category}</p>
            </div>
 
-           <div className="p-8 bg-surface-light rounded-[40px] border border-surface-border space-y-8 shadow-soft">
+           <div className="p-5 sm:p-8 bg-surface-light rounded-[32px] sm:rounded-[40px] border border-surface-border space-y-6 sm:space-y-8 shadow-soft">
               <div className="flex items-end justify-between">
                 <div>
                    {medicine.mrp && <p className="text-xs text-text-muted line-through mb-1">MRP ₹{medicine.mrp}</p>}
@@ -216,7 +216,7 @@ Link: ${window.location.origin}/product/${medicine._id}`;
       </div>
 
       {/* Description / Medical Info */}
-      <section className="bg-white rounded-[40px] border border-surface-border p-8 lg:p-14 shadow-premium space-y-8 mt-12">
+      <section className="bg-white rounded-[32px] sm:rounded-[40px] border border-surface-border p-6 sm:p-8 lg:p-14 shadow-premium space-y-6 sm:space-y-8 mt-12">
          <div className="flex items-center gap-4">
             <div className="w-1 h-8 bg-primary-600 rounded-full"></div>
             <h2 className="text-2xl lg:text-3xl font-black text-slate-900 italic uppercase">Clinical Information</h2>
@@ -246,7 +246,7 @@ Link: ${window.location.origin}/product/${medicine._id}`;
                      <p className="text-primary-700 text-xs mt-2 leading-relaxed font-bold opacity-70 italic">Ensure correct medical supervision and patient history review before administration.</p>
                   </div>
                </div>
-               <div className="p-6 bg-slate-900 rounded-[32px] text-white flex gap-5 shadow-2xl">
+               <div className="p-6 bg-slate-900 rounded-[32px] text-white flex flex-col sm:flex-row gap-4 sm:gap-5 shadow-2xl">
                   <History className="text-primary-400 shrink-0" size={28} />
                   <div>
                      <p className="text-lg font-black italic">Supply Reliability</p>

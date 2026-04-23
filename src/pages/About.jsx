@@ -43,7 +43,7 @@ const About = () => {
     return (
         <div className="bg-white pb-24">
             {/* Hero Section */}
-            <section className="relative h-[500px] flex items-center justify-center overflow-hidden bg-slate-900 rounded-b-[80px]">
+            <section className="relative h-[400px] md:h-[500px] flex items-center justify-center overflow-hidden bg-slate-900 rounded-b-[40px] md:rounded-b-[80px]">
                 <div className="absolute inset-0 z-0">
                     <div className="absolute inset-0 bg-primary-900/60 z-10"></div>
                     <img loading="lazy" src="https://images.unsplash.com/photo-1576091160550-217359f42f8c?auto=format&fit=crop&q=80&w=2000" 
@@ -52,7 +52,7 @@ const About = () => {
                     />
                 </div>
                 
-                <div className="relative z-20 text-center space-y-6 max-w-4xl px-8">
+                <div className="relative z-20 text-center space-y-4 md:space-y-6 max-w-4xl px-4 md:px-8 mt-10 md:mt-0">
                     <motion.div
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
@@ -65,7 +65,7 @@ const About = () => {
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.2, duration: 0.8 }}
-                      className="text-5xl lg:text-7xl font-black text-white tracking-tighter italic uppercase"
+                      className="text-4xl md:text-5xl lg:text-7xl font-black text-white tracking-tighter italic uppercase"
                     >
                         Wedome <span className="text-primary-500">Group</span>
                     </motion.h1>
@@ -81,8 +81,8 @@ const About = () => {
             </section>
 
             {/* Mission Section */}
-            <section className="max-w-7xl mx-auto px-8 -mt-24 relative z-30">
-                <div className="bg-white rounded-[56px] shadow-3xl p-12 lg:p-24 border border-slate-100 flex flex-col lg:flex-row gap-20 items-center">
+            <section className="max-w-7xl mx-auto px-4 md:px-8 -mt-12 md:-mt-24 relative z-30">
+                <div className="bg-white rounded-[32px] md:rounded-[56px] shadow-3xl p-6 md:p-12 lg:p-24 border border-slate-100 flex flex-col lg:flex-row gap-10 md:gap-20 items-center">
                     <div className="lg:w-1/2 space-y-8">
                         <div className="space-y-4">
                             <h2 className="text-sm font-black text-primary-600 uppercase tracking-[0.4em] flex items-center gap-2">
@@ -117,7 +117,7 @@ const About = () => {
             </section>
 
             {/* Values Grid */}
-            <section className="max-w-7xl mx-auto px-8 mt-40">
+            <section className="max-w-7xl mx-auto px-4 md:px-8 mt-20 md:mt-40">
                 <motion.div 
                   variants={containerVariants}
                   initial="hidden"
@@ -129,7 +129,7 @@ const About = () => {
                         <motion.div 
                           key={i} 
                           variants={itemVariants}
-                          className="bg-slate-50 p-10 rounded-[40px] border border-slate-100 group hover:bg-white hover:shadow-2xl hover:shadow-primary-600/5 transition-all duration-500"
+                          className="bg-slate-50 p-6 md:p-10 rounded-[32px] md:rounded-[40px] border border-slate-100 group hover:bg-white hover:shadow-2xl hover:shadow-primary-600/5 transition-all duration-500"
                         >
                             <div className="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center text-primary-600 mb-8 group-hover:bg-primary-600 group-hover:text-white transition-all duration-500">
                                 {i === 1 && <ShieldCheck size={32} />}
@@ -145,8 +145,8 @@ const About = () => {
             </section>
 
             {/* Call to Action */}
-            <section className="max-w-7xl mx-auto px-8 mt-40">
-                <div className="bg-primary-900 rounded-[56px] p-12 lg:p-24 text-center text-white relative overflow-hidden">
+            <section className="max-w-7xl mx-auto px-4 md:px-8 mt-20 md:mt-40">
+                <div className="bg-primary-900 rounded-[32px] md:rounded-[56px] p-8 md:p-12 lg:p-24 text-center text-white relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-80 h-80 bg-primary-600 rounded-full blur-[120px] opacity-20"></div>
                     <div className="relative z-10 space-y-10">
                         <h2 className="text-4xl lg:text-6xl font-black italic tracking-tighter uppercase leading-tight">Ready to join the <br /> Wedome ecosystem?</h2>
