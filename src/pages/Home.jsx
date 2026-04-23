@@ -109,15 +109,15 @@ const Home = () => {
                 {activeBanners[currentSlide].badge && (
                    <motion.span initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="text-blue-400 font-black tracking-[0.3em] uppercase text-[10px] bg-blue-400/10 px-4 py-1.5 rounded-full border border-blue-400/20 w-fit">{activeBanners[currentSlide].badge}</motion.span>
                 )}
-                <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-4xl md:text-7xl font-black text-white italic leading-[1.05] tracking-tighter">
+                <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-[20px] font-black text-white italic leading-[1.05] tracking-tighter">
                   {activeBanners[currentSlide].title1} <br />
                   <span className="text-blue-500">{activeBanners[currentSlide].title2}</span>
                 </motion.h1>
-                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="text-lg md:text-xl text-slate-300 font-medium max-w-xl leading-relaxed">
+                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="text-[20px] text-slate-300 font-medium max-w-xl leading-relaxed">
                   {activeBanners[currentSlide].description}
                 </motion.p>
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-                  <Link to={activeBanners[currentSlide].btn1Link || "/products"} className="inline-flex items-center gap-3 px-10 py-5 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] shadow-2xl shadow-blue-600/30 transition-all active:scale-95">
+                  <Link to={activeBanners[currentSlide].btn1Link || "/products"} className="inline-flex items-center gap-3 px-10 py-5 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-black uppercase text-[20px] tracking-[0.2em] shadow-2xl shadow-blue-600/30 transition-all active:scale-95">
                     {activeBanners[currentSlide].btn1Text || 'Enter Marketplace'} <ArrowRight size={18} />
                   </Link>
                 </motion.div>
