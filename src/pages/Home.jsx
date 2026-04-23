@@ -107,7 +107,7 @@ const Home = () => {
 
               <div className="relative z-10 h-full flex flex-col justify-center px-8 md:px-20 max-w-4xl space-y-6 md:space-y-8">
                 {activeBanners[currentSlide].badge && (
-                   <motion.span initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="text-blue-400 font-black tracking-[0.3em] uppercase text-[10px] bg-blue-400/10 px-4 py-1.5 rounded-full border border-blue-400/20 w-fit">{activeBanners[currentSlide].badge}</motion.span>
+                   <motion.span initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="text-blue-400 font-black tracking-[0.3em] uppercase text-[20px] bg-blue-400/10 px-4 py-1.5 rounded-full border border-blue-400/20 w-fit">{activeBanners[currentSlide].badge}</motion.span>
                 )}
                 <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-[20px] font-black text-white italic leading-[1.05] tracking-tighter">
                   {activeBanners[currentSlide].title1} <br />
