@@ -88,7 +88,9 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
       setShowModal(false);
       fetchData();
     } catch (err) {
-      alert('Error saving product.');
+      console.error('Save error:', err);
+      const errorMsg = err.response?.data?.message || err.message || 'Error saving product.';
+      alert(`Commit Failed: ${errorMsg}`);
     }
   };
 
@@ -194,8 +196,103 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
                           </select>
                        </div>
                     </div>
-                    {/* ... other standard form fields follow ... */}
-                    <div className="flex gap-4">
+                    <div className="grid grid-cols-2 gap-6">
+                       <div className="space-y-2">
+                          <label className="text-xs font-bold text-slate-500">Regular Price (₹)</label>
+                          <input required type="number" className="w-full bg-slate-50 p-4 rounded-xl border border-slate-100 outline-none focus:bg-white focus:border-blue-600 transition-all font-bold" value={formData.price} onChange={e => setFormData({ ...formData, price: e.target.value })} />
+                       </div>
+                       <div className="space-y-2">
+                          <label className="text-xs font-bold text-slate-500">Original Price (₹) - For Discount</label>
+                          <input type="number" className="w-full bg-slate-50 p-4 rounded-xl border border-slate-100 outline-none focus:bg-white focus:border-blue-600 transition-all font-bold" value={formData.originalPrice} onChange={e => setFormData({ ...formData, originalPrice: e.target.value })} />
+                       </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-6">
+                       <div className="space-y-2">
+                          <label className="text-xs font-bold text-slate-500">Category</label>
+                          <select required className="w-full bg-slate-50 p-4 rounded-xl border border-slate-100 outline-none focus:bg-white focus:border-blue-600 transition-all font-bold" value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })}>
+                             {categories.map(cat => (
+                               <option key={cat} value={cat}>{cat}</option>
+                             ))}
+                          </select>
+                       </div>
+                       <div className="space-y-2">
+                          <label className="text-xs font-bold text-slate-500">Stock Quantity</label>
+                          <input required type="number" className="w-full bg-slate-50 p-4 rounded-xl border border-slate-100 outline-none focus:bg-white focus:border-blue-600 transition-all font-bold" value={formData.stock} onChange={e => setFormData({ ...formData, stock: e.target.value })} />
+                       </div>
+                    </div>
+
+                    <div className="space-y-2">
+                       <label className="text-xs font-bold text-slate-500">Product Description</label>
+                       <textarea required rows="4" className="w-full bg-slate-50 p-4 rounded-xl border border-slate-100 outline-none focus:bg-white focus:border-blue-600 transition-all font-medium text-sm resize-none" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} />
+                    </div>
+
+                    <div className="space-y-4">
+                       <label className="text-xs font-bold text-slate-500">Product Visuals</label>
+                       <div className="grid grid-cols-4 gap-4">
+                          <label className="aspect-square bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:bg-slate-100 hover:border-blue-400 transition-all group">
+                             {uploadingImage ? (
+                               <div className="animate-spin rounded-full h-6 w-6 border-2 border-blue-600 border-t-transparent"></div>
+                             ) : (
+                               <>
+                                 <Plus className="text-slate-400 group-hover:text-blue-600" size={24} />
+                                 <span className="text-[10px] font-bold text-slate-400 mt-2">UPLOAD</span>
+                               </>
+                             )}
+                             <input type="file" className="hidden" accept="image/*" onChange={e => handleImageUpload(e.target.files[0])} disabled={uploadingImage} />
+                          </label>
+                          {formData.images?.map((img, idx) => (
+                            <div key={idx} className="aspect-square bg-slate-50 rounded-2xl overflow-hidden relative group border border-slate-100">
+                               <img src={img} className="w-full h-full object-cover" />
+                               <button 
+                                 type="button"
+                                 onClick={() => setFormData(prev => ({ ...prev, images: prev.images.filter((_, i) => i !== idx), image: prev.images[0] === img ? prev.images[1] || '' : prev.image }))} 
+                                 className="absolute top-1 right-1 p-1 bg-white/80 backdrop-blur-sm text-rose-500 rounded-md opacity-0 group-hover:opacity-100 transition-all"
+                               >
+                                  <X size={14} />
+                               </button>
+                               {formData.image === img && (
+                                 <div className="absolute bottom-2 left-2 bg-blue-600 text-white text-[8px] font-bold px-1.5 py-0.5 rounded shadow-sm">PRIMARY</div>
+                               )}
+                            </div>
+                          ))}
+                       </div>
+                    </div>
+
+                    <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-4">
+                       <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Display Configuration</h4>
+                       <div className="flex flex-wrap gap-6">
+                          <label className="flex items-center gap-3 cursor-pointer group">
+                             <div 
+                               onClick={() => setFormData({ ...formData, showOnShop: !formData.showOnShop })}
+                               className={`w-10 h-6 rounded-full p-1 transition-all ${formData.showOnShop ? 'bg-blue-600' : 'bg-slate-300'}`}
+                             >
+                                <div className={`w-4 h-4 bg-white rounded-full shadow-sm transition-all ${formData.showOnShop ? 'translate-x-4' : 'translate-x-0'}`} />
+                             </div>
+                             <span className="text-xs font-bold text-slate-600 uppercase tracking-tight">Show on Shop</span>
+                          </label>
+                          <label className="flex items-center gap-3 cursor-pointer group">
+                             <div 
+                               onClick={() => setFormData({ ...formData, showOnHome: !formData.showOnHome })}
+                               className={`w-10 h-6 rounded-full p-1 transition-all ${formData.showOnHome ? 'bg-emerald-600' : 'bg-slate-300'}`}
+                             >
+                                <div className={`w-4 h-4 bg-white rounded-full shadow-sm transition-all ${formData.showOnHome ? 'translate-x-4' : 'translate-x-0'}`} />
+                             </div>
+                             <span className="text-xs font-bold text-slate-600 uppercase tracking-tight">Show on Homepage</span>
+                          </label>
+                          <label className="flex items-center gap-3 cursor-pointer group">
+                             <div 
+                               onClick={() => setFormData({ ...formData, showOnSchemes: !formData.showOnSchemes })}
+                               className={`w-10 h-6 rounded-full p-1 transition-all ${formData.showOnSchemes ? 'bg-amber-600' : 'bg-slate-300'}`}
+                             >
+                                <div className={`w-4 h-4 bg-white rounded-full shadow-sm transition-all ${formData.showOnSchemes ? 'translate-x-4' : 'translate-x-0'}`} />
+                             </div>
+                             <span className="text-xs font-bold text-slate-600 uppercase tracking-tight">Apply Schemes</span>
+                          </label>
+                       </div>
+                    </div>
+
+                    <div className="flex gap-4 pt-4">
                        <button type="button" onClick={() => setShowModal(false)} className="flex-grow py-4 bg-slate-100 text-slate-600 rounded-xl font-bold text-xs uppercase tracking-widest border border-slate-200 hover:bg-slate-200 transition-all">Abort Action</button>
                        <button type="submit" className="flex-grow py-4 bg-blue-600 text-white rounded-xl font-bold text-xs uppercase tracking-widest shadow-xl hover:bg-blue-700 active:scale-95 transition-all">Commit Entry</button>
                     </div>
