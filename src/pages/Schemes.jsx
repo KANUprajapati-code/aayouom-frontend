@@ -3,8 +3,10 @@ import axios from 'axios';
 import { TrendingDown, Zap, ShieldCheck, ArrowRight, Package, ShoppingCart, Sparkles, ChevronRight, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
 
 const Schemes = () => {
+  const { addToCart } = useCart();
   const navigate = useNavigate();
   const [banners, setBanners] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -238,7 +240,13 @@ const Schemes = () => {
                   </div>
                   <div className="mt-auto pt-4 border-t border-slate-50 flex items-center justify-between">
                      <div className="text-lg font-black text-slate-900">₹{product.price}</div>
-                     <button className="w-10 h-10 rounded-xl bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all shadow-sm">
+                     <button 
+                       onClick={(e) => {
+                         e.stopPropagation();
+                         addToCart(product);
+                       }}
+                       className="w-10 h-10 rounded-xl bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all shadow-sm active:scale-90"
+                     >
                         <ShoppingCart size={18} />
                      </button>
                   </div>

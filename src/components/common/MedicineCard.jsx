@@ -12,6 +12,7 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
     scheme,
     image,
     stock,
+    discount,
     isBestDeal = false
   } = medicine;
   const availableStock = stock !== undefined ? stock : Infinity;

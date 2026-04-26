@@ -5,7 +5,13 @@ const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem('cart');
-    return savedCart ? JSON.parse(savedCart) : [];
+    let items = savedCart ? JSON.parse(savedCart) : [];
+    // Migration: ensure every item has a _cartId
+    return items.map(item => ({
+       ...item,
+       _cartId: item._cartId || item._id,
+       quantity: Number(item.quantity) || 1
+    }));
   });
 
   useEffect(() => {
@@ -64,22 +70,22 @@ export const CartProvider = ({ children }) => {
   const clearCart = () => setCart([]);
 
   const subtotal = cart.reduce((total, item) => {
-    let itemPrice = item.price;
+    let itemPrice = Number(item.price) || 0;
     
     // Apply scheme rules if they exist
     if (item.schemeRules && item.schemeRules.length > 0) {
       // Find the best rule (highest minUnits that is <= quantity)
       const applicableRule = item.schemeRules
-        .filter(r => item.quantity >= r.minUnits)
+        .filter(r => (Number(item.quantity) || 0) >= r.minUnits)
         .sort((a,b) => b.minUnits - a.minUnits)[0];
         
       if (applicableRule) {
-        const discountAmount = (item.price * applicableRule.discountPercentage) / 100;
-        itemPrice = item.price - discountAmount;
+        const discountAmount = (itemPrice * applicableRule.discountPercentage) / 100;
+        itemPrice = itemPrice - discountAmount;
       }
     }
     
-    return total + (itemPrice * item.quantity);
+    return total + (itemPrice * (Number(item.quantity) || 0));
   }, 0);
 
   return (
