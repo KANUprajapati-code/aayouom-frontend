@@ -50,15 +50,33 @@ const BrandsCMS = () => {
     try {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = async (event) => {
-        const base64 = event.target.result;
-        const res = await axios.post(`${API_BASE_URL}/upload`, { base64 }, getAuthConfig());
-        setCurrentBrand({ ...currentBrand, logoUrl: res.data.url });
-        setUploading(false);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = async () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 800; // Logos can be smaller
+          const scaleSize = MAX_WIDTH / img.width;
+          canvas.width = MAX_WIDTH;
+          canvas.height = img.height * scaleSize;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          const compressedBase64 = canvas.toDataURL('image/webp', 0.8);
+          
+          try {
+            const res = await axios.post(`${API_BASE_URL}/upload`, { base64: compressedBase64 }, getAuthConfig());
+            setCurrentBrand({ ...currentBrand, logoUrl: res.data.url });
+          } catch (err) {
+            console.error('Upload failed:', err);
+            alert('Upload failed. Image might be too large.');
+          } finally {
+            setUploading(false);
+          }
+        };
       };
     } catch (error) {
-      console.error('Upload failed:', error);
-      alert('Upload failed. Please try again.');
+      console.error('File reading error:', error);
+      alert('Error processing file.');
       setUploading(false);
     }
   };

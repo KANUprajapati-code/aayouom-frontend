@@ -30,6 +30,8 @@ const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [products, setProducts] = useState([]);
   const [pendingUsers, setPendingUsers] = useState([]);
+  const [brandsCount, setBrandsCount] = useState(0);
+  const [categoryCount, setCategoryCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [categoryFilter, setCategoryFilter] = useState('All');
   
@@ -41,10 +43,10 @@ const AdminDashboard = () => {
   };
 
   const dashboardStats = [
-    { label: 'Total Revenue', value: '₹1401', trend: '+10%', icon: BarChart3, color: 'text-blue-600', bg: 'bg-blue-50' },
-    { label: 'Total Orders', value: '29', trend: 'Lifetime', icon: ShoppingBag, color: 'text-indigo-600', bg: 'bg-indigo-50' },
-    { label: 'Total Customers', value: '10', trend: 'Registered Users', icon: Users, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-    { label: 'Consultations', value: '10', trend: 'Doctor Bookings', icon: Activity, color: 'text-amber-600', bg: 'bg-amber-50' }
+    { label: 'Total Revenue', value: '₹14,010', trend: '+10%', icon: BarChart3, color: 'text-blue-600', bg: 'bg-blue-50' },
+    { label: 'Active Catalog', value: products.length.toString(), trend: 'SKUs Registered', icon: Database, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+    { label: 'Total Customers', value: '10', trend: 'Verified Users', icon: Users, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+    { label: 'Partner Brands', value: brandsCount.toString(), trend: 'Global Partners', icon: Building2, color: 'text-amber-600', bg: 'bg-amber-50' }
   ];
 
   const lowStockItems = useMemo(() => products.filter(p => (p.stock || 0) <= 10).slice(0, 5), [products]);
@@ -52,10 +54,16 @@ const AdminDashboard = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const prodRes = await axios.get(`${API_BASE_URL}/products`).catch(() => ({ data: [] }));
-      setProducts(prodRes.data);
-
       const token = localStorage.getItem('token');
+      const [prodRes, brandRes, catRes] = await Promise.all([
+        axios.get(`${API_BASE_URL}/products`),
+        axios.get(`${API_BASE_URL}/brands`).catch(() => ({ data: [] })),
+        axios.get(`${API_BASE_URL}/categories`).catch(() => ({ data: [] }))
+      ]);
+      setProducts(prodRes.data || []);
+      setBrandsCount(brandRes.data?.length || 0);
+      setCategoryCount(catRes.data?.length || 0);
+
       if (token) {
         const userRes = await axios.get(`${API_BASE_URL}/admin/users/pending`, getAuthConfig()).catch(() => ({ data: [] }));
         setPendingUsers(userRes.data);

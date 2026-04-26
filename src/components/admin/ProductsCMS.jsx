@@ -66,13 +66,33 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
     try {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = async (e) => {
-        const { data } = await axios.post(`${API_BASE_URL}/upload`, { base64: e.target.result }, getAuthConfig());
-        setFormData(prev => ({ ...prev, image: data.url, images: [...prev.images, data.url] }));
-        setUploadingImage(false);
+      reader.onload = (e) => {
+        const img = new Image();
+        img.src = e.target.result;
+        img.onload = async () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 1200;
+          const scaleSize = MAX_WIDTH / img.width;
+          canvas.width = MAX_WIDTH;
+          canvas.height = img.height * scaleSize;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          const compressedBase64 = canvas.toDataURL('image/webp', 0.8);
+          
+          try {
+            const { data } = await axios.post(`${API_BASE_URL}/upload`, { base64: compressedBase64 }, getAuthConfig());
+            setFormData(prev => ({ ...prev, image: data.url, images: [...prev.images, data.url] }));
+          } catch (err) {
+            console.error('Upload error:', err);
+            alert("Upload failed. Image might be too large.");
+          } finally {
+            setUploadingImage(false);
+          }
+        };
       };
     } catch (err) {
-      alert("Upload failed.");
+      console.error('File reading error:', err);
+      alert("Error processing file.");
       setUploadingImage(false);
     }
   };

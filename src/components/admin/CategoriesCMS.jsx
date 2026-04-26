@@ -7,11 +7,13 @@ import API_BASE_URL from '../../config/api';
 const CategoriesCMS = ({ onManageProducts }) => {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
+  const [allBrands, setAllBrands] = useState([]); // Fetch all brands for selection
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState('add');
   const [currentId, setCurrentId] = useState(null);
-  const [formData, setFormData] = useState({ name: '', imageUrl: '', brandsStr: '' });
+  const [formData, setFormData] = useState({ name: '', imageUrl: '', brands: [] });
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
   
   const getAuthConfig = () => {
     const token = localStorage.getItem('token');
@@ -25,12 +27,14 @@ const CategoriesCMS = ({ onManageProducts }) => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [catRes, prodRes] = await Promise.all([
+      const [catRes, prodRes, brandRes] = await Promise.all([
         axios.get(`${API_BASE_URL}/categories`),
-        axios.get(`${API_BASE_URL}/products`).catch(() => ({ data: [] }))
+        axios.get(`${API_BASE_URL}/products`).catch(() => ({ data: [] })),
+        axios.get(`${API_BASE_URL}/brands`).catch(() => ({ data: [] }))
       ]);
       setCategories(catRes.data);
       setProducts(prodRes.data);
+      setAllBrands(brandRes.data);
     } catch (err) {
       console.error(err);
     } finally {
@@ -44,11 +48,11 @@ const CategoriesCMS = ({ onManageProducts }) => {
       setFormData({ 
         name: cat.name, 
         imageUrl: cat.imageUrl || '', 
-        brandsStr: cat.brands ? cat.brands.join(', ') : '' 
+        brands: cat.brands || []
       });
       setCurrentId(cat._id);
     } else {
-      setFormData({ name: '', imageUrl: '', brandsStr: '' });
+      setFormData({ name: '', imageUrl: '', brands: [] });
       setCurrentId(null);
     }
     setShowModal(true);
@@ -57,8 +61,7 @@ const CategoriesCMS = ({ onManageProducts }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const brands = formData.brandsStr.split(',').map(b => b.trim()).filter(b => b);
-      const payload = { name: formData.name, imageUrl: formData.imageUrl, brands };
+      const payload = { name: formData.name, imageUrl: formData.imageUrl, brands: formData.brands };
       
       if (modalMode === 'add') {
         const res = await axios.post(`${API_BASE_URL}/categories`, payload, getAuthConfig());
@@ -147,15 +150,62 @@ const CategoriesCMS = ({ onManageProducts }) => {
                      <label className="text-xs font-bold text-slate-500">Segment Name</label>
                      <input required type="text" className="w-full bg-slate-50 p-4 rounded-xl border border-slate-200 font-bold outline-none focus:bg-white focus:border-blue-600 transition-all uppercase" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value.toUpperCase() })} />
                   </div>
-                  <div className="space-y-2">
-                     <label className="text-xs font-bold text-slate-500">Icon URL</label>
-                     <input type="text" className="w-full bg-slate-50 p-4 rounded-xl border border-slate-200 outline-none focus:bg-white focus:border-blue-600 transition-all text-sm" value={formData.imageUrl} onChange={e => setFormData({ ...formData, imageUrl: e.target.value })} />
-                  </div>
-                  <div className="space-y-2">
-                     <label className="text-xs font-bold text-slate-500">Brands (Comma Separated)</label>
-                     <textarea rows="4" className="w-full bg-slate-50 p-4 rounded-xl border border-slate-200 outline-none focus:bg-white focus:border-blue-600 transition-all text-sm resize-none" value={formData.brandsStr} onChange={e => setFormData({ ...formData, brandsStr: e.target.value })} />
-                  </div>
-                  <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold text-xs uppercase tracking-widest shadow-lg transition-all active:scale-95">Save Segment</button>
+                   <div className="space-y-4">
+                      <label className="text-xs font-bold text-slate-500">Segment Identity (Icon)</label>
+                      <div className="flex items-center gap-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                         <div className="w-16 h-16 bg-white rounded-lg border border-slate-100 flex items-center justify-center overflow-hidden shrink-0">
+                            {uploading ? <div className="animate-spin rounded-full h-6 w-6 border-2 border-blue-600 border-t-transparent"></div> : formData.imageUrl ? <img src={formData.imageUrl} className="w-full h-full object-cover" /> : <Package className="text-slate-200" />}
+                         </div>
+                         <div className="flex-grow space-y-2">
+                            <input type="text" className="w-full bg-white p-2 rounded-lg border border-slate-200 text-xs outline-none" placeholder="Icon URL..." value={formData.imageUrl} onChange={e => setFormData({ ...formData, imageUrl: e.target.value })} />
+                            <label className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg text-[10px] font-bold cursor-pointer hover:bg-blue-700 transition-all">
+                               {uploading ? 'Processing...' : 'Upload Icon'}
+                               <input type="file" className="hidden" accept="image/*" onChange={async (e) => {
+                                  const file = e.target.files[0]; if (!file) return;
+                                  setUploading(true);
+                                  const reader = new FileReader(); reader.readAsDataURL(file);
+                                  reader.onload = (ev) => {
+                                     const img = new Image(); img.src = ev.target.result;
+                                     img.onload = async () => {
+                                        const canvas = document.createElement('canvas'); canvas.width = 400; canvas.height = 400;
+                                        canvas.getContext('2d').drawImage(img, 0, 0, 400, 400);
+                                        const res = await axios.post(`${API_BASE_URL}/upload`, { base64: canvas.toDataURL('image/webp', 0.8) }, getAuthConfig());
+                                        setFormData(prev => ({ ...prev, imageUrl: res.data.url }));
+                                        setUploading(false);
+                                     };
+                                  };
+                               }} />
+                            </label>
+                         </div>
+                      </div>
+                   </div>
+
+                   <div className="space-y-4">
+                      <label className="text-xs font-bold text-slate-500">Associated Brands ({formData.brands?.length || 0})</label>
+                      <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto p-4 bg-slate-50 rounded-xl border border-slate-200 no-scrollbar">
+                         {allBrands.map(brand => (
+                           <label key={brand._id} className={`flex items-center gap-3 p-3 rounded-lg border transition-all cursor-pointer ${formData.brands?.includes(brand.name) ? 'bg-blue-50 border-blue-200' : 'bg-white border-slate-100 hover:border-slate-200'}`}>
+                              <input 
+                                type="checkbox" 
+                                className="hidden" 
+                                checked={formData.brands?.includes(brand.name)}
+                                onChange={() => {
+                                  if (formData.brands?.includes(brand.name)) {
+                                    setFormData(prev => ({ ...prev, brands: prev.brands.filter(b => b !== brand.name) }));
+                                  } else {
+                                    setFormData(prev => ({ ...prev, brands: [...(prev.brands || []), brand.name] }));
+                                  }
+                                }}
+                              />
+                              <div className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${formData.brands?.includes(brand.name) ? 'bg-blue-600 border-blue-600' : 'bg-white border-slate-300'}`}>
+                                 {formData.brands?.includes(brand.name) && <Plus size={10} className="text-white" />}
+                              </div>
+                              <span className="text-xs font-bold text-slate-700">{brand.name}</span>
+                           </label>
+                         ))}
+                      </div>
+                   </div>
+                   <button type="submit" disabled={uploading} className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold text-xs uppercase tracking-widest shadow-lg transition-all active:scale-95 disabled:opacity-50">Save Segment</button>
                </form>
             </div>
          </div>
