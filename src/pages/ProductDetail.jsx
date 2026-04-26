@@ -97,18 +97,35 @@ Link: ${window.location.origin}/product/${medicine._id}`;
       <div className="grid lg:grid-cols-2 gap-12">
         {/* Gallery Section */}
         <div className="space-y-4">
-          <div className="bg-white p-8 aspect-square flex items-center justify-center relative rounded-[48px] border border-slate-100 shadow-premium group overflow-hidden">
-             <div className="absolute top-8 left-8 z-10">
-               {(medicine.scheme || medicine.schemeRules?.length > 0) && (
-                 <div className="bg-emerald-600 text-white text-[10px] font-black px-4 py-2 rounded-full shadow-xl flex items-center gap-2">
-                    <Zap size={14} className="fill-white" /> BULK SCHEME ACTIVE
+          <div className="aspect-square rounded-[64px] bg-white border border-slate-100 p-12 flex items-center justify-center relative overflow-hidden shadow-2xl group">
+              <div className="absolute inset-0 bg-slate-50 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+              
+              {/* Scheme Badge Top-Left */}
+              <div className="absolute top-8 left-8 z-10 pointer-events-none">
+                 {(medicine.scheme || (medicine.schemeRules && medicine.schemeRules.length > 0)) && (
+                   <div className="bg-emerald-600 text-white text-[10px] font-black px-4 py-2 rounded-full shadow-xl flex items-center gap-2 uppercase tracking-widest backdrop-blur-md border border-emerald-400/30">
+                      <Zap size={14} className="fill-white" /> BULK SCHEME ACTIVE
+                   </div>
+                 )}
+              </div>
+
+              {/* Discount Badge Top-Right */}
+              {displayOriginal && displayPrice < displayOriginal && (
+                 <div className="absolute top-0 right-0 z-10">
+                    <div className="bg-rose-600 text-white text-sm font-black px-8 py-3 rounded-bl-[40px] shadow-2xl uppercase tracking-[0.2em] italic">
+                       {Math.round(((displayOriginal - displayPrice) / displayOriginal) * 100)}% DISCOUNT
+                    </div>
                  </div>
-               )}
-             </div>
-             <img loading="lazy" src={mainImage} 
-               alt={medicine.name} 
-               className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-700 ease-out" 
-             />
+              )}
+              <motion.img 
+                key={mainImage}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                src={mainImage} 
+                alt={medicine.name} 
+                className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-700 ease-out" 
+              />
           </div>
           
           {medicine.images && medicine.images.length > 1 && (

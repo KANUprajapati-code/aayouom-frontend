@@ -25,6 +25,8 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
     window.open(`https://wa.me/919999988888?text=${encodeURIComponent(message)}`, '_blank');
   };
 
+  const calculatedDiscount = discount || (mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0);
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
@@ -54,6 +56,15 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
           </div>
         )}
       </div>
+
+      {/* Right-corner Discount Badge */}
+      {calculatedDiscount > 0 && (
+         <div className="absolute top-0 right-0 z-10">
+            <div className="bg-rose-600 text-white text-[10px] font-black px-4 py-2 rounded-bl-3xl shadow-lg uppercase tracking-wider italic">
+               {calculatedDiscount}% OFF
+            </div>
+         </div>
+      )}
 
       {/* Image Block */}
       <Link to={`/product/${_id}`} className="block relative h-48 mb-6 bg-slate-50/50 rounded-2xl overflow-hidden group-hover:bg-primary-50/30 transition-colors duration-500 flex items-center justify-center p-6 border border-slate-50">
@@ -91,7 +102,7 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
                 {mrp && (
                   <p className="text-[11px] text-slate-400 font-bold line-through leading-none mb-1.5 flex items-center gap-2">
                     MRP ₹{mrp}
-                    {discount && <span className="text-rose-500 bg-rose-50 px-1.5 py-0.5 rounded text-[9px] uppercase tracking-wider not-italic no-underline">Save {discount}%</span>}
+                    {calculatedDiscount > 0 && <span className="text-rose-500 bg-rose-50 px-1.5 py-0.5 rounded text-[9px] uppercase tracking-wider not-italic no-underline font-black">SAVE {calculatedDiscount}%</span>}
                   </p>
                 )}
                 <div className="flex items-baseline gap-1">
