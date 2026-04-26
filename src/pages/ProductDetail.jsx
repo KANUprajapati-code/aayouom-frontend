@@ -194,8 +194,31 @@ Link: ${window.location.origin}/product/${medicine._id}`;
                 </div>
               </div>
 
+              {(medicine.scheme || (medicine.freeUnitsScheme && medicine.freeUnitsScheme.buy)) && (
+                <div className="p-6 bg-gradient-to-br from-orange-500 to-rose-600 rounded-[32px] text-white flex items-center justify-between shadow-xl shadow-orange-500/20 relative overflow-hidden group">
+                   <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-700"></div>
+                   <div className="flex items-center gap-5 relative z-10">
+                     <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md border border-white/20 shrink-0">
+                        <Zap size={28} className="fill-white" />
+                     </div>
+                     <div>
+                       <p className="text-sm font-black uppercase tracking-widest text-orange-100 leading-none mb-1">Active Batch Protocol</p>
+                       <p className="text-2xl font-black italic tracking-tighter uppercase">
+                         {medicine.freeUnitsScheme?.buy 
+                           ? `BUY ${medicine.freeUnitsScheme.buy} GET ${medicine.freeUnitsScheme.free} FREE` 
+                           : medicine.scheme}
+                       </p>
+                       <p className="text-[10px] text-white/60 font-medium uppercase tracking-[0.2em] mt-1 italic">Verified Institutional Scheme</p>
+                     </div>
+                   </div>
+                   <div className="hidden sm:block">
+                      <ChevronRight size={24} className="text-white/40" />
+                   </div>
+                </div>
+              )}
+
               {/* Selection & Cart Controls */}
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-4 pt-4">
                  <div className="flex items-center gap-6 bg-white border border-slate-100 rounded-3xl p-5 shadow-sm">
                     <button 
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}

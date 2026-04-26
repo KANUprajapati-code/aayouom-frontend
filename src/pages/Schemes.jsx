@@ -211,26 +211,40 @@ const Schemes = () => {
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
-            {products.map((product, idx) => (
-              <div key={product._id} className="bg-white rounded-[24px] md:rounded-[32px] p-4 md:p-6 border border-slate-200 hover:border-blue-600/30 hover:shadow-lg transition-all duration-300 flex flex-col group relative">
-                <div className="absolute top-4 left-4 z-20 bg-blue-600 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1.5 rounded-lg shadow-lg">
-                  {idx % 2 === 0 ? 'Buy 10 Get 2' : '15% Bulk Off'}
+            {products.map((product, idx) => {
+              const hasFreeScheme = product.freeUnitsScheme && product.freeUnitsScheme.buy && product.freeUnitsScheme.free;
+              const hasRules = product.schemeRules && product.schemeRules.length > 0;
+              const schemeText = hasFreeScheme 
+                ? `BUY ${product.freeUnitsScheme.buy} GET ${product.freeUnitsScheme.free} FREE`
+                : hasRules 
+                  ? `${Math.max(...product.schemeRules.map(r => r.discountPercentage))}% BULK OFF`
+                  : 'LIMITED SCHEME';
+
+              return (
+                <div 
+                  key={product._id} 
+                  onClick={() => navigate(`/product/${product._id}`)}
+                  className="bg-white rounded-[24px] md:rounded-[32px] p-4 md:p-6 border border-slate-200 hover:border-blue-600/30 hover:shadow-lg transition-all duration-300 flex flex-col group relative cursor-pointer"
+                >
+                  <div className={`absolute top-4 left-4 z-20 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1.5 rounded-lg shadow-lg ${hasFreeScheme ? 'bg-orange-500' : 'bg-blue-600'}`}>
+                    {schemeText}
+                  </div>
+                  <div className="aspect-square rounded-2xl overflow-hidden bg-slate-50 mb-6 border border-slate-100 flex items-center justify-center group-hover:bg-blue-50 transition-all duration-500">
+                    <img src={product.image || 'https://images.unsplash.com/photo-1584308666744-24d5e4b2dcd9?w=300&q=80'} alt={product.name} className="w-4/5 h-4/5 object-contain" />
+                  </div>
+                  <div className="space-y-1 mb-6">
+                     <p className="text-[9px] font-bold text-blue-600 uppercase tracking-widest italic">{product.brand || 'General Pharma'}</p>
+                     <h3 className="text-sm font-bold text-slate-900 leading-tight uppercase tracking-tight truncate">{product.name}</h3>
+                  </div>
+                  <div className="mt-auto pt-4 border-t border-slate-50 flex items-center justify-between">
+                     <div className="text-lg font-black text-slate-900">₹{product.price}</div>
+                     <button className="w-10 h-10 rounded-xl bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all shadow-sm">
+                        <ShoppingCart size={18} />
+                     </button>
+                  </div>
                 </div>
-                <div className="aspect-square rounded-2xl overflow-hidden bg-slate-50 mb-6 border border-slate-100 flex items-center justify-center group-hover:bg-blue-50 transition-all duration-500">
-                  <img src={product.image || 'https://images.unsplash.com/photo-1584308666744-24d5e4b2dcd9?w=300&q=80'} alt={product.name} className="w-4/5 h-4/5 object-contain" />
-                </div>
-                <div className="space-y-1 mb-6">
-                   <p className="text-[9px] font-bold text-blue-600 uppercase tracking-widest italic">{product.brand || 'General Pharma'}</p>
-                   <h3 className="text-sm font-bold text-slate-900 leading-tight uppercase tracking-tight truncate">{product.name}</h3>
-                </div>
-                <div className="mt-auto pt-4 border-t border-slate-50 flex items-center justify-between">
-                   <div className="text-lg font-black text-slate-900">₹{product.price}</div>
-                   <button className="w-10 h-10 rounded-xl bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all shadow-sm">
-                      <ShoppingCart size={18} />
-                   </button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
       )}

@@ -15,7 +15,7 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
   const [formData, setFormData] = useState({
     name: '', brand: '', price: '', originalPrice: '', category: 'Medicines',
     image: '', images: [], description: '', stock: 0, showOnShop: true, showOnHome: false, showOnSchemes: false,
-    variants: [], schemeRules: []
+    variants: [], schemeRules: [], freeUnitsScheme: { buy: '', free: '' }
   });
 
   const [categories, setCategories] = useState([]);
@@ -54,11 +54,12 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
       setFormData({ 
         ...product,
         variants: product.variants || [],
-        schemeRules: product.schemeRules || []
+        schemeRules: product.schemeRules || [],
+        freeUnitsScheme: product.freeUnitsScheme || { buy: '', free: '' }
       });
       setCurrentProductId(product._id);
     } else {
-      setFormData({ name: '', brand: '', price: '', originalPrice: '', category: 'Medicines', image: '', images: [], description: '', stock: 0, showOnShop: true, showOnHome: false, showOnSchemes: false, variants: [], schemeRules: [] });
+      setFormData({ name: '', brand: '', price: '', originalPrice: '', category: 'Medicines', image: '', images: [], description: '', stock: 0, showOnShop: true, showOnHome: false, showOnSchemes: false, variants: [], schemeRules: [], freeUnitsScheme: { buy: '', free: '' } });
       setCurrentProductId(null);
     }
     setShowModal(true);
@@ -317,6 +318,20 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
                                 <button type="button" onClick={() => setFormData({...formData, schemeRules: formData.schemeRules.filter((_, idx) => idx !== i)})} className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all self-end mb-1"><X size={16}/></button>
                              </div>
                           ))}
+                       </div>
+                    </div>
+
+                    <div className="space-y-4">
+                       <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Free Units Scheme (e.g. Buy 10 Get 2)</label>
+                       <div className="grid grid-cols-2 gap-6 p-6 bg-blue-50/30 rounded-3xl border border-blue-100">
+                          <div className="space-y-2">
+                             <label className="text-[10px] font-black text-blue-600 uppercase tracking-widest ml-1">BUY QUANTITY</label>
+                             <input type="number" className="w-full bg-white p-3 rounded-xl border border-blue-100 text-xs font-bold" value={formData.freeUnitsScheme.buy} onChange={e => setFormData({...formData, freeUnitsScheme: {...formData.freeUnitsScheme, buy: e.target.value}})} placeholder="e.g. 10" />
+                          </div>
+                          <div className="space-y-2">
+                             <label className="text-[10px] font-black text-blue-600 uppercase tracking-widest ml-1">FREE UNITS</label>
+                             <input type="number" className="w-full bg-white p-3 rounded-xl border border-blue-100 text-xs font-bold" value={formData.freeUnitsScheme.free} onChange={e => setFormData({...formData, freeUnitsScheme: {...formData.freeUnitsScheme, free: e.target.value}})} placeholder="e.g. 2" />
+                          </div>
                        </div>
                     </div>
 
