@@ -11,7 +11,8 @@ import {
   Smartphone,
   Info,
   Clock,
-  Circle
+  Circle,
+  Zap
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
