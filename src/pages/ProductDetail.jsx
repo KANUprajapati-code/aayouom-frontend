@@ -12,7 +12,9 @@ import {
   ArrowLeft,
   Info,
   ShoppingCart,
-  MessageCircle
+  MessageCircle,
+  Zap,
+  Tag
 } from 'lucide-react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -27,6 +29,7 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [mainImage, setMainImage] = useState(null);
+  const [selectedVariant, setSelectedVariant] = useState(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -35,6 +38,10 @@ const ProductDetail = () => {
         setMedicine(data);
         if (data) {
            setMainImage(data.images?.length > 0 ? data.images[0] : (data.image || 'https://via.placeholder.com/400'));
+           // Pre-select first variant if exists
+           if (data.variants && data.variants.length > 0) {
+              setSelectedVariant(data.variants[0]);
+           }
         }
       } catch (err) {
         console.error('Failed to fetch product details:', err);
@@ -47,11 +54,16 @@ const ProductDetail = () => {
 
   const handleInquiry = () => {
     if (!medicine) return;
-    const whatsappNumber = "917990411390"; // Updated from USER_REQUEST
-    const message = `Hi, I am interested in *${medicine.name}* (Price: ₹${medicine.price}). Can you provide more details? 
+    const whatsappNumber = "917990411390"; 
+    const variantStr = selectedVariant ? ` (Variant: ${selectedVariant.name})` : '';
+    const message = `Hi, I am interested in *${medicine.name}*${variantStr} (Price: ₹${selectedVariant ? selectedVariant.price : medicine.price}). Can you provide more details? 
 Link: ${window.location.origin}/product/${medicine._id}`;
     window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
   };
+
+  const displayPrice = selectedVariant ? selectedVariant.price : medicine?.price;
+  const displayOriginal = selectedVariant ? selectedVariant.originalPrice : medicine?.originalPrice;
+  const displayStock = selectedVariant ? selectedVariant.stock : medicine?.stock;
 
   if (loading) {
     return (
@@ -71,7 +83,7 @@ Link: ${window.location.origin}/product/${medicine._id}`;
   }
 
   return (
-    <div className="space-y-8 pb-20 max-w-6xl mx-auto px-4">
+    <div className="space-y-8 pb-20 max-w-6xl mx-auto px-4 font-sans">
       <button 
         onClick={() => navigate(-1)}
         className="flex items-center gap-2 text-text-muted hover:text-primary-600 font-bold transition-all group"
@@ -79,179 +91,225 @@ Link: ${window.location.origin}/product/${medicine._id}`;
         <div className="w-8 h-8 rounded-full border border-surface-border flex items-center justify-center group-hover:border-primary-200">
           <ArrowLeft size={18} />
         </div>
-        Back to Results
+        Back to Marketplace
       </button>
 
       <div className="grid lg:grid-cols-2 gap-12">
-        {/* Image Section (Amazon Style Gallery) */}
+        {/* Gallery Section */}
         <div className="space-y-4">
-          <div className="card !p-8 bg-white aspect-square flex items-center justify-center relative rounded-[40px] border border-surface-border shadow-soft group">
-             <div className="absolute top-6 left-6 z-10">
-               {medicine.scheme && <SchemeBadge scheme={medicine.scheme} />}
+          <div className="bg-white p-8 aspect-square flex items-center justify-center relative rounded-[48px] border border-slate-100 shadow-premium group overflow-hidden">
+             <div className="absolute top-8 left-8 z-10">
+               {(medicine.scheme || medicine.schemeRules?.length > 0) && (
+                 <div className="bg-emerald-600 text-white text-[10px] font-black px-4 py-2 rounded-full shadow-xl flex items-center gap-2">
+                    <Zap size={14} className="fill-white" /> BULK SCHEME ACTIVE
+                 </div>
+               )}
              </div>
              <img loading="lazy" src={mainImage} 
                alt={medicine.name} 
-               className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500 ease-out" 
+               className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-700 ease-out" 
              />
           </div>
           
-          {/* Thumbnails Row */}
           {medicine.images && medicine.images.length > 1 && (
-             <div className="flex items-center gap-3 overflow-x-auto pb-2 custom-scrollbar justify-center">
+             <div className="flex items-center gap-4 overflow-x-auto pb-4 custom-scrollbar justify-center">
                 {medicine.images.map((img, idx) => (
                   <button 
                     key={idx} 
                     onClick={() => setMainImage(img)}
-                    className={`shrink-0 w-20 h-20 bg-white rounded-2xl border-2 p-2 flex items-center justify-center transition-all ${
+                    className={`shrink-0 w-24 h-24 bg-white rounded-3xl border-2 p-3 flex items-center justify-center transition-all ${
                        mainImage === img 
-                         ? 'border-primary-500 shadow-lg shadow-primary-500/20' 
-                         : 'border-slate-100 opacity-60 hover:opacity-100 hover:border-primary-300'
+                         ? 'border-primary-500 shadow-xl shadow-primary-500/10' 
+                         : 'border-slate-50 opacity-60 hover:opacity-100 hover:border-slate-200'
                     }`}
                   >
-                     <img src={img} alt={`Thumbnail ${idx+1}`} className="max-w-full max-h-full object-contain mix-blend-multiply" />
+                     <img src={img} alt="" className="max-w-full max-h-full object-contain mix-blend-multiply" />
                   </button>
                 ))}
              </div>
           )}
         </div>
 
-        {/* Content Section */}
+        {/* Info Section */}
         <div className="space-y-8">
-           <div className="space-y-2">
-             <p className="text-xs font-bold text-primary-600 uppercase tracking-widest">{medicine.brand || "Verified Brand"}</p>
-             <h1 className="text-3xl lg:text-4xl font-black text-slate-900 leading-tight">{medicine.name}</h1>
-             <p className="text-sm text-text-muted font-medium italic">{medicine.category}</p>
+           <div className="space-y-3">
+             <div className="flex items-center gap-2">
+                <span className="text-[10px] font-black text-primary-600 uppercase tracking-widest bg-primary-50 px-3 py-1 rounded-full border border-primary-100">{medicine.brand || "Institutional Node"}</span>
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{medicine.category}</span>
+             </div>
+             <h1 className="text-4xl lg:text-5xl font-black text-slate-950 leading-[1.1] tracking-tighter italic uppercase">{medicine.name}</h1>
            </div>
 
-           <div className="p-5 sm:p-8 bg-surface-light rounded-[32px] sm:rounded-[40px] border border-surface-border space-y-6 sm:space-y-8 shadow-soft">
-              <div className="flex items-end justify-between">
+           {/* Variant Selection (Amazon Style) */}
+           {medicine.variants && medicine.variants.length > 0 && (
+             <div className="space-y-4">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Select potency / capacity:</p>
+                <div className="flex flex-wrap gap-3">
+                   {medicine.variants.map((v, idx) => (
+                     <button 
+                       key={idx}
+                       onClick={() => setSelectedVariant(v)}
+                       className={`px-6 py-4 rounded-2xl font-black text-sm transition-all border-2 flex flex-col items-center gap-1 min-w-[100px] ${
+                         selectedVariant?.name === v.name 
+                           ? 'bg-slate-900 border-slate-900 text-white shadow-2xl scale-105' 
+                           : 'bg-white border-slate-100 text-slate-500 hover:border-primary-200'
+                       }`}
+                     >
+                        <span>{v.name}</span>
+                        <span className={`text-[10px] ${selectedVariant?.name === v.name ? 'text-blue-400' : 'text-slate-400'}`}>₹{v.price}</span>
+                     </button>
+                   ))}
+                </div>
+             </div>
+           )}
+
+           <div className="p-8 bg-slate-50 rounded-[48px] border border-slate-100 space-y-8 shadow-inner">
+              <div className="flex items-end justify-between px-2">
                 <div>
-                   {medicine.mrp && <p className="text-xs text-text-muted line-through mb-1">MRP ₹{medicine.mrp}</p>}
-                   <div className="flex items-baseline gap-2">
-                     <span className="text-4xl font-black text-slate-900">₹{medicine.price}</span>
-                     {medicine.discount && <span className="text-sm font-bold text-secondary-600">({medicine.discount}% OFF)</span>}
+                   {displayOriginal && <p className="text-xs text-slate-400 line-through mb-1 font-bold">MRP ₹{displayOriginal}</p>}
+                   <div className="flex items-baseline gap-3">
+                     <span className="text-5xl font-black text-slate-950 tracking-tighter">₹{displayPrice}</span>
+                     {displayOriginal && (
+                        <span className="text-sm font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">
+                          {Math.round(((displayOriginal - displayPrice) / displayOriginal) * 100)}% OFF
+                        </span>
+                     )}
                    </div>
                 </div>
                 <div className="text-right">
-                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Stock Availability</p>
-                   {medicine.stock > 0 ? (
-                     <p className="text-sm font-bold text-secondary-600 flex items-center gap-2 justify-end">
-                       <span className="w-2 h-2 rounded-full bg-secondary-500 animate-pulse"></span>
-                       In Stock ({medicine.stock})
-                     </p>
+                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Institutional Stock</p>
+                   {displayStock > 0 ? (
+                     <div className="flex flex-col items-end">
+                        <span className="text-xs font-black text-emerald-600 uppercase tracking-tight flex items-center gap-2">
+                           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                           Operational ({displayStock} units)
+                        </span>
+                     </div>
                    ) : (
-                     <p className="text-sm font-bold text-rose-500 flex items-center gap-2 justify-end">
-                       <span className="w-2 h-2 rounded-full bg-rose-500"></span>
-                       Out of Stock
-                     </p>
+                     <span className="text-xs font-black text-rose-500 uppercase tracking-tight flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-rose-500"></span>
+                        Depleted
+                     </span>
                    )}
                 </div>
               </div>
 
-              {medicine.scheme && (
-                <div className="p-5 bg-white rounded-2xl border border-primary-100 flex items-center justify-between shadow-premium">
-                   <div className="flex items-center gap-4">
-                     <div className="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center text-primary-600">
-                        <TrendingDown size={24} />
-                     </div>
-                     <div>
-                       <p className="text-sm font-black text-slate-900 uppercase tracking-tight">{medicine.scheme}</p>
-                       <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest mt-0.5">Applied on Clinical Bulk Checkout</p>
-                     </div>
-                   </div>
-                   <Info size={18} className="text-slate-300" />
-                </div>
-              )}
-
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                 <div className="flex items-center gap-6 bg-white border border-surface-border rounded-2xl p-4 shadow-sm">
+              {/* Selection & Cart Controls */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                 <div className="flex items-center gap-6 bg-white border border-slate-100 rounded-3xl p-5 shadow-sm">
                     <button 
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="text-primary-600 hover:bg-primary-50 p-1 rounded-lg transition-colors"
+                      className="text-slate-400 hover:text-black p-1 transition-colors"
                     >
                       <Minus size={20} />
                     </button>
-                    <span className="text-xl font-black w-8 text-center text-slate-800">{quantity}</span>
+                    <span className="text-2xl font-black w-10 text-center text-slate-900">{quantity}</span>
                     <button 
                       onClick={() => setQuantity(quantity + 1)}
-                      className="text-primary-600 hover:bg-primary-50 p-1 rounded-lg transition-colors"
+                      className="text-slate-400 hover:text-black p-1 transition-colors"
                     >
                       <Plus size={20} />
                     </button>
                  </div>
                  <button 
-                   onClick={() => addToCart(medicine, quantity)}
-                   className="btn-primary flex-grow py-5 text-sm uppercase tracking-[0.2em] shadow-premium"
+                   onClick={() => addToCart(medicine, quantity, selectedVariant)}
+                   className="flex-grow py-5 bg-blue-600 hover:bg-blue-700 text-white rounded-3xl font-black uppercase text-xs tracking-[0.2em] shadow-xl shadow-blue-600/20 flex items-center justify-center gap-3 transition-all active:scale-95"
                  >
-                    Add to Clinic Cart
+                    DEPLOY TO CART
                     <ShoppingCart size={20} />
                  </button>
               </div>
 
               <button 
                 onClick={handleInquiry}
-                className="w-full py-4 border-2 border-emerald-500/20 bg-emerald-50 text-emerald-700 rounded-2xl font-black uppercase tracking-widest text-[11px] flex items-center justify-center gap-2 hover:bg-emerald-500 hover:text-white transition-all duration-300 shadow-soft"
+                className="w-full py-5 bg-white text-emerald-600 rounded-3xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-3 hover:bg-emerald-600 hover:text-white border border-emerald-100 transition-all shadow-sm"
               >
-                 <MessageCircle size={18} /> Inquire about this medicine
+                 <MessageCircle size={18} /> Professional Inquiry (WhatsApp)
               </button>
-           </div>
-
-           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-6 bg-white rounded-3xl border border-surface-border space-y-2 shadow-soft">
-                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                    <Package size={14} className="text-primary-500" /> Logistics Info
-                 </p>
-                 <p className="text-sm font-black text-slate-800">Sealed Pack Delivery</p>
-                 <p className="text-xs text-text-muted">Standard clinical packaging maintained.</p>
-              </div>
-              <div className="p-6 bg-white rounded-3xl border border-surface-border space-y-2 shadow-soft">
-                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                    <Truck size={14} className="text-primary-500" /> Fast Delivery
-                 </p>
-                 <p className="text-sm font-black text-slate-800">24-48 Hours Express</p>
-                 <p className="text-xs text-text-muted">Priority fulfillment for medical hubs.</p>
-              </div>
            </div>
         </div>
       </div>
 
-      {/* Description / Medical Info */}
-      <section className="bg-white rounded-[32px] sm:rounded-[40px] border border-surface-border p-6 sm:p-8 lg:p-14 shadow-premium space-y-6 sm:space-y-8 mt-12">
-         <div className="flex items-center gap-4">
-            <div className="w-1 h-8 bg-primary-600 rounded-full"></div>
-            <h2 className="text-2xl lg:text-3xl font-black text-slate-900 italic uppercase">Clinical Information</h2>
-         </div>
-         
-         <div className="grid md:grid-cols-2 gap-12 text-sm leading-relaxed">
-            <div className="space-y-6">
-               <div className="p-6 bg-slate-50 rounded-3xl border border-slate-100 italic font-medium text-slate-600 leading-relaxed shadow-inner">
-                  "{medicine.description || "Detailed clinical description and therapeutic usage guidelines are available upon purchase or professional inquiry."}"
+      {/* Schemes / Bulk Discounts Table */}
+      {medicine.schemeRules && medicine.schemeRules.length > 0 && (
+        <section className="bg-emerald-950 rounded-[48px] p-10 md:p-16 text-white relative overflow-hidden shadow-2xl">
+           <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500 opacity-10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
+           <div className="relative z-10 space-y-10">
+              <div className="space-y-2">
+                 <div className="flex items-center gap-3 text-emerald-400 font-black text-[10px] uppercase tracking-[0.3em]">
+                    <Zap size={16} className="fill-emerald-400" /> Yield Maximization
+                 </div>
+                 <h2 className="text-3xl md:text-5xl font-black italic tracking-tighter uppercase leading-none">Bulk Institutional Schemes</h2>
+                 <p className="text-emerald-500/60 text-sm font-semibold max-w-xl">Scale your clinic inventory with our specialized quantity-based yield protocols. Savings applied at checkout matrix.</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                 {medicine.schemeRules.sort((a,b) => a.minUnits - b.minUnits).map((rule, idx) => (
+                   <div key={idx} className="bg-white/5 border border-white/10 p-8 rounded-[32px] text-center space-y-4 backdrop-blur-md hover:bg-white/10 transition-all group">
+                      <div className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">MINIMUM ORDER</div>
+                      <div className="text-4xl font-black italic">{rule.minUnits} UNITS</div>
+                      <div className="h-1 w-10 bg-emerald-500 mx-auto rounded-full group-hover:w-full transition-all duration-500"></div>
+                      <div className="text-sm font-bold text-slate-400">Yield Discount</div>
+                      <div className="text-2xl font-black text-emerald-400">{rule.discountPercentage}% OFF</div>
+                   </div>
+                 ))}
+              </div>
+           </div>
+        </section>
+      )}
+
+      {/* Product Description */}
+      <section className="bg-white rounded-[48px] border border-slate-100 p-10 md:p-20 shadow-premium grid md:grid-cols-3 gap-16">
+         <div className="md:col-span-2 space-y-10">
+            <div className="space-y-4">
+               <h2 className="text-3xl font-black italic uppercase tracking-tighter text-slate-950 flex items-center gap-4">
+                  <div className="w-2 h-8 bg-blue-600 rounded-full"></div>
+                  Clinical Narrative
+               </h2>
+               <div className="text-slate-500 text-base leading-relaxed font-semibold italic p-8 bg-slate-50 rounded-[32px] border border-slate-100 shadow-inner">
+                  "{medicine.description || "Detailed clinical specifications and professional guidance nodes are provided upon institutional procurement."}"
                </div>
-               <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 rounded-2xl bg-surface-light border border-surface-border">
-                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Category</p>
-                     <p className="font-bold text-slate-800">{medicine.category}</p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-8">
+               <div className="space-y-4">
+                  <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 ml-1">
+                     <Tag size={12} className="text-blue-500" /> Logistics Node
                   </div>
-                  <div className="p-4 rounded-2xl bg-surface-light border border-surface-border">
-                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Storage</p>
-                     <p className="font-bold text-slate-800">Cool & Dry Place</p>
+                  <div className="p-6 bg-white border border-slate-100 rounded-3xl space-y-1 shadow-sm">
+                     <p className="font-black text-slate-900 text-sm">Institutional Sealed</p>
+                     <p className="text-xs text-slate-400 font-medium">Original pharmaceutical pack.</p>
+                  </div>
+               </div>
+               <div className="space-y-4">
+                  <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 ml-1">
+                     <History size={12} className="text-blue-500" /> Batch Tracking
+                  </div>
+                  <div className="p-6 bg-white border border-slate-100 rounded-3xl space-y-1 shadow-sm">
+                     <p className="font-black text-slate-900 text-sm">Node Freshness</p>
+                     <p className="text-xs text-slate-400 font-medium">Long shelf-life authenticated.</p>
                   </div>
                </div>
             </div>
-            <div className="space-y-6">
-               <div className="p-6 bg-primary-50/50 rounded-[32px] border border-primary-100 flex gap-5">
-                  <ShieldCheck className="text-primary-600 shrink-0" size={28} />
-                  <div>
-                     <p className="text-lg font-black text-primary-900 leading-none">Professional-Grade</p>
-                     <p className="text-primary-700 text-xs mt-2 leading-relaxed font-bold opacity-70 italic">Ensure correct medical supervision and patient history review before administration.</p>
-                  </div>
+         </div>
+
+         <div className="space-y-8">
+            <div className="p-8 bg-slate-950 rounded-[40px] text-white space-y-6 shadow-2xl relative overflow-hidden group">
+               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600 opacity-20 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-1000"></div>
+               <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-blue-400 border border-white/10">
+                  <ShieldCheck size={28} />
                </div>
-               <div className="p-6 bg-slate-900 rounded-[32px] text-white flex flex-col sm:flex-row gap-4 sm:gap-5 shadow-2xl">
-                  <History className="text-primary-400 shrink-0" size={28} />
-                  <div>
-                     <p className="text-lg font-black italic">Supply Reliability</p>
-                     <p className="text-slate-400 text-xs mt-2 leading-relaxed font-medium">consistent stock availability tracked directly from warehouse nodes.</p>
-                  </div>
+               <div className="space-y-2">
+                  <h4 className="text-xl font-black italic uppercase italic">Clinic Verified</h4>
+                  <p className="text-slate-400 text-xs font-semibold leading-relaxed">This product node is part of the established AYUOM clinical supply network. Authentic pharmaceutical grade guaranteed.</p>
+               </div>
+            </div>
+
+            <div className="p-8 bg-blue-600 rounded-[40px] text-white flex gap-5 shadow-2xl items-start shadow-blue-600/20">
+               <Truck size={32} />
+               <div>
+                  <h4 className="text-xl font-black italic uppercase">Matrix Express</h4>
+                  <p className="text-blue-100 text-[10px] font-bold uppercase tracking-wider mt-2">24-48 HR CLINIC DELIVERY</p>
                </div>
             </div>
          </div>
@@ -261,3 +319,4 @@ Link: ${window.location.origin}/product/${medicine._id}`;
 };
 
 export default ProductDetail;
+

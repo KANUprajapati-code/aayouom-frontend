@@ -14,7 +14,8 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
 
   const [formData, setFormData] = useState({
     name: '', brand: '', price: '', originalPrice: '', category: 'Medicines',
-    image: '', images: [], description: '', stock: 0, showOnShop: true, showOnHome: false, showOnSchemes: false
+    image: '', images: [], description: '', stock: 0, showOnShop: true, showOnHome: false, showOnSchemes: false,
+    variants: [], schemeRules: []
   });
 
   const [categories, setCategories] = useState([]);
@@ -50,10 +51,14 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
   const handleOpenModal = (mode, product = null) => {
     setModalMode(mode);
     if (mode === 'edit' && product) {
-      setFormData({ ...product });
+      setFormData({ 
+        ...product,
+        variants: product.variants || [],
+        schemeRules: product.schemeRules || []
+      });
       setCurrentProductId(product._id);
     } else {
-      setFormData({ name: '', brand: '', price: '', originalPrice: '', category: 'Medicines', image: '', images: [], description: '', stock: 0, showOnShop: true, showOnHome: false, showOnSchemes: false });
+      setFormData({ name: '', brand: '', price: '', originalPrice: '', category: 'Medicines', image: '', images: [], description: '', stock: 0, showOnShop: true, showOnHome: false, showOnSchemes: false, variants: [], schemeRules: [] });
       setCurrentProductId(null);
     }
     setShowModal(true);
@@ -245,6 +250,74 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
                     <div className="space-y-2">
                        <label className="text-xs font-bold text-slate-500">Product Description</label>
                        <textarea required rows="4" className="w-full bg-slate-50 p-4 rounded-xl border border-slate-100 outline-none focus:bg-white focus:border-blue-600 transition-all font-medium text-sm resize-none" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} />
+                    </div>
+
+                    <div className="space-y-4">
+                       <div className="flex items-center justify-between">
+                          <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Product Variants (mg/gm/units)</label>
+                          <button type="button" onClick={() => setFormData({...formData, variants: [...formData.variants, {name: '', price: '', originalPrice: '', stock: 0}]})} className="text-[10px] bg-blue-600 text-white px-3 py-1 rounded-md font-bold hover:bg-blue-700 transition-all flex items-center gap-1"><Plus size={12}/> ADD VARIANT</button>
+                       </div>
+                       <div className="space-y-3">
+                          {formData.variants.map((v, i) => (
+                             <div key={i} className="grid grid-cols-5 gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-end">
+                                <div className="col-span-2">
+                                   <label className="text-[8px] font-bold text-slate-400">LABEL (e.g. 50mg)</label>
+                                   <input className="w-full bg-white p-2 rounded-lg border border-slate-200 text-xs font-bold" value={v.name} onChange={e => {
+                                      const newVariants = [...formData.variants];
+                                      newVariants[i].name = e.target.value;
+                                      setFormData({...formData, variants: newVariants});
+                                   }} />
+                                </div>
+                                <div>
+                                   <label className="text-[8px] font-bold text-slate-400">PRICE</label>
+                                   <input type="number" className="w-full bg-white p-2 rounded-lg border border-slate-200 text-xs font-bold" value={v.price} onChange={e => {
+                                      const newVariants = [...formData.variants];
+                                      newVariants[i].price = e.target.value;
+                                      setFormData({...formData, variants: newVariants});
+                                   }} />
+                                </div>
+                                <div>
+                                   <label className="text-[8px] font-bold text-slate-400">STOCK</label>
+                                   <input type="number" className="w-full bg-white p-2 rounded-lg border border-slate-200 text-xs font-bold" value={v.stock} onChange={e => {
+                                      const newVariants = [...formData.variants];
+                                      newVariants[i].stock = e.target.value;
+                                      setFormData({...formData, variants: newVariants});
+                                   }} />
+                                </div>
+                                <button type="button" onClick={() => setFormData({...formData, variants: formData.variants.filter((_, idx) => idx !== i)})} className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-all"><X size={16}/></button>
+                             </div>
+                          ))}
+                       </div>
+                    </div>
+
+                    <div className="space-y-4">
+                       <div className="flex items-center justify-between">
+                          <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Scheme & Promotion Rules</label>
+                          <button type="button" onClick={() => setFormData({...formData, schemeRules: [...formData.schemeRules, {minUnits: '', discountPercentage: ''}]})} className="text-[10px] bg-emerald-600 text-white px-3 py-1 rounded-md font-bold hover:bg-emerald-700 transition-all flex items-center gap-1"><Plus size={12}/> ADD RULE</button>
+                       </div>
+                       <div className="space-y-3">
+                          {formData.schemeRules.map((r, i) => (
+                             <div key={i} className="grid grid-cols-3 gap-3 p-4 bg-emerald-50/30 rounded-xl border border-emerald-100 flex items-end">
+                                <div>
+                                   <label className="text-[8px] font-bold text-emerald-600">MIN UNITS</label>
+                                   <input type="number" className="w-full bg-white p-2 rounded-lg border border-emerald-100 text-xs font-bold" value={r.minUnits} onChange={e => {
+                                      const newRules = [...formData.schemeRules];
+                                      newRules[i].minUnits = e.target.value;
+                                      setFormData({...formData, schemeRules: newRules});
+                                   }} />
+                                </div>
+                                <div>
+                                   <label className="text-[8px] font-bold text-emerald-600">DISCOUNT %</label>
+                                   <input type="number" className="w-full bg-white p-2 rounded-lg border border-emerald-100 text-xs font-bold" value={r.discountPercentage} onChange={e => {
+                                      const newRules = [...formData.schemeRules];
+                                      newRules[i].discountPercentage = e.target.value;
+                                      setFormData({...formData, schemeRules: newRules});
+                                   }} />
+                                </div>
+                                <button type="button" onClick={() => setFormData({...formData, schemeRules: formData.schemeRules.filter((_, idx) => idx !== i)})} className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all self-end mb-1"><X size={16}/></button>
+                             </div>
+                          ))}
+                       </div>
                     </div>
 
                     <div className="space-y-4">

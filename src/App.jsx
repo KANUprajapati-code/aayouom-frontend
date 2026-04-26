@@ -26,6 +26,7 @@ import ReferAndEarn from './pages/ReferAndEarn';
 import Promotions from './pages/Promotions';
 import Profile from './pages/Profile';
 import Support from './pages/Support';
+import Checkout from './pages/Checkout';
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -48,6 +49,7 @@ function App() {
                   <Route path="/products" element={<Products />} />
                   <Route path="/product/:id" element={<ProductDetail />} />
                   <Route path="/cart" element={<Cart />} />
+                  <Route path="/checkout" element={<Checkout />} />
                   <Route path="/quick-order" element={<QuickOrder />} />
                   <Route path="/orders" element={<OrderHistory />} />
                   <Route path="/schemes" element={<Schemes />} />

@@ -27,16 +27,8 @@ const Cart = () => {
   const totalMRP = cart.reduce((acc, item) => acc + (item.mrp * item.quantity), 0);
   const savings = totalMRP - subtotal;
 
-  const handleWhatsAppCheckout = () => {
-    const whatsappNumber = "917990411390"; // Updated from USER_REQUEST
-    let message = `*New Order from ${user?.clinicName || 'Clinic'}*\n\n`;
-    cart.forEach((item, index) => {
-      message += `${index + 1}. *${item.name}* x ${item.quantity} = ₹${(item.price * item.quantity).toLocaleString()}\n`;
-    });
-    message += `\n*Grand Total: ₹${subtotal.toLocaleString()}*`;
-    message += `\n\nAddress: ${user?.address || 'Mumbai, Maharashtra'}`;
-    
-    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
+  const handleCheckout = () => {
+    navigate('/checkout');
   };
 
   if (cart.length === 0) {
@@ -58,21 +50,21 @@ const Cart = () => {
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 pb-20">
-      <div className="flex items-end justify-between">
+      <div className="flex items-end justify-between px-4 sm:px-0">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Your Cart</h1>
-          <p className="text-text-muted mt-1">Review your professional order and savings before checkout.</p>
+          <h1 className="text-4xl font-black text-slate-900 italic tracking-tighter uppercase">Payload Matrix</h1>
+          <p className="text-text-muted mt-1 font-bold uppercase tracking-widest text-[10px] ml-1">Review your clinical order deployment</p>
         </div>
-        <Link to="/products" className="text-primary-600 font-bold hover:underline mb-1 flex items-center gap-1">
+        <Link to="/products" className="text-primary-600 font-bold hover:underline mb-1 flex items-center gap-1 text-sm">
           <Plus size={18} /> Add More
         </Link>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-8">
           {/* Cart Items */}
-          <div className="card !p-0 overflow-hidden">
-            <div className="p-4 bg-surface-light border-b border-surface-border text-[10px] font-bold text-slate-400 uppercase tracking-widest hidden md:grid grid-cols-12 gap-4">
+          <div className="bg-white rounded-[40px] border border-slate-100 shadow-premium overflow-hidden">
+            <div className="p-6 bg-slate-50 border-b border-slate-100 text-[10px] font-black text-slate-400 uppercase tracking-widest hidden md:grid grid-cols-12 gap-4">
               <div className="col-span-6">Medicine Details</div>
               <div className="col-span-3 text-center">Quantity</div>
               <div className="col-span-2 text-right">Total</div>
@@ -81,50 +73,52 @@ const Cart = () => {
 
             <div className="divide-y divide-slate-50">
               {cart.map(item => (
-                <div key={item._id} className="p-4 md:p-6 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 items-center group relative">
-                  <div className="col-span-1 md:col-span-6 flex gap-3 md:gap-4 w-full pr-8 md:pr-0">
-                    <div className="w-16 h-16 md:w-20 md:h-20 bg-surface-light rounded-xl overflow-hidden shrink-0">
-                      <img loading="lazy" src={item.image} alt={item.name} className="w-full h-full object-contain p-2" />
+                <div key={item._cartId} className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-12 gap-6 items-center group relative">
+                  <div className="col-span-1 md:col-span-6 flex gap-4 w-full pr-8 md:pr-0">
+                    <div className="w-20 h-20 bg-slate-50 rounded-2xl overflow-hidden shrink-0 border border-slate-100 p-2">
+                      <img loading="lazy" src={item.image} alt={item.name} className="w-full h-full object-contain mix-blend-multiply" />
                     </div>
                     <div className="space-y-1">
-                      <p className="text-[10px] font-bold text-primary-600 uppercase tracking-widest">{item.brand}</p>
-                      <h3 className="text-sm md:text-base font-bold text-slate-900 group-hover:text-primary-600 transition-colors line-clamp-2">{item.name}</h3>
-                      <div className="flex flex-wrap items-center gap-2 pt-1">
-                        <SchemeBadge scheme={item.scheme} type='green' />
-                        <span className="text-[10px] font-bold text-secondary-600">₹{item.price} / unit</span>
+                      <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest italic">{item.brand || 'Institutional'}</p>
+                      <h3 className="text-base font-black text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2 uppercase italic tracking-tighter">{item.name}</h3>
+                      <div className="flex flex-wrap items-center gap-2 pt-1 font-bold">
+                        {item.selectedVariant && (
+                           <span className="text-[10px] bg-slate-100 px-3 py-1 rounded-full text-slate-600">{item.selectedVariant.name}</span>
+                        )}
+                        <span className="text-[10px] text-emerald-600">₹{item.price} / unit</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="col-span-1 md:col-span-3 flex justify-start md:justify-center mt-2 md:mt-0">
-                    <div className="inline-flex items-center gap-3 p-1 bg-surface-light rounded-xl border border-surface-border">
+                  <div className="col-span-1 md:col-span-3 flex justify-start md:justify-center">
+                    <div className="inline-flex items-center gap-4 px-4 py-2 bg-slate-50 rounded-2xl border border-slate-100">
                       <button 
-                        onClick={() => updateQuantity(item._id, item.quantity - 1)}
-                        className="p-1 md:p-1.5 hover:bg-white hover:text-red-600 rounded-lg transition-all shadow-sm"
+                        onClick={() => updateQuantity(item._cartId, item.quantity - 1)}
+                        className="text-slate-400 hover:text-black transition-all"
                       >
-                        <Minus size={14} className="md:w-4 md:h-4" />
+                        <Minus size={16} />
                       </button>
-                      <span className="text-sm font-bold text-slate-900 w-6 md:w-8 text-center">{item.quantity}</span>
+                      <span className="text-lg font-black text-slate-900 w-8 text-center">{item.quantity}</span>
                       <button 
-                        onClick={() => updateQuantity(item._id, item.quantity + 1)}
-                        className="p-1 md:p-1.5 hover:bg-white hover:text-primary-600 rounded-lg transition-all shadow-sm"
+                        onClick={() => updateQuantity(item._cartId, item.quantity + 1)}
+                        className="text-slate-400 hover:text-black transition-all"
                       >
-                        <Plus size={14} className="md:w-4 md:h-4" />
+                        <Plus size={16} />
                       </button>
                     </div>
                   </div>
 
-                  <div className="col-span-1 md:col-span-2 flex items-center justify-between md:block md:text-right mt-2 md:mt-0">
-                    <p className="text-[10px] text-text-muted line-through md:block inline mr-2 md:mr-0">₹{(item.mrp * item.quantity).toLocaleString()}</p>
-                    <p className="text-sm md:text-base font-black text-slate-900 inline md:block">₹{(item.price * item.quantity).toLocaleString()}</p>
+                  <div className="col-span-1 md:col-span-2 flex items-center justify-between md:block md:text-right">
+                    <p className="text-xs text-slate-300 line-through md:block inline mr-2 italic">₹{(item.mrp * item.quantity).toLocaleString()}</p>
+                    <p className="text-xl font-black text-slate-950 inline md:block tracking-tighter italic">₹{(item.price * item.quantity).toLocaleString()}</p>
                   </div>
 
-                  <div className="absolute top-4 right-4 md:static md:col-span-1 flex justify-end">
+                  <div className="absolute top-6 right-6 md:static md:col-span-1 flex justify-end">
                     <button 
-                      onClick={() => removeFromCart(item._id)}
-                      className="p-1.5 md:p-2 text-slate-300 hover:text-red-600 hover:bg-red-50 rounded-lg md:rounded-xl transition-all"
+                      onClick={() => removeFromCart(item._cartId)}
+                      className="p-3 text-slate-200 hover:text-rose-500 hover:bg-rose-50 rounded-2xl transition-all"
                     >
-                      <Trash2 size={18} className="md:w-5 md:h-5" />
+                      <Trash2 size={20} />
                     </button>
                   </div>
                 </div>
@@ -132,78 +126,71 @@ const Cart = () => {
             </div>
           </div>
 
-          {/* Savings Highlight */}
-          <div className="p-6 bg-secondary-900 rounded-3xl text-white relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-secondary-500/20 rounded-full blur-3xl -u-translate-y-1/2 translate-x-1/2 group-hover:scale-110 transition-transform duration-700"></div>
-            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-              <div className="space-y-2">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-500/20 border border-secondary-500/30 text-[10px] font-bold uppercase tracking-widest">
-                  <TrendingDown size={14} />
-                  Professional Savings
+          {/* Savings Summary */}
+          <div className="p-8 bg-slate-950 rounded-[40px] text-white relative overflow-hidden group shadow-2xl">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 group-hover:scale-110 transition-transform duration-1000"></div>
+            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
+              <div className="space-y-4">
+                <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-400">
+                  <TrendingDown size={14} /> Matrix Discount Applied
                 </div>
-                <h2 className="text-2xl font-bold">You're saving ₹{savings.toLocaleString()} on this order</h2>
-                <p className="text-secondary-200 text-sm">Bulk schemes and doctor-exclusive discounts applied automatically.</p>
+                <h2 className="text-3xl font-black italic tracking-tighter">Yield Saved: <span className="text-emerald-400">₹{savings.toLocaleString()}</span></h2>
+                <p className="text-slate-400 text-sm font-semibold max-w-sm">Institutional batch pricing and multi-unit schemes have been validated for this deployment payload.</p>
               </div>
-              <div className="w-full md:w-auto p-4 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 text-center">
-                <p className="text-[10px] uppercase font-bold tracking-widest text-secondary-300 mb-1">Clinic Wallet Points</p>
-                <p className="text-2xl font-black">+ {Math.floor(subtotal / 10)} pts</p>
+              <div className="bg-white/5 p-6 rounded-3xl backdrop-blur-xl border border-white/10 text-center min-w-[200px]">
+                <p className="text-[10px] uppercase font-black tracking-widest text-emerald-400 mb-2">Clinic Points</p>
+                <p className="text-3xl font-black italic tracking-tighter text-white">+ {Math.floor(subtotal / 10)} PTS</p>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="space-y-6">
-          <div className="card !p-8 space-y-8 sticky top-24">
-            <h2 className="text-xl font-bold text-slate-900 border-b border-surface-border pb-4">Checkout Details</h2>
+        <div className="space-y-8">
+          <div className="bg-white rounded-[40px] border border-slate-100 p-10 space-y-10 sticky top-24 shadow-premium">
+            <h2 className="text-2xl font-black text-slate-950 italic uppercase tracking-tighter border-b border-slate-50 pb-6 ml-1">Summary Matrix</h2>
             
             <div className="space-y-6">
-              <div>
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-                  <MapPin size={14} /> Delivery Address
-                </p>
-                <div className="p-3 bg-surface-light rounded-2xl border border-surface-border group cursor-pointer hover:border-primary-200 transition-all">
-                  <p className="text-sm font-bold text-slate-800">{user?.clinicName || 'Your Clinic'}</p>
-                  <p className="text-xs text-text-muted mt-1">{user?.address || 'Mumbai, Maharashtra, India'}</p>
-                </div>
-              </div>
-
-              <div>
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-                  <CreditCard size={14} /> Payment Method
-                </p>
-                <div className="p-3 bg-surface-light rounded-2xl border border-surface-border flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-6 bg-slate-200 rounded-md"></div>
-                    <span className="text-sm font-bold text-slate-800">Cash on Delivery</span>
+               <div className="space-y-4">
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                    <MapPin size={14} /> SHIPMENT NODE
+                  </p>
+                  <div className="p-5 bg-slate-50 rounded-3xl border border-slate-100 hover:border-blue-200 transition-all cursor-pointer group">
+                    <p className="text-sm font-black text-slate-950 uppercase italic tracking-tight">{user?.clinicName || 'Operational Hub'}</p>
+                    <p className="text-xs text-slate-500 mt-1 font-semibold leading-relaxed">{user?.address || 'Mumbai Cluster, Maharashtra'}</p>
                   </div>
-                  <button className="text-[10px] font-bold text-primary-600 hover:underline">Change</button>
-                </div>
-              </div>
+               </div>
             </div>
 
-            <div className="pt-6 border-t border-surface-border space-y-3">
-              <div className="flex justify-between text-base">
-                <span className="text-text-muted">Total Points Earned</span>
-                <span className="font-bold text-secondary-600">{Math.floor(subtotal / 10)}</span>
+            <div className="pt-8 border-t border-slate-50 space-y-4">
+              <div className="flex justify-between text-slate-400 font-bold uppercase tracking-widest text-[10px]">
+                <span>Base Load Value</span>
+                <span>₹{subtotal.toLocaleString()}</span>
               </div>
-              <div className="flex justify-between text-2xl font-black text-slate-900">
-                <span>Grand Total</span>
+              <div className="flex justify-between text-slate-400 font-bold uppercase tracking-widest text-[10px]">
+                <span>Node Logistics</span>
+                <span className="text-emerald-600 italic">SECURE & FREE</span>
+              </div>
+              <div className="h-px bg-slate-50 w-full"></div>
+              <div className="flex justify-between text-3xl font-black italic text-slate-950 tracking-tighter">
+                <span>TOTAL</span>
                 <span>₹{subtotal.toLocaleString()}</span>
               </div>
             </div>
 
             <button 
-              onClick={handleWhatsAppCheckout}
+              onClick={handleCheckout}
               disabled={loading}
-              className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-4 rounded-2xl font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 shadow-premium transition-all active:scale-95"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-5 rounded-[32px] font-black uppercase tracking-[0.2em] text-xs flex items-center justify-center gap-3 shadow-2xl shadow-blue-500/20 transition-all active:scale-95"
             >
-              Order on WhatsApp
-              <MessageCircle size={20} />
+              PROCEED TO PAYLOAD
+              <ArrowRight size={20} />
             </button>
             
-            <p className="text-[10px] text-center text-text-muted leading-relaxed">
-              Standard professional delivery (24-48 hours) applied for verified medical licenses.
-            </p>
+            <div className="flex items-center justify-center gap-3 opacity-30 grayscale">
+               <ShieldCheck size={20} />
+               <Package size={20} />
+               <Truck size={20} />
+            </div>
           </div>
         </div>
       </div>
