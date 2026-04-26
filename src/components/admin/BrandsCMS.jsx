@@ -15,6 +15,7 @@ const BrandsCMS = () => {
     name: '',
     logoUrl: '',
     description: '',
+    mainCategory: 'Others',
     status: 'Active'
   });
 
@@ -94,7 +95,7 @@ const BrandsCMS = () => {
       }
       setIsModalOpen(false);
       fetchBrands();
-      setCurrentBrand({ name: '', logoUrl: '', description: '', status: 'Active' });
+      setCurrentBrand({ name: '', logoUrl: '', description: '', mainCategory: 'Others', status: 'Active' });
     } catch (error) {
       console.error('Error saving brand:', error);
       alert('Error saving brand. Name might already exist.');
@@ -130,7 +131,7 @@ const BrandsCMS = () => {
         </div>
         <button 
           onClick={() => {
-            setCurrentBrand({ name: '', logoUrl: '', description: '', status: 'Active' });
+            setCurrentBrand({ name: '', logoUrl: '', description: '', mainCategory: 'Others', status: 'Active' });
             setIsModalOpen(true);
           }}
           className="bg-slate-900 hover:bg-black text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest flex items-center gap-3 transition-all shadow-xl shadow-slate-200 active:scale-95"
@@ -183,21 +184,24 @@ const BrandsCMS = () => {
                 </tr>
               ) : filteredBrands.map((brand) => (
                 <tr key={brand._id} className="hover:bg-slate-50/50 transition-colors group">
-                  <td className="px-8 py-6">
-                    <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden flex items-center justify-center shrink-0">
-                        {brand.logoUrl ? (
-                          <img src={brand.logoUrl} alt={brand.name} className="w-full h-full object-contain p-2" />
-                        ) : (
-                          <span className="text-xl font-black text-slate-300 uppercase italic">{brand.name.charAt(0)}</span>
-                        )}
+                    <td className="px-8 py-6">
+                      <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden flex items-center justify-center shrink-0">
+                          {brand.logoUrl ? (
+                            <img src={brand.logoUrl} alt={brand.name} className="w-full h-full object-contain p-2" />
+                          ) : (
+                            <span className="text-xl font-black text-slate-300 uppercase italic">{brand.name.charAt(0)}</span>
+                          )}
+                        </div>
+                        <div>
+                          <div className="font-black text-slate-900 italic tracking-tight">{brand.name}</div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[8px] font-bold px-2 py-0.5 bg-blue-50 text-blue-600 rounded uppercase">{brand.mainCategory || 'Others'}</span>
+                            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">ID: {brand._id.slice(-6)}</span>
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <div className="font-black text-slate-900 italic tracking-tight">{brand.name}</div>
-                        <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">ID: {brand._id.slice(-6)}</div>
-                      </div>
-                    </div>
-                  </td>
+                    </td>
                   <td className="px-8 py-6 max-w-xs">
                     <p className="text-slate-500 font-semibold text-sm line-clamp-2 leading-relaxed">
                       {brand.description || 'No specialized description provided.'}
@@ -277,6 +281,22 @@ const BrandsCMS = () => {
                          placeholder="Enter brand name..."
                        />
                     </div>
+                    <div className="space-y-2">
+                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Main Category (Tree Group)</label>
+                       <select 
+                         required
+                         value={currentBrand.mainCategory || 'Others'}
+                         onChange={(e) => setCurrentBrand({ ...currentBrand, mainCategory: e.target.value })}
+                         className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-600 focus:bg-white rounded-2xl px-5 py-4 font-bold text-slate-900 transition-all outline-none"
+                       >
+                          <option value="Homeopathy">Homeopathy</option>
+                          <option value="Ayurveda">Ayurveda</option>
+                          <option value="Others">Others</option>
+                       </select>
+                    </div>
+                 </div>
+
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-2">
                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Operational Status</label>
                        <select 
