@@ -5,12 +5,20 @@ const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem('cart');
-    let items = savedCart ? JSON.parse(savedCart) : [];
-    // Migration: ensure every item has a _cartId
-    return items.map(item => ({
+    let items = [];
+    try {
+      items = savedCart ? JSON.parse(savedCart) : [];
+    } catch (e) {
+      console.error("Cart data corruption detected. Resetting cart.");
+      items = [];
+    }
+    // Migration: ensure every item has a _cartId and handle potential nulls
+    if (!Array.isArray(items)) items = [];
+    return items.filter(Boolean).map(item => ({
        ...item,
-       _cartId: item._cartId || item._id,
-       quantity: Number(item.quantity) || 1
+       _cartId: item._cartId || item._id || Math.random().toString(),
+       quantity: Number(item.quantity) || 1,
+       price: Number(item.price) || 0
     }));
   });
 
@@ -21,6 +29,7 @@ export const CartProvider = ({ children }) => {
   const [isCartSliderOpen, setIsCartSliderOpen] = useState(false);
 
   const addToCart = (product, quantity = 1, selectedVariant = null) => {
+    if (!product || !product._id) return;
     const cartItemId = selectedVariant ? `${product._id}-${selectedVariant.name}` : product._id;
     
     // Create a normalized cart item

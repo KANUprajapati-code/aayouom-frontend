@@ -3,6 +3,7 @@ import { ShoppingCart, MessageCircle, Info, TrendingUp, Tag, ShieldCheck } from 
 import { motion } from 'framer-motion';
 
 const MedicineCard = ({ medicine, onAddToCart }) => {
+  if (!medicine) return null;
   const {
     _id,
     name,

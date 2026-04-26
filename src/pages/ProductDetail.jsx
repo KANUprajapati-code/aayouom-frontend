@@ -194,7 +194,7 @@ Link: ${window.location.origin}/product/${medicine._id}`;
                 </div>
               </div>
 
-              {(medicine.scheme || (medicine.freeUnitsScheme && medicine.freeUnitsScheme.buy)) && (
+              {(medicine.scheme || medicine.freeUnitsScheme?.buy) && (
                 <div className="p-6 bg-gradient-to-br from-orange-500 to-rose-600 rounded-[32px] text-white flex items-center justify-between shadow-xl shadow-orange-500/20 relative overflow-hidden group">
                    <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-700"></div>
                    <div className="flex items-center gap-5 relative z-10">
