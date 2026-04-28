@@ -98,15 +98,26 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
         <div className="mt-auto pt-4 border-t border-slate-100 border-dashed">
             {/* Pricing Matrix */}
             <div className="flex items-end justify-between mb-6">
-              <div>
-                {mrp && (
-                  <p className="text-[11px] text-slate-400 font-bold line-through leading-none mb-1.5 flex items-center gap-2">
-                    MRP ₹{mrp}
-                    {calculatedDiscount > 0 && <span className="text-rose-500 bg-rose-50 px-1.5 py-0.5 rounded text-[9px] uppercase tracking-wider not-italic no-underline font-black">SAVE {calculatedDiscount}%</span>}
-                  </p>
+              <div className="space-y-1">
+                {mrp && mrp > price && (
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-2 text-[11px]">
+                      <span className="text-slate-400 font-bold uppercase tracking-widest">M.R.P:</span>
+                      <span className="text-slate-400 font-bold line-through">₹{mrp}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded text-[10px] uppercase font-black tracking-wider">
+                        {calculatedDiscount}% OFF
+                      </span>
+                      <span className="text-rose-500 text-[10px] font-bold">
+                        (Save ₹{mrp - price})
+                      </span>
+                    </div>
+                  </div>
                 )}
-                <div className="flex items-baseline gap-1">
-                  <span className="text-[11px] font-bold text-slate-400">₹</span>
+                <div className="flex items-baseline gap-1 mt-2">
+                  <span className="text-[10px] uppercase font-black text-slate-500 tracking-widest mr-1">Offer:</span>
+                  <span className="text-[11px] font-bold text-slate-900">₹</span>
                   <span className="text-3xl font-black text-slate-900 tracking-tighter">{price}</span>
                   <span className="text-[10px] uppercase font-black text-slate-400 tracking-widest ml-1">/ Unit</span>
                 </div>

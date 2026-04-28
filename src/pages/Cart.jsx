@@ -109,9 +109,23 @@ const Cart = () => {
                     </div>
                   </div>
 
-                  <div className="col-span-1 md:col-span-2 flex items-center justify-between md:block md:text-right">
-                    <p className="text-xs text-slate-300 line-through md:block inline mr-2 italic">₹{(item.mrp * item.quantity).toLocaleString()}</p>
-                    <p className="text-xl font-black text-slate-950 inline md:block tracking-tighter italic">₹{(item.price * item.quantity).toLocaleString()}</p>
+                  <div className="col-span-1 md:col-span-2 flex flex-col md:items-end justify-center">
+                    {item.mrp && item.mrp > item.price && (
+                       <div className="flex flex-col md:items-end gap-0.5 mb-1">
+                          <div className="flex items-center gap-2">
+                             <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">M.R.P:</span>
+                             <p className="text-[10px] text-slate-400 font-bold line-through">₹{(item.mrp * item.quantity).toLocaleString()}</p>
+                          </div>
+                          <div className="flex gap-2 items-center">
+                             <span className="text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded text-[9px] uppercase font-black tracking-wider">{Math.round(((item.mrp - item.price) / item.mrp) * 100)}% OFF</span>
+                             <span className="text-rose-500 text-[9px] font-bold">Save ₹{((item.mrp - item.price) * item.quantity).toLocaleString()}</span>
+                          </div>
+                       </div>
+                    )}
+                    <div className="flex items-baseline gap-1 mt-1">
+                       <span className="text-[10px] uppercase font-black text-slate-500 tracking-widest mr-1">Offer:</span>
+                       <p className="text-xl font-black text-slate-950 inline md:block tracking-tighter italic">₹{(item.price * item.quantity).toLocaleString()}</p>
+                    </div>
                   </div>
 
                   <div className="absolute top-6 right-6 md:static md:col-span-1 flex justify-end">

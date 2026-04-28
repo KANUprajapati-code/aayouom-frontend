@@ -35,12 +35,28 @@ const ProductCard = ({ product }) => {
         </div>
 
         {/* Pricing */}
-        <div className="flex items-baseline gap-2">
-          <span className="text-xs font-bold text-slate-900">₹</span>
-          <span className="text-2xl font-black text-slate-900 tabular-nums">{product.price}</span>
-          {product.originalPrice && (
-            <span className="text-xs text-slate-400 line-through font-medium">M.R.P: ₹{product.originalPrice}</span>
+        <div className="flex flex-col gap-1.5 mt-2">
+          {product.originalPrice && product.originalPrice > product.price && (
+            <div className="flex flex-col gap-0.5">
+              <div className="flex items-center gap-2 text-[11px]">
+                <span className="text-slate-400 font-bold uppercase tracking-widest">M.R.P:</span>
+                <span className="text-slate-400 font-bold line-through">₹{product.originalPrice}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded text-[10px] uppercase font-black tracking-wider">
+                  {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
+                </span>
+                <span className="text-rose-500 text-[10px] font-bold">
+                  (Save ₹{product.originalPrice - product.price})
+                </span>
+              </div>
+            </div>
           )}
+          <div className="flex items-baseline gap-1 mt-1">
+            <span className="text-[10px] uppercase font-black text-slate-500 tracking-widest mr-1">Offer:</span>
+            <span className="text-xs font-bold text-slate-900">₹</span>
+            <span className="text-2xl font-black text-slate-900 tabular-nums">{product.price}</span>
+          </div>
         </div>
 
         {/* Delivery Info (Amazon Style) */}
