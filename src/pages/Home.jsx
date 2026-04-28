@@ -83,7 +83,7 @@ const Home = () => {
   return (
     <div className="space-y-16 lg:space-y-28 pb-20 lg:pb-32 font-sans overflow-x-hidden">
       {/* 1. Hero Slider Section */}
-      <section className="relative overflow-hidden bg-slate-900 lg:rounded-[48px] h-[55vh] md:h-[65vh] lg:h-[75vh] w-full group shadow-2xl">
+      <section className="relative overflow-hidden bg-slate-900 lg:rounded-[48px] w-full aspect-[4/3] sm:aspect-[16/9] lg:aspect-[2.5/1] group shadow-2xl">
         <div className="absolute inset-0 w-full h-full">
           <AnimatePresence mode="wait">
             <motion.div
@@ -96,7 +96,7 @@ const Home = () => {
             >
               <div className="absolute inset-0 z-0">
                 {activeBanners[currentSlide].imageUrl ? (
-                  <img src={activeBanners[currentSlide].imageUrl} alt="" className="w-full h-full object-contain opacity-80" />
+                  <img src={activeBanners[currentSlide].imageUrl} alt="" className="w-full h-full object-cover object-center opacity-80" />
                 ) : (
                   <div className="w-full h-full bg-slate-800 flex items-center justify-center">
                     <ImageIcon size={64} className="text-slate-700" />
