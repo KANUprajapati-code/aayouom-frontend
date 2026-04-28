@@ -113,12 +113,12 @@ const Home = () => {
                       {activeBanners[currentSlide].badge && (
                          <motion.span initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="text-blue-400 font-black tracking-[0.3em] uppercase text-[9px] md:text-[10px] bg-blue-400/10 px-3 py-1 md:py-1.5 rounded-full border border-blue-400/20 w-fit pointer-events-auto">{activeBanners[currentSlide].badge}</motion.span>
                       )}
-                      <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-[15px] font-black text-white italic leading-[1.2] tracking-tighter">
+                      <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-[20px] font-black text-white italic leading-[1.2] tracking-tighter">
                         {activeBanners[currentSlide].title1} <br />
                         <span className="text-blue-500">{activeBanners[currentSlide].title2}</span>
                       </motion.h1>
                       {activeBanners[currentSlide].description && (
-                        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="text-[13px] text-slate-300 font-medium max-w-lg leading-relaxed line-clamp-2 md:line-clamp-none">
+                        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="text-[16px] text-slate-300 font-medium max-w-lg leading-relaxed line-clamp-2 md:line-clamp-none">
                           {activeBanners[currentSlide].description}
                         </motion.p>
                       )}

@@ -115,7 +115,7 @@ const Schemes = () => {
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.3 }}
-                          className="text-[15px] font-black text-white italic leading-[1.2] tracking-tighter"
+                          className="text-[20px] font-black text-white italic leading-[1.2] tracking-tighter"
                         >
                           {banners[currentSlide].title}
                         </motion.h1>
@@ -125,7 +125,7 @@ const Schemes = () => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.4 }}
-                            className="text-[13px] text-blue-100/70 font-medium max-w-lg leading-relaxed line-clamp-2 md:line-clamp-none"
+                            className="text-[16px] text-blue-100/70 font-medium max-w-lg leading-relaxed line-clamp-2 md:line-clamp-none"
                           >
                             {banners[currentSlide].description}
                           </motion.p>
