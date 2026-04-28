@@ -28,7 +28,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     { icon: Home, label: 'Home', path: '/', requiresAuth: false },
     { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard', requiresAuth: true },
     { icon: Package, label: 'Medicines', path: '/products', requiresAuth: false },
-    { icon: Zap, label: 'Quick Order', path: '/quick-order', requiresAuth: true },
+    // { icon: Zap, label: 'Quick Order', path: '/quick-order', requiresAuth: true },
     { icon: TrendingDown, label: 'Schemes', path: '/schemes', requiresAuth: false },
     { icon: History, label: 'Order History', path: '/orders', requiresAuth: true },
     { icon: ShoppingCart, label: 'My Cart', path: '/cart', requiresAuth: true },

@@ -16,7 +16,7 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
-import QuickOrder from './pages/QuickOrder';
+// import QuickOrder from './pages/QuickOrder';
 import OrderHistory from './pages/OrderHistory';
 import Schemes from './pages/Schemes';
 import Settings from './pages/Settings';
@@ -56,7 +56,7 @@ function App() {
                     <Route path="/product/:id" element={<ProductDetail />} />
                     <Route path="/cart" element={<Cart />} />
                     <Route path="/checkout" element={<Checkout />} />
-                    <Route path="/quick-order" element={<QuickOrder />} />
+                    {/* <Route path="/quick-order" element={<QuickOrder />} /> */}
                     <Route path="/orders" element={<OrderHistory />} />
                     <Route path="/schemes" element={<Schemes />} />
                     <Route path="/settings" element={<Settings />} />
