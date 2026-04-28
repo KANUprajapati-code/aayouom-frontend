@@ -25,7 +25,7 @@ const Cart = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const totalMRP = cart.reduce((acc, item) => acc + (item.mrp * item.quantity), 0);
+  const totalMRP = cart.reduce((acc, item) => acc + ((item.originalPrice || item.price) * item.quantity), 0);
   const savings = totalMRP - subtotal;
 
   const handleCheckout = () => {
@@ -110,15 +110,15 @@ const Cart = () => {
                   </div>
 
                   <div className="col-span-1 md:col-span-2 flex flex-col md:items-end justify-center">
-                    {item.mrp && item.mrp > item.price && (
+                    {item.originalPrice && item.originalPrice > item.price && (
                        <div className="flex flex-col md:items-end gap-0.5 mb-1">
                           <div className="flex items-center gap-2">
                              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">M.R.P:</span>
-                             <p className="text-[10px] text-slate-400 font-bold line-through">₹{(item.mrp * item.quantity).toLocaleString()}</p>
+                             <p className="text-[10px] text-slate-400 font-bold line-through">₹{(item.originalPrice * item.quantity).toLocaleString()}</p>
                           </div>
                           <div className="flex gap-2 items-center">
-                             <span className="text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded text-[9px] uppercase font-black tracking-wider">{Math.round(((item.mrp - item.price) / item.mrp) * 100)}% OFF</span>
-                             <span className="text-rose-500 text-[9px] font-bold">Save ₹{((item.mrp - item.price) * item.quantity).toLocaleString()}</span>
+                             <span className="text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded text-[9px] uppercase font-black tracking-wider">{Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100)}% OFF</span>
+                             <span className="text-rose-500 text-[9px] font-bold">Save ₹{((item.originalPrice - item.price) * item.quantity).toLocaleString()}</span>
                           </div>
                        </div>
                     )}

@@ -8,7 +8,7 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
     _id,
     name,
     brand,
-    mrp,
+    originalPrice,
     price,
     scheme,
     image,
@@ -25,7 +25,7 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
     window.open(`https://wa.me/919999988888?text=${encodeURIComponent(message)}`, '_blank');
   };
 
-  const calculatedDiscount = discount || (mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0);
+  const calculatedDiscount = discount || (originalPrice > price ? Math.round(((originalPrice - price) / originalPrice) * 100) : 0);
 
   return (
     <motion.div 
@@ -99,18 +99,18 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
             {/* Pricing Matrix */}
             <div className="flex items-end justify-between mb-6">
               <div className="space-y-1">
-                {mrp && mrp > price && (
+                {originalPrice && originalPrice > price && (
                   <div className="flex flex-col gap-1">
                     <div className="flex items-center gap-2 text-[11px]">
                       <span className="text-slate-400 font-bold uppercase tracking-widest">M.R.P:</span>
-                      <span className="text-slate-400 font-bold line-through">₹{mrp}</span>
+                      <span className="text-slate-400 font-bold line-through">₹{originalPrice}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded text-[10px] uppercase font-black tracking-wider">
                         {calculatedDiscount}% OFF
                       </span>
                       <span className="text-rose-500 text-[10px] font-bold">
-                        (Save ₹{mrp - price})
+                        (Save ₹{originalPrice - price})
                       </span>
                     </div>
                   </div>

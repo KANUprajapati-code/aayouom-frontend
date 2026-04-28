@@ -102,14 +102,14 @@ const Home = () => {
                     <ImageIcon size={64} className="text-slate-700" />
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/40 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-slate-900/50 to-transparent"></div>
               </div>
 
               <div className="relative z-10 h-full flex flex-col justify-center px-8 md:px-20 max-w-4xl space-y-6 md:space-y-8">
                 {activeBanners[currentSlide].badge && (
                    <motion.span initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="text-blue-400 font-black tracking-[0.3em] uppercase text-[10px] md:text-xs bg-blue-400/10 px-4 py-1.5 rounded-full border border-blue-400/20 w-fit">{activeBanners[currentSlide].badge}</motion.span>
                 )}
-                <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-3xl md:text-5xl lg:text-7xl font-black text-white italic leading-[1.05] tracking-tighter">
+                <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-2xl md:text-4xl lg:text-5xl font-black text-white italic leading-[1.1] tracking-tighter">
                   {activeBanners[currentSlide].title1} <br />
                   <span className="text-blue-500">{activeBanners[currentSlide].title2}</span>
                 </motion.h1>

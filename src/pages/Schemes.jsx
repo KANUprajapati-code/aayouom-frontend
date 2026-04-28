@@ -89,7 +89,7 @@ const Schemes = () => {
              >
                 <div className="absolute inset-0 z-0">
                    <img src={banners[currentSlide].imageUrl || 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=2000'} alt="" className="w-full h-full object-cover opacity-80" />
-                   <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/60 to-transparent"></div>
+                   <div className="absolute inset-0 bg-gradient-to-r from-slate-900/50 to-transparent"></div>
                 </div>
 
                 <div className="relative z-10 h-full flex flex-col justify-center px-10 md:px-20 max-w-4xl space-y-6 md:space-y-8">
@@ -106,7 +106,7 @@ const Schemes = () => {
                      initial={{ opacity: 0, y: 20 }}
                      animate={{ opacity: 1, y: 0 }}
                      transition={{ delay: 0.3 }}
-                     className="text-4xl md:text-6xl lg:text-7xl font-black text-white italic leading-[1.1] tracking-tighter"
+                     className="text-3xl md:text-5xl lg:text-6xl font-black text-white italic leading-[1.1] tracking-tighter"
                    >
                      {banners[currentSlide].title}
                    </motion.h1>
