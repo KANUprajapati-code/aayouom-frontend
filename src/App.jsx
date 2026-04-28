@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute';
+import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/layout/Layout';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
@@ -42,29 +43,33 @@ function App() {
           <div className="min-h-screen">
             <Suspense fallback={<LoadingFallback />}>
               <Routes>
-                {/* Main Application with Layout */}
-                <Route element={<Layout />}>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/products" element={<Products />} />
-                  <Route path="/product/:id" element={<ProductDetail />} />
-                  <Route path="/cart" element={<Cart />} />
-                  <Route path="/checkout" element={<Checkout />} />
-                  <Route path="/quick-order" element={<QuickOrder />} />
-                  <Route path="/orders" element={<OrderHistory />} />
-                  <Route path="/schemes" element={<Schemes />} />
-                  <Route path="/settings" element={<Settings />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/support" element={<Support />} />
-                  <Route path="/register" element={<Register />} />
-                  <Route path="/login" element={<AdminLogin />} />
-                  <Route path="/page/:slug" element={<DynamicPage />} />
-                  <Route path="/bulk-inquiry" element={<BulkInquiry />} />
-                  <Route path="/wallet" element={<WalletDashboard />} />
-                  <Route path="/refer" element={<ReferAndEarn />} />
-                  <Route path="/promotions" element={<Promotions />} />
-                  <Route path="/profile" element={<Profile />} />
+                {/* Public Routes */}
+                <Route path="/login" element={<AdminLogin />} />
+                <Route path="/register" element={<Register />} />
+                
+                {/* Main Application with Layout - Protected */}
+                <Route element={<ProtectedRoute />}>
+                  <Route element={<Layout />}>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/products" element={<Products />} />
+                    <Route path="/product/:id" element={<ProductDetail />} />
+                    <Route path="/cart" element={<Cart />} />
+                    <Route path="/checkout" element={<Checkout />} />
+                    <Route path="/quick-order" element={<QuickOrder />} />
+                    <Route path="/orders" element={<OrderHistory />} />
+                    <Route path="/schemes" element={<Schemes />} />
+                    <Route path="/settings" element={<Settings />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/support" element={<Support />} />
+                    <Route path="/page/:slug" element={<DynamicPage />} />
+                    <Route path="/bulk-inquiry" element={<BulkInquiry />} />
+                    <Route path="/wallet" element={<WalletDashboard />} />
+                    <Route path="/refer" element={<ReferAndEarn />} />
+                    <Route path="/promotions" element={<Promotions />} />
+                    <Route path="/profile" element={<Profile />} />
+                  </Route>
                 </Route>
 
                 {/* Admin Routes */}
