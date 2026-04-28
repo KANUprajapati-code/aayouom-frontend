@@ -70,7 +70,7 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
       )}
 
       {/* Image Block */}
-      <Link to={`/product/${_id}`} className="block relative h-48 mb-6 bg-slate-50/50 rounded-2xl overflow-hidden group-hover:bg-primary-50/30 transition-colors duration-500 flex items-center justify-center p-6 border border-slate-50">
+      <Link to={`/product/${_id}`} className="block relative h-56 mb-4 bg-slate-50/50 rounded-2xl overflow-hidden group-hover:bg-primary-50/30 transition-colors duration-500 flex items-center justify-center p-3 border border-slate-50">
         <img loading="lazy" src={image || 'https://via.placeholder.com/200'} 
           alt={name} 
           className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 ease-out"
@@ -93,7 +93,7 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
         </div>
 
         <Link to={`/product/${_id}`} className="block mb-4">
-          <h3 className="text-lg font-black text-slate-800 line-clamp-2 group-hover:text-primary-600 transition-colors tracking-tight leading-tight">
+          <h3 className="text-base font-black text-slate-800 line-clamp-2 group-hover:text-primary-600 transition-colors tracking-tight leading-tight">
             {name}
           </h3>
         </Link>
@@ -121,7 +121,7 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
                 <div className="flex items-baseline gap-1 mt-2">
                   <span className="text-[10px] uppercase font-black text-slate-500 tracking-widest mr-1">Offer:</span>
                   <span className="text-[11px] font-bold text-slate-900">₹</span>
-                  <span className="text-3xl font-black text-slate-900 tracking-tighter">{price}</span>
+                  <span className="text-2xl font-black text-slate-900 tracking-tighter">{price}</span>
                   <span className="text-[10px] uppercase font-black text-slate-400 tracking-widest ml-1">/ Unit</span>
                 </div>
               </div>
@@ -146,19 +146,19 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
                     btn.classList.remove('bg-black');
                   }, 1500);
                 }}
-                className="w-full py-3.5 bg-slate-900 hover:bg-black text-white rounded-xl shadow-xl shadow-slate-900/20 transition-all flex items-center justify-center gap-2 group/add relative overflow-hidden"
+                className="w-full py-2.5 bg-slate-900 hover:bg-black text-white rounded-xl shadow-xl shadow-slate-900/20 transition-all flex items-center justify-center gap-2 group/add relative overflow-hidden"
               >
-                <ShoppingCart size={18} className="group-hover/add:scale-110 group-hover/add:-translate-y-0.5 transition-transform" />
-                <span className="text-[11px] font-black uppercase tracking-widest">Add to Procurement</span>
+                <ShoppingCart size={16} className="group-hover/add:scale-110 group-hover/add:-translate-y-0.5 transition-transform" />
+                <span className="text-[10px] font-black uppercase tracking-widest">Add to Procurement</span>
               </motion.button>
               
               <motion.button 
                 whileTap={{ scale: 0.98 }}
                 onClick={handleWhatsApp}
-                className="w-full py-3 bg-emerald-50 hover:bg-emerald-500 text-emerald-600 hover:text-white border border-emerald-100 hover:border-emerald-500 rounded-xl transition-all flex items-center justify-center gap-2 group/wa"
+                className="w-full py-2.5 bg-emerald-50 hover:bg-emerald-500 text-emerald-600 hover:text-white border border-emerald-100 hover:border-emerald-500 rounded-xl transition-all flex items-center justify-center gap-2 group/wa"
               >
-                <MessageCircle size={18} className="group-hover/wa:scale-110 transition-transform" />
-                <span className="text-[11px] font-black uppercase tracking-widest">WhatsApp Inquiry</span>
+                <MessageCircle size={16} className="group-hover/wa:scale-110 transition-transform" />
+                <span className="text-[10px] font-black uppercase tracking-widest">WhatsApp Inquiry</span>
               </motion.button>
             </div>
         </div>

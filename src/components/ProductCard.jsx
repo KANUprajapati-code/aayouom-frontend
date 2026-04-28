@@ -12,7 +12,7 @@ const ProductCard = ({ product }) => {
   return (
     <div className="group bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-300 border border-slate-100 flex flex-col relative h-full">
       {/* Image Area */}
-      <Link to={`/product/${product.id}`} className="block relative aspect-square mb-4 overflow-hidden p-4 flex items-center justify-center bg-slate-50/30 rounded-lg">
+      <Link to={`/product/${product.id}`} className="block relative aspect-square mb-3 overflow-hidden p-2 flex items-center justify-center bg-slate-50/30 rounded-lg">
         <img loading="lazy" src={product.image} 
           alt={product.name} 
           className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
@@ -22,7 +22,7 @@ const ProductCard = ({ product }) => {
       {/* Content */}
       <div className="flex flex-col flex-grow space-y-2">
         <Link to={`/product/${product.id}`} className="block">
-          <h3 className="font-medium text-slate-800 text-sm leading-tight hover:text-secondary-600 transition-colors line-clamp-2 min-h-[2.5rem]">
+          <h3 className="font-medium text-slate-800 text-xs leading-tight hover:text-secondary-600 transition-colors line-clamp-2 min-h-[2rem]">
             {product.name}
           </h3>
         </Link>
@@ -58,7 +58,7 @@ const ProductCard = ({ product }) => {
           <div className="flex items-baseline gap-1 mt-1">
             <span className="text-[10px] uppercase font-black text-slate-500 tracking-widest mr-1">Offer:</span>
             <span className="text-xs font-bold text-slate-900">₹</span>
-            <span className="text-2xl font-black text-slate-900 tabular-nums">{numPrice}</span>
+            <span className="text-xl font-black text-slate-900 tabular-nums">{numPrice}</span>
           </div>
         </div>
 
@@ -72,9 +72,9 @@ const ProductCard = ({ product }) => {
         <div className="pt-4 mt-auto">
           <button 
             onClick={() => addToCart(product)}
-            className="w-full bg-secondary-400 hover:bg-secondary-500 text-slate-900 font-black py-2.5 rounded-full shadow-lg shadow-secondary-100 transition-all flex items-center justify-center gap-2 text-xs uppercase tracking-widest active:scale-95"
+            className="w-full bg-secondary-400 hover:bg-secondary-500 text-slate-900 font-black py-2 rounded-full shadow-lg shadow-secondary-100 transition-all flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest active:scale-95"
           >
-            <ShoppingCart className="w-4 h-4" /> Add to Cart
+            <ShoppingCart className="w-3 h-3" /> Add to Cart
           </button>
         </div>
       </div>
