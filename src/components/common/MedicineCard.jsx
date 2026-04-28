@@ -16,6 +16,9 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
     discount,
     isBestDeal = false
   } = medicine;
+  
+  const numPrice = Number(price) || 0;
+  const numOriginalPrice = Number(medicine.originalPrice) || Number(medicine.mrp) || 0;
   const availableStock = stock !== undefined ? stock : Infinity;
 
   const handleWhatsApp = (e) => {
@@ -25,7 +28,7 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
     window.open(`https://wa.me/919999988888?text=${encodeURIComponent(message)}`, '_blank');
   };
 
-  const calculatedDiscount = discount || (originalPrice > price ? Math.round(((originalPrice - price) / originalPrice) * 100) : 0);
+  const calculatedDiscount = discount || (numOriginalPrice > numPrice ? Math.round(((numOriginalPrice - numPrice) / numOriginalPrice) * 100) : 0);
 
   return (
     <motion.div 
@@ -99,18 +102,18 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
             {/* Pricing Matrix */}
             <div className="flex items-end justify-between mb-6">
               <div className="space-y-1">
-                {originalPrice && originalPrice > price && (
+                {numOriginalPrice > 0 && numOriginalPrice > numPrice && (
                   <div className="flex flex-col gap-1">
                     <div className="flex items-center gap-2 text-[11px]">
                       <span className="text-slate-400 font-bold uppercase tracking-widest">M.R.P:</span>
-                      <span className="text-slate-400 font-bold line-through">₹{originalPrice}</span>
+                      <span className="text-slate-400 font-bold line-through">₹{numOriginalPrice}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded text-[10px] uppercase font-black tracking-wider">
                         {calculatedDiscount}% OFF
                       </span>
                       <span className="text-rose-500 text-[10px] font-bold">
-                        (Save ₹{originalPrice - price})
+                        (Save ₹{numOriginalPrice - numPrice})
                       </span>
                     </div>
                   </div>
