@@ -83,53 +83,62 @@ const Home = () => {
   return (
     <div className="space-y-16 lg:space-y-28 pb-20 lg:pb-32 font-sans overflow-x-hidden">
       {/* 1. Hero Slider Section */}
-      <section className="relative overflow-hidden bg-slate-900 lg:rounded-[48px] w-full aspect-[4/3] sm:aspect-[16/9] lg:aspect-[2.5/1] group shadow-2xl">
-        <div className="absolute inset-0 w-full h-full">
+      <section className="relative overflow-hidden bg-slate-900 lg:rounded-[48px] w-full group shadow-2xl">
+        <div className="w-full relative">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentSlide}
-              initial={{ opacity: 0, scale: 1.05 }}
+              initial={{ opacity: 0, scale: 1.02 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 1 }}
-              className="absolute inset-0 w-full h-full"
+              transition={{ duration: 0.8 }}
+              className="relative w-full"
             >
-              <div className="absolute inset-0 z-0">
+              <div className="w-full relative z-0">
                 {activeBanners[currentSlide].imageUrl ? (
-                  <img src={activeBanners[currentSlide].imageUrl} alt="" className="w-full h-full object-cover object-center opacity-80" />
+                  <Link to={activeBanners[currentSlide].linkUrl || "/products"} className="block w-full">
+                    <img src={activeBanners[currentSlide].imageUrl} alt="" className="w-full h-auto object-contain block" />
+                  </Link>
                 ) : (
-                  <div className="w-full h-full bg-slate-800 flex items-center justify-center">
+                  <div className="w-full aspect-[21/9] bg-slate-800 flex items-center justify-center">
                     <ImageIcon size={64} className="text-slate-700" />
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-r from-slate-900/50 to-transparent"></div>
-              </div>
-
-              <div className="relative z-10 h-full flex flex-col justify-center px-8 md:px-20 max-w-4xl space-y-6 md:space-y-8">
-                {activeBanners[currentSlide].badge && (
-                   <motion.span initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="text-blue-400 font-black tracking-[0.3em] uppercase text-[10px] md:text-xs bg-blue-400/10 px-4 py-1.5 rounded-full border border-blue-400/20 w-fit">{activeBanners[currentSlide].badge}</motion.span>
+                
+                {/* Only show gradient and text overlay if user provided a title */}
+                {(activeBanners[currentSlide].title1 || activeBanners[currentSlide].title2) && (
+                  <>
+                    <div className="absolute inset-0 bg-gradient-to-r from-slate-900/60 to-transparent pointer-events-none"></div>
+                    <div className="absolute inset-0 z-10 flex flex-col justify-center px-8 md:px-20 max-w-4xl space-y-4 md:space-y-6 pointer-events-none">
+                      {activeBanners[currentSlide].badge && (
+                         <motion.span initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="text-blue-400 font-black tracking-[0.3em] uppercase text-[10px] md:text-xs bg-blue-400/10 px-4 py-1.5 rounded-full border border-blue-400/20 w-fit pointer-events-auto">{activeBanners[currentSlide].badge}</motion.span>
+                      )}
+                      <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-2xl md:text-4xl lg:text-5xl font-black text-white italic leading-[1.1] tracking-tighter">
+                        {activeBanners[currentSlide].title1} <br />
+                        <span className="text-blue-500">{activeBanners[currentSlide].title2}</span>
+                      </motion.h1>
+                      {activeBanners[currentSlide].description && (
+                        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="text-sm md:text-base lg:text-lg text-slate-300 font-medium max-w-xl leading-relaxed">
+                          {activeBanners[currentSlide].description}
+                        </motion.p>
+                      )}
+                      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="pointer-events-auto">
+                        <Link to={activeBanners[currentSlide].btn1Link || "/products"} className="inline-flex items-center gap-2 md:gap-3 px-6 md:px-10 py-3 md:py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl md:rounded-2xl font-black uppercase text-xs md:text-sm tracking-[0.2em] shadow-2xl shadow-blue-600/30 transition-all active:scale-95">
+                          {activeBanners[currentSlide].btn1Text || 'Enter Marketplace'} <ArrowRight size={18} />
+                        </Link>
+                      </motion.div>
+                    </div>
+                  </>
                 )}
-                <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-2xl md:text-4xl lg:text-5xl font-black text-white italic leading-[1.1] tracking-tighter">
-                  {activeBanners[currentSlide].title1} <br />
-                  <span className="text-blue-500">{activeBanners[currentSlide].title2}</span>
-                </motion.h1>
-                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="text-base md:text-lg lg:text-xl text-slate-300 font-medium max-w-xl leading-relaxed">
-                  {activeBanners[currentSlide].description}
-                </motion.p>
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-                  <Link to={activeBanners[currentSlide].btn1Link || "/products"} className="inline-flex items-center gap-2 md:gap-3 px-6 md:px-10 py-3 md:py-5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl md:rounded-2xl font-black uppercase text-xs md:text-sm tracking-[0.2em] shadow-2xl shadow-blue-600/30 transition-all active:scale-95">
-                    {activeBanners[currentSlide].btn1Text || 'Enter Marketplace'} <ArrowRight size={18} />
-                  </Link>
-                </motion.div>
               </div>
             </motion.div>
           </AnimatePresence>
 
           {/* Dots Navigation */}
           {activeBanners.length > 1 && (
-            <div className="absolute bottom-10 inset-x-0 flex justify-center gap-3 z-20">
+            <div className="absolute bottom-6 md:bottom-10 inset-x-0 flex justify-center gap-3 z-20">
               {activeBanners.map((_, i) => (
-                <button key={i} onClick={() => setCurrentSlide(i)} className={`h-1.5 rounded-full transition-all duration-500 ${currentSlide === i ? 'w-12 bg-blue-500' : 'w-2 bg-white/20 hover:bg-white/40'}`}></button>
+                <button key={i} onClick={() => setCurrentSlide(i)} className={`h-1.5 rounded-full transition-all duration-500 ${currentSlide === i ? 'w-12 bg-blue-500' : 'w-2 bg-white/40 hover:bg-white/70'}`}></button>
               ))}
             </div>
           )}
