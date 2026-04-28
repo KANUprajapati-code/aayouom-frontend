@@ -76,92 +76,107 @@ const Schemes = () => {
     <motion.div initial="hidden" animate="visible" className="space-y-16 pb-24 font-sans px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       
       {/* Dynamic Multi-Banner Slider */}
-      <section className="relative h-[450px] md:h-[550px] lg:h-[600px] rounded-[32px] md:rounded-[48px] overflow-hidden bg-slate-900 group">
-        <AnimatePresence mode="wait">
-           {banners.length > 0 && (
-             <motion.div
-               key={currentSlide}
-               initial={{ opacity: 0, x: 50 }}
-               animate={{ opacity: 1, x: 0 }}
-               exit={{ opacity: 0, x: -50 }}
-               transition={{ duration: 0.8, ease: "easeInOut" }}
-               className="absolute inset-0"
-             >
+      <section className="relative w-full rounded-[32px] md:rounded-[48px] overflow-hidden bg-slate-900 group shadow-2xl min-h-[450px] lg:min-h-[550px]">
+        <div className="absolute inset-0 w-full h-full">
+          <AnimatePresence mode="wait">
+            {banners.length > 0 && (
+              <motion.div
+                key={currentSlide}
+                initial={{ opacity: 0, scale: 1.02 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.8 }}
+                className="absolute inset-0 w-full h-full"
+              >
                 <div className="absolute inset-0 z-0">
-                   <img src={banners[currentSlide].imageUrl || 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=2000'} alt="" className="w-full h-full object-cover object-center opacity-80" />
-                   <div className="absolute inset-0 bg-gradient-to-r from-slate-900/50 to-transparent"></div>
+                  {banners[currentSlide].imageUrl ? (
+                    <img src={banners[currentSlide].imageUrl} alt="" className="w-full h-full object-cover object-center block" />
+                  ) : (
+                    <div className="w-full h-full bg-slate-800 flex items-center justify-center">
+                      <Sparkles size={64} className="text-slate-700" />
+                    </div>
+                  )}
+
+                  {/* Only show gradient and text overlay if user provided a title */}
+                  {(banners[currentSlide].title || banners[currentSlide].description) && (
+                    <>
+                      <div className="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-900/60 to-transparent pointer-events-none"></div>
+                      <div className="absolute inset-0 z-10 flex flex-col justify-center px-10 md:px-20 max-w-4xl space-y-6 md:space-y-8 pointer-events-none">
+                        <motion.div 
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.2 }}
+                          className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-400 text-[10px] font-black uppercase tracking-widest w-fit pointer-events-auto"
+                        >
+                          <Sparkles size={14} className="animate-pulse" /> {banners[currentSlide].subtitle || 'Registered Partner Exclusive'}
+                        </motion.div>
+                        
+                        <motion.h1 
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.3 }}
+                          className="text-3xl md:text-5xl lg:text-6xl font-black text-white italic leading-[1.1] tracking-tighter"
+                        >
+                          {banners[currentSlide].title}
+                        </motion.h1>
+                        
+                        {banners[currentSlide].description && (
+                          <motion.p 
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.4 }}
+                            className="text-lg md:text-xl text-blue-100/70 font-medium max-w-2xl leading-relaxed"
+                          >
+                            {banners[currentSlide].description}
+                          </motion.p>
+                        )}
+                        
+                        <motion.div 
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.5 }}
+                          className="flex flex-wrap gap-6 pt-4 pointer-events-auto"
+                        >
+                          <button 
+                            onClick={() => navigate(banners[currentSlide].btnLink || '/products')}
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 md:py-5 rounded-2xl font-black uppercase text-xs tracking-widest transition-all flex items-center gap-3 group shadow-2xl shadow-blue-600/30 active:scale-95"
+                          >
+                            {banners[currentSlide].btnText || 'Explore Active Matrix'} <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
+                          </button>
+                        </motion.div>
+                      </div>
+                    </>
+                  )}
                 </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-                <div className="relative z-10 h-full flex flex-col justify-center px-10 md:px-20 max-w-4xl space-y-6 md:space-y-8">
-                   <motion.div 
-                     initial={{ opacity: 0, y: 20 }}
-                     animate={{ opacity: 1, y: 0 }}
-                     transition={{ delay: 0.2 }}
-                     className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-400 text-[10px] font-black uppercase tracking-widest w-fit"
-                   >
-                     <Sparkles size={14} className="animate-pulse" /> {banners[currentSlide].subtitle || 'Registered Partner Exclusive'}
-                   </motion.div>
-                   
-                   <motion.h1 
-                     initial={{ opacity: 0, y: 20 }}
-                     animate={{ opacity: 1, y: 0 }}
-                     transition={{ delay: 0.3 }}
-                     className="text-3xl md:text-5xl lg:text-6xl font-black text-white italic leading-[1.1] tracking-tighter"
-                   >
-                     {banners[currentSlide].title}
-                   </motion.h1>
-                   
-                   <motion.p 
-                     initial={{ opacity: 0, y: 20 }}
-                     animate={{ opacity: 1, y: 0 }}
-                     transition={{ delay: 0.4 }}
-                     className="text-lg md:text-xl text-blue-100/70 font-medium max-w-2xl leading-relaxed"
-                   >
-                     {banners[currentSlide].description}
-                   </motion.p>
-                   
-                   <motion.div 
-                     initial={{ opacity: 0, y: 20 }}
-                     animate={{ opacity: 1, y: 0 }}
-                     transition={{ delay: 0.5 }}
-                     className="flex flex-wrap gap-6 pt-4"
-                   >
-                     <button 
-                       onClick={() => navigate(banners[currentSlide].btnLink || '/products')}
-                       className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 md:py-5 rounded-2xl font-black uppercase text-xs tracking-widest transition-all flex items-center gap-3 group shadow-2xl shadow-blue-600/30 active:scale-95"
-                     >
-                       {banners[currentSlide].btnText || 'Explore Active Matrix'} <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
-                     </button>
-                   </motion.div>
-                </div>
-             </motion.div>
-           )}
-        </AnimatePresence>
+          {/* Navigation Arrows */}
+          {banners.length > 1 && (
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-6 md:px-10 z-20 pointer-events-none">
+               <button onClick={prevSlide} className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white hover:text-slate-900 transition-all pointer-events-auto active:scale-90">
+                  <ChevronLeft size={24} />
+               </button>
+               <button onClick={nextSlide} className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white hover:text-slate-900 transition-all pointer-events-auto active:scale-90">
+                  <ChevronRight size={24} />
+               </button>
+            </div>
+          )}
 
-        {/* Navigation Arrows */}
-        {banners.length > 1 && (
-          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-6 md:px-10 z-20 pointer-events-none">
-             <button onClick={prevSlide} className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white hover:text-slate-900 transition-all pointer-events-auto active:scale-90">
-                <ChevronLeft size={24} />
-             </button>
-             <button onClick={nextSlide} className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white hover:text-slate-900 transition-all pointer-events-auto active:scale-90">
-                <ChevronRight size={24} />
-             </button>
-          </div>
-        )}
-
-        {/* Dots Navigation */}
-        {banners.length > 1 && (
-          <div className="absolute bottom-10 inset-x-0 z-20 flex justify-center gap-3">
-             {banners.map((_, i) => (
-                <button 
-                  key={i} 
-                  onClick={() => setCurrentSlide(i)}
-                  className={`h-2 rounded-full transition-all duration-500 ${currentSlide === i ? 'w-10 bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.8)]' : 'w-2 bg-white/30 hover:bg-white/50'}`}
-                />
-             ))}
-          </div>
-        )}
+          {/* Dots Navigation */}
+          {banners.length > 1 && (
+            <div className="absolute bottom-6 md:bottom-10 inset-x-0 z-20 flex justify-center gap-3">
+               {banners.map((_, i) => (
+                  <button 
+                    key={i} 
+                    onClick={() => setCurrentSlide(i)}
+                    className={`h-2 rounded-full transition-all duration-500 ${currentSlide === i ? 'w-10 bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.8)]' : 'w-2 bg-white/30 hover:bg-white/50'}`}
+                  />
+               ))}
+            </div>
+          )}
+        </div>
       </section>
 
       {/* Schemes Matrix Grid */}
