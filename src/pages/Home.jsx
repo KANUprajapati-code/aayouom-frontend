@@ -96,7 +96,7 @@ const Home = () => {
             >
               <div className="absolute inset-0 z-0">
                 {activeBanners[currentSlide].imageUrl ? (
-                  <img src={activeBanners[currentSlide].imageUrl} alt="" className="w-full h-full object-cover opacity-80" />
+                  <img src={activeBanners[currentSlide].imageUrl} alt="" className="w-full h-full object-contain opacity-80" />
                 ) : (
                   <div className="w-full h-full bg-slate-800 flex items-center justify-center">
                     <ImageIcon size={64} className="text-slate-700" />
