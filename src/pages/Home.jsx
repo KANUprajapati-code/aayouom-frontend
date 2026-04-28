@@ -83,8 +83,8 @@ const Home = () => {
   return (
     <div className="space-y-16 lg:space-y-28 pb-20 lg:pb-32 font-sans overflow-x-hidden">
       {/* 1. Hero Slider Section */}
-      <section className="relative overflow-hidden bg-slate-900 lg:rounded-[48px] w-full min-h-[450px] lg:min-h-[550px] group shadow-2xl">
-        <div className="absolute inset-0 w-full h-full">
+      <section className="relative overflow-hidden bg-slate-900 lg:rounded-[48px] w-full group shadow-2xl">
+        <div className="w-full relative">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentSlide}
@@ -92,15 +92,15 @@ const Home = () => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.8 }}
-              className="absolute inset-0 w-full h-full"
+              className="relative w-full"
             >
-              <div className="absolute inset-0 z-0">
+              <div className="w-full relative z-0">
                 {activeBanners[currentSlide].imageUrl ? (
-                  <Link to={activeBanners[currentSlide].linkUrl || "/products"} className="block w-full h-full">
-                    <img src={activeBanners[currentSlide].imageUrl} alt="" className="w-full h-full object-cover object-center block" />
+                  <Link to={activeBanners[currentSlide].linkUrl || "/products"} className="block w-full">
+                    <img src={activeBanners[currentSlide].imageUrl} alt="" className="w-full h-auto object-contain block" />
                   </Link>
                 ) : (
-                  <div className="w-full h-full bg-slate-800 flex items-center justify-center">
+                  <div className="w-full aspect-[21/9] bg-slate-800 flex items-center justify-center">
                     <ImageIcon size={64} className="text-slate-700" />
                   </div>
                 )}
@@ -109,22 +109,22 @@ const Home = () => {
                 {(activeBanners[currentSlide].title1 || activeBanners[currentSlide].title2) && (
                   <>
                     <div className="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-900/60 to-transparent pointer-events-none"></div>
-                    <div className="absolute inset-0 z-10 flex flex-col justify-center px-8 md:px-20 max-w-4xl space-y-4 md:space-y-6 pointer-events-none">
+                    <div className="absolute inset-0 z-10 flex flex-col justify-center px-6 md:px-16 lg:px-20 max-w-3xl space-y-2 md:space-y-4 pointer-events-none">
                       {activeBanners[currentSlide].badge && (
-                         <motion.span initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="text-blue-400 font-black tracking-[0.3em] uppercase text-[10px] md:text-xs bg-blue-400/10 px-4 py-1.5 rounded-full border border-blue-400/20 w-fit pointer-events-auto">{activeBanners[currentSlide].badge}</motion.span>
+                         <motion.span initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="text-blue-400 font-black tracking-[0.3em] uppercase text-[9px] md:text-[10px] bg-blue-400/10 px-3 py-1 md:py-1.5 rounded-full border border-blue-400/20 w-fit pointer-events-auto">{activeBanners[currentSlide].badge}</motion.span>
                       )}
-                      <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-3xl md:text-5xl lg:text-6xl font-black text-white italic leading-[1.1] tracking-tighter">
+                      <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-xl md:text-3xl lg:text-4xl font-black text-white italic leading-[1.1] tracking-tighter">
                         {activeBanners[currentSlide].title1} <br />
                         <span className="text-blue-500">{activeBanners[currentSlide].title2}</span>
                       </motion.h1>
                       {activeBanners[currentSlide].description && (
-                        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="text-sm md:text-base lg:text-lg text-slate-300 font-medium max-w-xl leading-relaxed">
+                        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="text-xs md:text-sm lg:text-base text-slate-300 font-medium max-w-lg leading-relaxed line-clamp-2 md:line-clamp-none">
                           {activeBanners[currentSlide].description}
                         </motion.p>
                       )}
-                      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="pointer-events-auto pt-4">
-                        <Link to={activeBanners[currentSlide].btn1Link || "/products"} className="inline-flex items-center gap-2 md:gap-3 px-6 md:px-10 py-3 md:py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl md:rounded-2xl font-black uppercase text-xs md:text-sm tracking-[0.2em] shadow-2xl shadow-blue-600/30 transition-all active:scale-95">
-                          {activeBanners[currentSlide].btn1Text || 'Enter Marketplace'} <ArrowRight size={18} />
+                      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="pointer-events-auto pt-1 md:pt-2">
+                        <Link to={activeBanners[currentSlide].btn1Link || "/products"} className="inline-flex items-center gap-1.5 md:gap-2 px-5 md:px-8 py-2 md:py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg md:rounded-xl font-black uppercase text-[10px] md:text-xs tracking-[0.2em] shadow-xl shadow-blue-600/30 transition-all active:scale-95">
+                          {activeBanners[currentSlide].btn1Text || 'Enter Marketplace'} <ArrowRight size={14} className="md:w-4 md:h-4" />
                         </Link>
                       </motion.div>
                     </div>
@@ -136,9 +136,9 @@ const Home = () => {
 
           {/* Dots Navigation */}
           {activeBanners.length > 1 && (
-            <div className="absolute bottom-6 md:bottom-10 inset-x-0 flex justify-center gap-3 z-20">
+            <div className="absolute bottom-4 md:bottom-6 inset-x-0 flex justify-center gap-2 z-20">
               {activeBanners.map((_, i) => (
-                <button key={i} onClick={() => setCurrentSlide(i)} className={`h-1.5 rounded-full transition-all duration-500 ${currentSlide === i ? 'w-12 bg-blue-500' : 'w-2 bg-white/40 hover:bg-white/70'}`}></button>
+                <button key={i} onClick={() => setCurrentSlide(i)} className={`h-1.5 rounded-full transition-all duration-500 ${currentSlide === i ? 'w-10 md:w-12 bg-blue-500' : 'w-2 bg-white/40 hover:bg-white/70'}`}></button>
               ))}
             </div>
           )}

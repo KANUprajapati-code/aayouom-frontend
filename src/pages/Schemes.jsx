@@ -76,8 +76,8 @@ const Schemes = () => {
     <motion.div initial="hidden" animate="visible" className="space-y-16 pb-24 font-sans px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       
       {/* Dynamic Multi-Banner Slider */}
-      <section className="relative w-full rounded-[32px] md:rounded-[48px] overflow-hidden bg-slate-900 group shadow-2xl min-h-[450px] lg:min-h-[550px]">
-        <div className="absolute inset-0 w-full h-full">
+      <section className="relative w-full rounded-[32px] md:rounded-[48px] overflow-hidden bg-slate-900 group shadow-2xl">
+        <div className="w-full relative">
           <AnimatePresence mode="wait">
             {banners.length > 0 && (
               <motion.div
@@ -86,13 +86,13 @@ const Schemes = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.8 }}
-                className="absolute inset-0 w-full h-full"
+                className="relative w-full"
               >
-                <div className="absolute inset-0 z-0">
+                <div className="w-full relative z-0">
                   {banners[currentSlide].imageUrl ? (
-                    <img src={banners[currentSlide].imageUrl} alt="" className="w-full h-full object-cover object-center block" />
+                    <img src={banners[currentSlide].imageUrl} alt="" className="w-full h-auto object-contain block" />
                   ) : (
-                    <div className="w-full h-full bg-slate-800 flex items-center justify-center">
+                    <div className="w-full aspect-[21/9] bg-slate-800 flex items-center justify-center">
                       <Sparkles size={64} className="text-slate-700" />
                     </div>
                   )}
@@ -101,21 +101,21 @@ const Schemes = () => {
                   {(banners[currentSlide].title || banners[currentSlide].description) && (
                     <>
                       <div className="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-900/60 to-transparent pointer-events-none"></div>
-                      <div className="absolute inset-0 z-10 flex flex-col justify-center px-10 md:px-20 max-w-4xl space-y-6 md:space-y-8 pointer-events-none">
+                      <div className="absolute inset-0 z-10 flex flex-col justify-center px-6 md:px-16 lg:px-20 max-w-3xl space-y-2 md:space-y-4 pointer-events-none">
                         <motion.div 
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.2 }}
-                          className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-400 text-[10px] font-black uppercase tracking-widest w-fit pointer-events-auto"
+                          className="inline-flex items-center gap-2 md:gap-3 px-3 md:px-5 py-1 md:py-2 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-400 text-[9px] md:text-[10px] font-black uppercase tracking-widest w-fit pointer-events-auto"
                         >
-                          <Sparkles size={14} className="animate-pulse" /> {banners[currentSlide].subtitle || 'Registered Partner Exclusive'}
+                          <Sparkles size={12} className="animate-pulse md:w-3.5 md:h-3.5" /> {banners[currentSlide].subtitle || 'Registered Partner Exclusive'}
                         </motion.div>
                         
                         <motion.h1 
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.3 }}
-                          className="text-3xl md:text-5xl lg:text-6xl font-black text-white italic leading-[1.1] tracking-tighter"
+                          className="text-2xl md:text-4xl lg:text-5xl font-black text-white italic leading-[1.1] tracking-tighter"
                         >
                           {banners[currentSlide].title}
                         </motion.h1>
@@ -125,7 +125,7 @@ const Schemes = () => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.4 }}
-                            className="text-lg md:text-xl text-blue-100/70 font-medium max-w-2xl leading-relaxed"
+                            className="text-xs md:text-sm lg:text-base text-blue-100/70 font-medium max-w-lg leading-relaxed line-clamp-2 md:line-clamp-none"
                           >
                             {banners[currentSlide].description}
                           </motion.p>
@@ -135,13 +135,13 @@ const Schemes = () => {
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.5 }}
-                          className="flex flex-wrap gap-6 pt-4 pointer-events-auto"
+                          className="flex flex-wrap gap-4 md:gap-6 pt-2 md:pt-4 pointer-events-auto"
                         >
                           <button 
                             onClick={() => navigate(banners[currentSlide].btnLink || '/products')}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 md:py-5 rounded-2xl font-black uppercase text-xs tracking-widest transition-all flex items-center gap-3 group shadow-2xl shadow-blue-600/30 active:scale-95"
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 md:px-10 py-2.5 md:py-4 rounded-xl md:rounded-2xl font-black uppercase text-[10px] md:text-xs tracking-widest transition-all flex items-center gap-2 md:gap-3 group shadow-xl shadow-blue-600/30 active:scale-95"
                           >
-                            {banners[currentSlide].btnText || 'Explore Active Matrix'} <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
+                            {banners[currentSlide].btnText || 'Explore Active Matrix'} <ArrowRight size={14} className="md:w-[18px] md:h-[18px] group-hover:translate-x-2 transition-transform" />
                           </button>
                         </motion.div>
                       </div>
@@ -154,24 +154,24 @@ const Schemes = () => {
 
           {/* Navigation Arrows */}
           {banners.length > 1 && (
-            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-6 md:px-10 z-20 pointer-events-none">
-               <button onClick={prevSlide} className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white hover:text-slate-900 transition-all pointer-events-auto active:scale-90">
-                  <ChevronLeft size={24} />
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-4 md:px-10 z-20 pointer-events-none">
+               <button onClick={prevSlide} className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white hover:text-slate-900 transition-all pointer-events-auto active:scale-90">
+                  <ChevronLeft size={18} className="md:w-6 md:h-6" />
                </button>
-               <button onClick={nextSlide} className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white hover:text-slate-900 transition-all pointer-events-auto active:scale-90">
-                  <ChevronRight size={24} />
+               <button onClick={nextSlide} className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white hover:text-slate-900 transition-all pointer-events-auto active:scale-90">
+                  <ChevronRight size={18} className="md:w-6 md:h-6" />
                </button>
             </div>
           )}
 
           {/* Dots Navigation */}
           {banners.length > 1 && (
-            <div className="absolute bottom-6 md:bottom-10 inset-x-0 z-20 flex justify-center gap-3">
+            <div className="absolute bottom-4 md:bottom-10 inset-x-0 z-20 flex justify-center gap-2 md:gap-3">
                {banners.map((_, i) => (
                   <button 
                     key={i} 
                     onClick={() => setCurrentSlide(i)}
-                    className={`h-2 rounded-full transition-all duration-500 ${currentSlide === i ? 'w-10 bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.8)]' : 'w-2 bg-white/30 hover:bg-white/50'}`}
+                    className={`h-1.5 md:h-2 rounded-full transition-all duration-500 ${currentSlide === i ? 'w-8 md:w-10 bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.8)]' : 'w-2 bg-white/30 hover:bg-white/50'}`}
                   />
                ))}
             </div>
