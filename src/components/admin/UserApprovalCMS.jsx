@@ -27,7 +27,11 @@ const UserApprovalCMS = () => {
     setLoading(true);
     try {
       const res = await axios.get(`${API_BASE_URL}/admin/users/all`, getAuthConfig());
-      setUsers(res.data);
+      const mappedUsers = res.data.map(u => ({
+        ...u,
+        status: u.isApproved ? 'approved' : 'pending'
+      }));
+      setUsers(mappedUsers);
     } catch (err) {
       console.error(err);
     } finally {
@@ -45,10 +49,10 @@ const UserApprovalCMS = () => {
   };
 
   const handleReject = async (id) => {
-    if (!window.confirm('Reject this user validation?')) return;
+    if (!window.confirm('Reject this user validation? This will permanently remove the registration request.')) return;
     try {
-      await axios.put(`${API_BASE_URL}/admin/users/approve/${id}`, { status: 'rejected' }, getAuthConfig());
-      setUsers(users.map(u => u._id === id ? { ...u, status: 'rejected' } : u));
+      await axios.delete(`${API_BASE_URL}/admin/users/${id}`, getAuthConfig());
+      setUsers(users.filter(u => u._id !== id));
     } catch (err) {
       alert('Rejection failed.');
     }
