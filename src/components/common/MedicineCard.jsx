@@ -70,7 +70,7 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
       <Link to={`/product/${_id}`} className="block relative h-48 mb-6 bg-slate-50/50 rounded-2xl overflow-hidden group-hover:bg-primary-50/30 transition-colors duration-500 flex items-center justify-center p-6 border border-slate-50">
         <img loading="lazy" src={image || 'https://via.placeholder.com/200'} 
           alt={name} 
-          className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-700 ease-out"
+          className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 ease-out"
         />
         <div className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-md rounded-xl text-slate-400 hover:text-primary-600 border border-slate-100 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-sm">
           <Info size={16} />

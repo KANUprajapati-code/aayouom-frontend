@@ -88,7 +88,7 @@ const Schemes = () => {
                className="absolute inset-0"
              >
                 <div className="absolute inset-0 z-0">
-                   <img src={banners[currentSlide].imageUrl || 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=2000'} alt="" className="w-full h-full object-cover opacity-30" />
+                   <img src={banners[currentSlide].imageUrl || 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=2000'} alt="" className="w-full h-full object-cover opacity-80" />
                    <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/60 to-transparent"></div>
                 </div>
 

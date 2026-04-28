@@ -49,7 +49,7 @@ const CartSlider = () => {
             cart.map((item) => (
               <div key={item._id} className="bg-white p-4 rounded-3xl border border-surface-border shadow-sm flex gap-4 items-center">
                  <div className="w-20 h-20 bg-surface-light rounded-2xl flex items-center justify-center p-2 shrink-0 border border-slate-50">
-                    <img src={item.image || 'https://via.placeholder.com/150'} alt={item.name} className="w-full h-full object-contain mix-blend-multiply" />
+                    <img src={item.image || 'https://via.placeholder.com/150'} alt={item.name} className="w-full h-full object-contain" />
                  </div>
                  <div className="flex-1 min-w-0">
                     <p className="text-[9px] font-black uppercase tracking-widest text-primary-600 truncate">{item.category}</p>

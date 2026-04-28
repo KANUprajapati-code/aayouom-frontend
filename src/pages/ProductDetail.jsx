@@ -140,7 +140,7 @@ Link: ${window.location.origin}/product/${medicine._id}`;
                          : 'border-slate-50 opacity-60 hover:opacity-100 hover:border-slate-200'
                     }`}
                   >
-                     <img src={img} alt="" className="max-w-full max-h-full object-contain mix-blend-multiply" />
+                     <img src={img} alt="" className="max-w-full max-h-full object-contain" />
                   </button>
                 ))}
              </div>

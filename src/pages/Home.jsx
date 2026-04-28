@@ -96,7 +96,7 @@ const Home = () => {
             >
               <div className="absolute inset-0 z-0">
                 {activeBanners[currentSlide].imageUrl ? (
-                  <img src={activeBanners[currentSlide].imageUrl} alt="" className="w-full h-full object-cover opacity-40" />
+                  <img src={activeBanners[currentSlide].imageUrl} alt="" className="w-full h-full object-cover opacity-80" />
                 ) : (
                   <div className="w-full h-full bg-slate-800 flex items-center justify-center">
                     <ImageIcon size={64} className="text-slate-700" />
@@ -247,7 +247,7 @@ const Home = () => {
             {[1, 2, 3].map(i => (
               <div key={i} className="space-y-4 flex flex-col items-center group">
                 <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-blue-400 border border-white/10 backdrop-blur-md overflow-hidden group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 shadow-xl">
-                   {cms?.[`trustItem${i}Img`] ? <img src={cms[`trustItem${i}Img`]} alt="" className="w-full h-full object-cover" /> : <ShieldCheck size={32} />}
+                   {cms?.[`trustItem${i}Img`] ? <img src={cms[`trustItem${i}Img`]} alt="" className="w-full h-full object-contain" /> : <ShieldCheck size={32} />}
                 </div>
                 <h4 className="text-xl font-black text-white uppercase italic tracking-tight">{cms[`trustItem${i}Title`] || "Service Node"}</h4>
                 <p className="text-slate-500 text-sm font-semibold leading-relaxed">{cms[`trustItem${i}Desc`] || "Optimized logistics and authenticated supply chain protocols."}</p>
