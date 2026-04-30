@@ -41,7 +41,7 @@ const UserApprovalCMS = () => {
 
   const handleApprove = async (id) => {
     try {
-      await axios.put(`${API_BASE_URL}/admin/users/approve/${id}`, { status: 'approved' }, getAuthConfig());
+      await axios.put(`${API_BASE_URL}/admin/users/${id}/approve`, { status: 'approved' }, getAuthConfig());
       setUsers(users.map(u => u._id === id ? { ...u, status: 'approved' } : u));
     } catch (err) {
       alert('Approval failed.');
