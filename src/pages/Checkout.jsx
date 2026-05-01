@@ -11,29 +11,66 @@ import {
   Smartphone,
   Info,
   Clock,
-  Circle,
-  Zap
+  Plus,
+  Home,
+  Briefcase,
+  ChevronRight,
+  Check,
+  CreditCard as PaymentIcon,
+  Trash2
 } from 'lucide-react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
+
+const SHIPPING_CHARGE = 50;
+const COD_CHARGE = 50;
 
 const Checkout = () => {
   const { cart, subtotal, clearCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
   
+  const [currentStep, setCurrentStep] = useState(1); // 1: Address, 2: Payment, 3: Review
   const [loading, setLoading] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('COD'); // COD or Prepaid
-
-  const [shippingData, setShippingData] = useState({
-    customerName: user?.clinicName || '',
-    phone: user?.phone || '',
-    address: user?.address || '',
+  const [userProfile, setUserProfile] = useState(null);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [showAddressForm, setShowAddressForm] = useState(false);
+  
+  const [newAddress, setNewAddress] = useState({
+    customerName: '',
+    phone: '',
+    fullAddress: '',
+    city: '',
+    state: '',
+    pincode: '',
+    isDefault: false
   });
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('https://ayuom-backend.vercel.app/api/auth/profile', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setUserProfile(response.data);
+        if (response.data.addresses && response.data.addresses.length > 0) {
+          const defaultAddr = response.data.addresses.find(a => a.isDefault) || response.data.addresses[0];
+          setSelectedAddress(defaultAddr);
+        } else {
+          setShowAddressForm(true);
+        }
+      } catch (err) {
+        console.error('Error fetching profile:', err);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   useEffect(() => {
     if (cart.length === 0 && !orderSuccess) {
@@ -41,18 +78,51 @@ const Checkout = () => {
     }
   }, [cart, orderSuccess, navigate]);
 
+  const handleAddAddress = async (e) => {
+    e.preventDefault();
+    if (!newAddress.customerName || !newAddress.phone || !newAddress.fullAddress) {
+      alert("Please fill all required fields.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post('https://ayuom-backend.vercel.app/api/auth/address', newAddress, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setUserProfile({ ...userProfile, addresses: response.data });
+      setSelectedAddress(response.data[response.data.length - 1]);
+      setShowAddressForm(false);
+      setNewAddress({ customerName: '', phone: '', fullAddress: '', city: '', state: '', pincode: '', isDefault: false });
+    } catch (err) {
+      console.error('Failed to add address:', err);
+      alert('Failed to save address.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const calculateTotal = () => {
+    let total = subtotal + SHIPPING_CHARGE;
+    if (paymentMethod === 'COD') {
+      total += COD_CHARGE;
+    }
+    return total;
+  };
+
   const handlePlaceOrder = async () => {
-    if (!shippingData.customerName || !shippingData.phone || !shippingData.address) {
-      alert("Please fill all shipping details.");
+    if (!selectedAddress) {
+      alert("Please select or add a shipping address.");
+      setCurrentStep(1);
       return;
     }
 
     setLoading(true);
     try {
       const orderPayload = {
-        customerName: shippingData.customerName,
-        phone: shippingData.phone,
-        address: shippingData.address,
+        customerName: selectedAddress.customerName,
+        phone: selectedAddress.phone,
+        address: `${selectedAddress.fullAddress}, ${selectedAddress.city}, ${selectedAddress.state} - ${selectedAddress.pincode}`,
         products: cart.map(item => ({
           productId: item._id,
           name: item.name,
@@ -60,12 +130,14 @@ const Checkout = () => {
           quantity: item.quantity,
           price: item.price
         })),
-        totalAmount: subtotal,
+        totalAmount: calculateTotal(),
+        shippingCharge: SHIPPING_CHARGE,
+        codCharge: paymentMethod === 'COD' ? COD_CHARGE : 0,
         paymentMethod: paymentMethod,
         status: 'Pending'
       };
 
-      const { data } = await axios.post('https://ayuom-backend.vercel.app/api/orders', orderPayload, {
+      await axios.post('https://ayuom-backend.vercel.app/api/orders', orderPayload, {
          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
 
@@ -90,201 +162,403 @@ const Checkout = () => {
           <CheckCircle2 size={48} />
         </motion.div>
         <div className="space-y-4">
-           <h1 className="text-4xl font-black text-slate-900 italic tracking-tighter uppercase">Mission Success!</h1>
-           <p className="text-slate-500 font-bold leading-relaxed">Your professional order has been registered in the AYUOM matrix. Our logistics node will contact you shortly for dispatch verification.</p>
+           <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase">Order Confirmed!</h1>
+           <p className="text-slate-500 font-bold leading-relaxed text-lg">Thank you for your order. We've received it and will start processing it right away.</p>
         </div>
         <div className="grid grid-cols-2 gap-4">
-           <button onClick={() => navigate('/orders')} className="py-4 bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-black transition-all">Track Order</button>
-           <button onClick={() => navigate('/products')} className="py-4 bg-white text-slate-900 border border-slate-200 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-slate-50 transition-all">Continue Hub</button>
+           <button onClick={() => navigate('/orders')} className="py-4 bg-slate-900 text-white rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-black transition-all">Track Order</button>
+           <button onClick={() => navigate('/products')} className="py-4 bg-white text-slate-900 border border-slate-200 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-slate-50 transition-all">Continue Shopping</button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto pb-24 px-4 font-sans">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
-         <div className="space-y-1">
-            <button onClick={() => navigate('/cart')} className="flex items-center gap-2 text-slate-400 font-black text-[10px] uppercase tracking-widest hover:text-blue-600 transition-all mb-4">
-               <ChevronLeft size={14} /> Back to Payload
-            </button>
-            <h1 className="text-4xl font-black text-slate-950 italic tracking-tighter uppercase">Final Validation</h1>
-            <p className="text-slate-500 font-bold uppercase tracking-[0.2em] text-[10px] ml-1">Secure Institutional Checkout</p>
-         </div>
-         <div className="flex items-center gap-3 bg-blue-50 px-6 py-4 rounded-[28px] border border-blue-100">
-            <ShieldCheck className="text-blue-600" size={24} />
-            <div>
-               <p className="text-xs font-black text-slate-900 leading-none">Encrypted Matrix</p>
-               <p className="text-[10px] text-blue-600/60 mt-1 font-bold">256-BIT SSL PROTECTED</p>
+    <div className="min-h-screen bg-slate-50 pb-24">
+      {/* Step Header */}
+      <div className="bg-white border-b border-slate-200 sticky top-0 z-40">
+        <div className="max-w-6xl mx-auto px-4 py-4 md:py-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <button onClick={() => navigate('/cart')} className="p-2 hover:bg-slate-100 rounded-full transition-all">
+                <ChevronLeft size={24} className="text-slate-600" />
+              </button>
+              <h1 className="text-xl md:text-2xl font-black text-slate-900">Checkout</h1>
             </div>
-         </div>
+            
+            <div className="hidden md:flex items-center gap-8">
+              {[1, 2, 3].map(step => (
+                <div key={step} className="flex items-center gap-3">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all ${
+                    currentStep >= step ? 'bg-primary-600 border-primary-600 text-white' : 'border-slate-200 text-slate-400'
+                  }`}>
+                    {currentStep > step ? <Check size={16} /> : step}
+                  </div>
+                  <span className={`text-sm font-bold ${currentStep >= step ? 'text-slate-900' : 'text-slate-400'}`}>
+                    {step === 1 ? 'Address' : step === 2 ? 'Payment' : 'Review'}
+                  </span>
+                  {step < 3 && <ChevronRight size={16} className="text-slate-300" />}
+                </div>
+              ))}
+            </div>
+            
+            <div className="flex items-center gap-2 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-100">
+               <ShieldCheck className="text-emerald-600" size={16} />
+               <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider">Secure Payment</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="grid lg:grid-cols-5 gap-12">
-        <div className="lg:col-span-3 space-y-10">
+      <div className="max-w-6xl mx-auto mt-8 px-4 grid lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 space-y-6">
           
-          {/* Shipping Node */}
-          <section className="bg-white rounded-[40px] border border-slate-100 p-8 md:p-10 space-y-8 shadow-premium">
-             <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-900 border border-slate-100">
-                   <MapPin size={24} />
-                </div>
-                <h2 className="text-xl font-black italic uppercase tracking-tight">Deployment Node (Shipping)</h2>
-             </div>
-
-             <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Clinic / Customer Name</label>
-                   <input 
-                     type="text" 
-                     className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 font-black text-sm focus:bg-white focus:border-blue-600 outline-none transition-all"
-                     placeholder="Enter clinic name..."
-                     value={shippingData.customerName}
-                     onChange={e => setShippingData({...shippingData, customerName: e.target.value})}
-                   />
-                </div>
-                <div className="space-y-2">
-                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Communication Channel (Phone)</label>
-                   <input 
-                     type="text" 
-                     className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 font-black text-sm focus:bg-white focus:border-blue-600 outline-none transition-all"
-                     placeholder="+91 XXXXXXXXXX"
-                     value={shippingData.phone}
-                     onChange={e => setShippingData({...shippingData, phone: e.target.value})}
-                   />
-                </div>
-                <div className="md:col-span-2 space-y-2">
-                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Physical Node (Detailed Address)</label>
-                   <textarea 
-                     rows="3"
-                     className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 font-black text-sm focus:bg-white focus:border-blue-600 outline-none transition-all resize-none"
-                     placeholder="Complete clinical address for delivery..."
-                     value={shippingData.address}
-                     onChange={e => setShippingData({...shippingData, address: e.target.value})}
-                   />
-                </div>
-             </div>
-          </section>
-
-          {/* Payment Matrix */}
-          <section className="bg-white rounded-[40px] border border-slate-100 p-8 md:p-10 space-y-8 shadow-premium">
-             <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-900 border border-slate-100">
-                   <CreditCard size={24} />
-                </div>
-                <h2 className="text-xl font-black italic uppercase tracking-tight">Settlement Matrix (Payment)</h2>
-             </div>
-
-             <div className="grid md:grid-cols-2 gap-6">
-                <button 
-                  onClick={() => setPaymentMethod('COD')}
-                  className={`p-6 rounded-[32px] border-2 text-left transition-all relative group overflow-hidden ${
-                    paymentMethod === 'COD' ? 'border-slate-900 bg-slate-900 text-white shadow-2xl' : 'border-slate-100 bg-slate-50 text-slate-500 hover:border-slate-200'
-                  }`}
-                >
-                   <div className="relative z-10 flex flex-col h-full justify-between gap-6">
-                      <div className="flex items-center justify-between">
-                         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${paymentMethod === 'COD' ? 'bg-white/10' : 'bg-white shadow-sm'}`}>
-                            <Smartphone size={20} />
-                         </div>
-                         {paymentMethod === 'COD' ? <CheckCircle2 size={20} className="text-blue-400" /> : <div className="w-5 h-5 rounded-full border-2 border-slate-200"></div>}
-                      </div>
-                      <div>
-                         <p className="font-black italic uppercase text-sm tracking-tight">Cash on Delivery</p>
-                         <p className={`text-[10px] font-bold mt-1 ${paymentMethod === 'COD' ? 'text-slate-400' : 'text-slate-400'}`}>SETTLE UPON RECEIPT</p>
-                      </div>
+          {/* Step 1: Address */}
+          <div className={`bg-white rounded-3xl border border-slate-200 shadow-sm transition-all overflow-hidden ${currentStep !== 1 ? 'opacity-80' : ''}`}>
+             <div className="p-6 md:p-8 border-b border-slate-100 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                   <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
+                      <MapPin size={20} />
                    </div>
-                </button>
-
-                <button 
-                  onClick={() => setPaymentMethod('Prepaid')}
-                  className={`p-6 rounded-[32px] border-2 text-left transition-all relative group overflow-hidden ${
-                    paymentMethod === 'Prepaid' ? 'border-blue-600 bg-blue-600 text-white shadow-2xl' : 'border-slate-100 bg-slate-50 text-slate-500 hover:border-slate-200'
-                  }`}
-                >
-                   <div className="relative z-10 flex flex-col h-full justify-between gap-6">
-                      <div className="flex items-center justify-between">
-                         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${paymentMethod === 'Prepaid' ? 'bg-white/10' : 'bg-white shadow-sm'}`}>
-                            <Zap size={20} />
-                         </div>
-                         {paymentMethod === 'Prepaid' ? <CheckCircle2 size={20} className="text-white" /> : <div className="w-5 h-5 rounded-full border-2 border-slate-200"></div>}
-                      </div>
-                      <div>
-                         <p className="font-black italic uppercase text-sm tracking-tight">Prepaid (Institutional)</p>
-                         <p className={`text-[10px] font-bold mt-1 ${paymentMethod === 'Prepaid' ? 'text-blue-100' : 'text-slate-400'}`}>FASTER DISPATCH NODE</p>
-                      </div>
+                   <div>
+                      <h2 className="text-lg font-black text-slate-900">1. Delivery Address</h2>
+                      {currentStep > 1 && selectedAddress && (
+                        <p className="text-xs text-slate-500 font-medium truncate max-w-xs">{selectedAddress.customerName}, {selectedAddress.fullAddress}</p>
+                      )}
                    </div>
-                </button>
+                </div>
+                {currentStep > 1 && (
+                  <button onClick={() => setCurrentStep(1)} className="text-sm font-bold text-primary-600 hover:underline">Change</button>
+                )}
              </div>
 
-             <div className="bg-blue-50/50 p-6 rounded-3xl border border-blue-100 flex gap-4">
-                <Info size={20} className="text-blue-600 shrink-0 mt-0.5" />
-                <p className="text-xs text-blue-800 font-bold leading-relaxed italic">
-                   Note: Institutional prepaid orders receive priority allocation in high-demand cycles. COD validation involves a mandatory confirmation ping from our node admins.
-                </p>
+             <AnimatePresence>
+               {currentStep === 1 && (
+                 <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }} className="p-6 md:p-8 space-y-6">
+                    {userProfile?.addresses?.length > 0 && !showAddressForm && (
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {userProfile.addresses.map((addr, i) => (
+                          <div 
+                            key={i}
+                            onClick={() => setSelectedAddress(addr)}
+                            className={`p-5 rounded-2xl border-2 cursor-pointer transition-all relative ${
+                              selectedAddress === addr ? 'border-primary-600 bg-primary-50/30' : 'border-slate-100 bg-white hover:border-slate-200'
+                            }`}
+                          >
+                             {selectedAddress === addr && (
+                               <div className="absolute top-4 right-4 w-5 h-5 bg-primary-600 rounded-full flex items-center justify-center text-white">
+                                 <Check size={12} strokeWidth={4} />
+                               </div>
+                             )}
+                             <div className="flex items-start gap-3 mb-3">
+                                {addr.fullAddress.toLowerCase().includes('office') ? <Briefcase size={16} className="text-slate-400 mt-1" /> : <Home size={16} className="text-slate-400 mt-1" />}
+                                <p className="font-bold text-slate-900">{addr.customerName}</p>
+                             </div>
+                             <p className="text-xs text-slate-500 leading-relaxed mb-4">{addr.fullAddress}, {addr.city}, {addr.state} - {addr.pincode}</p>
+                             <p className="text-xs font-bold text-slate-900">Phone: {addr.phone}</p>
+                          </div>
+                        ))}
+                        <button 
+                          onClick={() => setShowAddressForm(true)}
+                          className="flex flex-col items-center justify-center p-5 rounded-2xl border-2 border-dashed border-slate-200 hover:border-primary-400 hover:bg-primary-50/20 transition-all text-slate-400 hover:text-primary-600 group"
+                        >
+                           <Plus size={32} className="mb-2 group-hover:scale-110 transition-transform" />
+                           <span className="text-sm font-bold">Add New Address</span>
+                        </button>
+                      </div>
+                    )}
+
+                    {showAddressForm && (
+                      <form onSubmit={handleAddAddress} className="space-y-4">
+                         <div className="grid md:grid-cols-2 gap-4">
+                            <input 
+                              type="text" 
+                              placeholder="Receiver's Name *" 
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary-500/20 outline-none"
+                              value={newAddress.customerName}
+                              onChange={e => setNewAddress({...newAddress, customerName: e.target.value})}
+                              required
+                            />
+                            <input 
+                              type="tel" 
+                              placeholder="Phone Number *" 
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary-500/20 outline-none"
+                              value={newAddress.phone}
+                              onChange={e => setNewAddress({...newAddress, phone: e.target.value})}
+                              required
+                            />
+                         </div>
+                         <textarea 
+                           placeholder="Detailed Address (House No, Building, Street) *" 
+                           rows="3"
+                           className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary-500/20 outline-none resize-none"
+                           value={newAddress.fullAddress}
+                           onChange={e => setNewAddress({...newAddress, fullAddress: e.target.value})}
+                           required
+                         />
+                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            <input 
+                              type="text" 
+                              placeholder="City *" 
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm"
+                              value={newAddress.city}
+                              onChange={e => setNewAddress({...newAddress, city: e.target.value})}
+                            />
+                            <input 
+                              type="text" 
+                              placeholder="State *" 
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm"
+                              value={newAddress.state}
+                              onChange={e => setNewAddress({...newAddress, state: e.target.value})}
+                            />
+                            <input 
+                              type="text" 
+                              placeholder="Pincode *" 
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm"
+                              value={newAddress.pincode}
+                              onChange={e => setNewAddress({...newAddress, pincode: e.target.value})}
+                            />
+                         </div>
+                         <div className="flex gap-3 pt-2">
+                            <button 
+                              type="button" 
+                              onClick={() => setShowAddressForm(false)}
+                              className="px-6 py-2 border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50"
+                            >
+                              Cancel
+                            </button>
+                            <button 
+                              type="submit"
+                              disabled={loading}
+                              className="px-8 py-2 bg-primary-600 text-white rounded-xl text-sm font-bold hover:bg-primary-700 disabled:opacity-50"
+                            >
+                              {loading ? 'Saving...' : 'Save & Deliver Here'}
+                            </button>
+                         </div>
+                      </form>
+                    )}
+
+                    {!showAddressForm && (
+                      <div className="pt-4 flex justify-end">
+                         <button 
+                           onClick={() => {
+                             if (!selectedAddress) alert('Please select an address');
+                             else setCurrentStep(2);
+                           }}
+                           className="btn-primary px-10 py-3 rounded-2xl flex items-center gap-2 group"
+                         >
+                            Continue to Payment <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                         </button>
+                      </div>
+                    )}
+                 </motion.div>
+               )}
+             </AnimatePresence>
+          </div>
+
+          {/* Step 2: Payment */}
+          <div className={`bg-white rounded-3xl border border-slate-200 shadow-sm transition-all overflow-hidden ${currentStep < 2 ? 'opacity-50 pointer-events-none' : ''}`}>
+             <div className="p-6 md:p-8 border-b border-slate-100 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                   <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600">
+                      <PaymentIcon size={20} />
+                   </div>
+                   <div>
+                      <h2 className="text-lg font-black text-slate-900">2. Payment Method</h2>
+                      {currentStep > 2 && (
+                        <p className="text-xs text-slate-500 font-medium">{paymentMethod === 'COD' ? 'Cash on Delivery' : 'Prepaid Payment'}</p>
+                      )}
+                   </div>
+                </div>
+                {currentStep > 2 && (
+                  <button onClick={() => setCurrentStep(2)} className="text-sm font-bold text-primary-600 hover:underline">Change</button>
+                )}
              </div>
-          </section>
+
+             <AnimatePresence>
+               {currentStep === 2 && (
+                 <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }} className="p-6 md:p-8 space-y-6">
+                    <div className="grid md:grid-cols-2 gap-6">
+                       <button 
+                         onClick={() => setPaymentMethod('COD')}
+                         className={`p-6 rounded-3xl border-2 text-left transition-all relative ${
+                           paymentMethod === 'COD' ? 'border-primary-600 bg-primary-50/50' : 'border-slate-100 bg-white hover:border-slate-200'
+                         }`}
+                       >
+                          <div className="flex items-center justify-between mb-4">
+                             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${paymentMethod === 'COD' ? 'bg-primary-600 text-white' : 'bg-slate-100 text-slate-500'}`}>
+                                <Smartphone size={24} />
+                             </div>
+                             {paymentMethod === 'COD' && <CheckCircle2 size={24} className="text-primary-600" />}
+                          </div>
+                          <h3 className="font-black text-slate-900 mb-1">Cash on Delivery</h3>
+                          <p className="text-xs text-slate-500 font-medium">Extra ₹{COD_CHARGE} handling fee applies</p>
+                          {paymentMethod === 'COD' && (
+                            <div className="mt-4 p-3 bg-white border border-primary-100 rounded-xl text-[10px] font-bold text-primary-700 uppercase tracking-wider flex items-center gap-2">
+                               <Info size={14} /> PAY WHEN YOU RECEIVE
+                            </div>
+                          )}
+                       </button>
+
+                       <button 
+                         onClick={() => setPaymentMethod('Prepaid')}
+                         className={`p-6 rounded-3xl border-2 text-left transition-all relative ${
+                           paymentMethod === 'Prepaid' ? 'border-emerald-600 bg-emerald-50/50' : 'border-slate-100 bg-white hover:border-slate-200'
+                         }`}
+                       >
+                          <div className="flex items-center justify-between mb-4">
+                             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${paymentMethod === 'Prepaid' ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-500'}`}>
+                                <CreditCard size={24} />
+                             </div>
+                             {paymentMethod === 'Prepaid' && <CheckCircle2 size={24} className="text-emerald-600" />}
+                          </div>
+                          <h3 className="font-black text-slate-900 mb-1">Online Payment</h3>
+                          <p className="text-xs text-slate-500 font-medium">Faster processing & no extra fees</p>
+                          {paymentMethod === 'Prepaid' && (
+                            <div className="mt-4 p-3 bg-white border border-emerald-100 rounded-xl text-[10px] font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-2">
+                               <CheckCircle2 size={14} /> ₹{COD_CHARGE} SAVED!
+                            </div>
+                          )}
+                       </button>
+                    </div>
+
+                    <div className="pt-4 flex justify-between items-center">
+                       <button onClick={() => setCurrentStep(1)} className="text-sm font-bold text-slate-500 hover:text-slate-900 flex items-center gap-2">
+                          <ChevronLeft size={18} /> Back to Address
+                       </button>
+                       <button 
+                         onClick={() => setCurrentStep(3)}
+                         className="btn-primary px-10 py-3 rounded-2xl flex items-center gap-2 group"
+                       >
+                          Review Order <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                       </button>
+                    </div>
+                 </motion.div>
+               )}
+             </AnimatePresence>
+          </div>
+
+          {/* Step 3: Review */}
+          <div className={`bg-white rounded-3xl border border-slate-200 shadow-sm transition-all overflow-hidden ${currentStep < 3 ? 'opacity-50 pointer-events-none' : ''}`}>
+             <div className="p-6 md:p-8 border-b border-slate-100">
+                <div className="flex items-center gap-4">
+                   <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
+                      <Package size={20} />
+                   </div>
+                   <h2 className="text-lg font-black text-slate-900">3. Review Items</h2>
+                </div>
+             </div>
+
+             <AnimatePresence>
+               {currentStep === 3 && (
+                 <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }} className="p-6 md:p-8 space-y-8">
+                    <div className="space-y-4">
+                       {cart.map((item, idx) => (
+                         <div key={idx} className="flex gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                            <div className="w-20 h-20 bg-white rounded-xl border border-slate-100 p-2 flex items-center justify-center">
+                               <img src={item.image} alt={item.name} className="max-w-full max-h-full object-contain" />
+                            </div>
+                            <div className="flex-grow space-y-1">
+                               <h4 className="text-sm font-black text-slate-900 leading-tight">{item.name}</h4>
+                               <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">{item.selectedVariant?.name} • {item.quantity} Units</p>
+                               <div className="pt-2 flex items-center justify-between">
+                                  <p className="text-sm font-black text-slate-900">₹{(item.price * item.quantity).toLocaleString()}</p>
+                                  <div className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
+                                     SECURE PACKING
+                                  </div>
+                               </div>
+                            </div>
+                         </div>
+                       ))}
+                    </div>
+
+                    <div className="pt-6 border-t border-slate-100 flex flex-col md:flex-row gap-6 justify-between items-start">
+                       <div className="flex items-start gap-4 p-4 bg-primary-50 rounded-2xl border border-primary-100 max-w-md">
+                          <Truck className="text-primary-600 shrink-0 mt-1" size={24} />
+                          <div>
+                             <p className="text-xs font-black text-primary-900 uppercase tracking-widest mb-1">Estimated Delivery</p>
+                             <p className="text-sm font-bold text-primary-700">Expect delivery between <span className="underline">3-5 business days</span> at your selected node.</p>
+                          </div>
+                       </div>
+                       
+                       <div className="w-full md:w-auto flex flex-col gap-3">
+                          <button onClick={() => setCurrentStep(2)} className="text-center text-sm font-bold text-slate-500 hover:text-slate-900">
+                             Go Back to Payment
+                          </button>
+                          <button 
+                            onClick={handlePlaceOrder}
+                            disabled={loading}
+                            className="w-full md:w-64 py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-black uppercase text-sm tracking-widest shadow-xl shadow-primary-500/20 flex items-center justify-center gap-3 transition-all active:scale-95 disabled:opacity-50"
+                          >
+                             {loading ? 'CONFIRMING...' : 'CONFIRM ORDER'}
+                             {!loading && <ArrowRight size={20} />}
+                          </button>
+                       </div>
+                    </div>
+                 </motion.div>
+               )}
+             </AnimatePresence>
+          </div>
         </div>
 
-        <div className="lg:col-span-2 space-y-8">
-           <div className="bg-white rounded-[40px] border border-slate-100 p-8 shadow-premium sticky top-24 space-y-8">
-              <h2 className="text-xl font-black italic uppercase tracking-tight pb-6 border-b border-slate-50">Payload Summary</h2>
+        {/* Price Sidebar */}
+        <div className="lg:col-span-1">
+           <div className="bg-white rounded-[40px] border border-slate-200 p-8 shadow-xl shadow-slate-200/50 sticky top-24 space-y-8">
+              <h3 className="text-xl font-black text-slate-900 italic tracking-tighter uppercase border-b border-slate-50 pb-4">Price Breakdown</h3>
               
-              <div className="space-y-4 max-h-64 overflow-y-auto no-scrollbar pr-2">
-                 {cart.map(item => (
-                   <div key={item._cartId} className="flex justify-between gap-4">
-                      <div className="flex gap-3">
-                         <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center border border-slate-100 p-2">
-                            <img src={item.image} alt="" className="max-w-full max-h-full object-contain" />
-                         </div>
-                         <div className="space-y-1">
-                            <p className="text-xs font-black text-slate-900 leading-tight line-clamp-1">{item.name}</p>
-                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{item.quantity} units</p>
-                         </div>
-                      </div>
-                      <div className="text-sm font-black text-slate-900 tracking-tight">₹{(item.price * item.quantity).toLocaleString()}</div>
+              <div className="space-y-4">
+                 <div className="flex justify-between text-sm font-bold text-slate-500">
+                    <span>Order Subtotal</span>
+                    <span className="text-slate-900">₹{subtotal.toLocaleString()}</span>
+                 </div>
+                 <div className="flex justify-between text-sm font-bold text-slate-500">
+                    <span className="flex items-center gap-2">Logistics Fee <Info size={14} className="text-slate-300" /></span>
+                    <span className="text-slate-900">₹{SHIPPING_CHARGE}</span>
+                 </div>
+                 {paymentMethod === 'COD' && (
+                   <div className="flex justify-between text-sm font-bold text-slate-500 animate-in fade-in slide-in-from-right-2 duration-300">
+                      <span className="flex items-center gap-2 text-amber-600">COD Handling Fee <Smartphone size={14} /></span>
+                      <span className="text-amber-600">₹{COD_CHARGE}</span>
                    </div>
-                 ))}
-              </div>
-
-              <div className="pt-8 space-y-4 border-t border-slate-50 text-sm">
-                 <div className="flex justify-between text-slate-400 font-bold">
-                    <span>Base Value</span>
-                    <span>₹{subtotal.toLocaleString()}</span>
-                 </div>
-                 <div className="flex justify-between text-slate-400 font-bold">
-                    <span>Node Logistics</span>
-                    <span className="text-emerald-600 uppercase">FREE</span>
-                 </div>
-                 <div className="h-px bg-slate-50 w-full"></div>
-                 <div className="flex justify-between text-2xl font-black italic text-slate-950 tracking-tighter">
-                    <span>GRAND TOTAL</span>
-                    <span>₹{subtotal.toLocaleString()}</span>
+                 )}
+                 <div className="h-px bg-slate-100 w-full my-2"></div>
+                 <div className="flex justify-between items-end">
+                    <div>
+                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Payable Amount</p>
+                       <p className="text-4xl font-black text-slate-900 tracking-tighter">₹{calculateTotal().toLocaleString()}</p>
+                    </div>
+                    <div className="flex flex-col items-end">
+                       <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-100">
+                          TOTAL SAVINGS: ₹{Math.floor(subtotal * 0.15).toLocaleString()}
+                       </span>
+                    </div>
                  </div>
               </div>
 
-              <div className="space-y-4 pt-4">
-                 <button 
-                   onClick={handlePlaceOrder}
-                   disabled={loading}
-                   className="w-full py-5 bg-blue-600 hover:bg-blue-700 text-white rounded-[32px] font-black uppercase text-xs tracking-[0.2em] shadow-2xl shadow-blue-600/30 flex items-center justify-center gap-3 transition-all active:scale-95 disabled:opacity-50"
-                 >
-                    {loading ? 'VALIDATING...' : 'EXECUTE ORDER'}
-                    {!loading && <ArrowRight size={18} />}
-                 </button>
-                 <div className="flex items-center justify-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                    <Clock size={12} /> PROCESSING IN <span className="text-blue-600">~24 HOURS</span>
+              {/* Secure Checkout Badge */}
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-3">
+                 <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-white">
+                       <ShieldCheck size={18} />
+                    </div>
+                    <p className="text-[10px] font-black text-slate-900 uppercase tracking-widest">Ayuom Secure Shield</p>
                  </div>
+                 <p className="text-[10px] text-slate-500 font-bold leading-relaxed">Your professional credentials and payment data are encrypted using 256-bit institutional protocols.</p>
               </div>
-           </div>
 
-           <div className="p-8 bg-slate-900 rounded-[40px] text-white space-y-6 shadow-2xl relative overflow-hidden">
-              <div className="absolute bottom-0 right-0 w-32 h-32 bg-blue-600 opacity-20 rounded-full blur-2xl translate-y-1/2 translate-x-1/2"></div>
-              <div className="flex items-center gap-3">
-                 <Truck size={24} className="text-blue-400" />
-                 <h4 className="font-black italic uppercase italic">Last Mile Protocol</h4>
-              </div>
-              <p className="text-slate-400 text-xs font-semibold leading-relaxed">Orders are fulfilled via our specialized medical logistics nodes. Temperature control and clinical integrity maintained throughout transit.</p>
+              {/* Dynamic Action Button based on step */}
+              {currentStep < 3 && (
+                <button 
+                  onClick={() => {
+                    if (currentStep === 1 && !selectedAddress) alert('Please select an address');
+                    else setCurrentStep(currentStep + 1);
+                  }}
+                  className="w-full py-5 bg-slate-900 text-white rounded-[32px] font-black uppercase text-xs tracking-[0.2em] shadow-2xl shadow-slate-900/20 flex items-center justify-center gap-3 transition-all hover:bg-black"
+                >
+                   NEXT STEP: {currentStep === 1 ? 'PAYMENT' : 'REVIEW'}
+                   <ArrowRight size={18} />
+                </button>
+              )}
            </div>
         </div>
       </div>
