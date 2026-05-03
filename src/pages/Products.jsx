@@ -21,7 +21,8 @@ import {
   Dna,
   Percent,
   X,
-  ShieldCheck
+  ShieldCheck,
+  Building2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
@@ -358,49 +359,87 @@ const Products = () => {
           <motion.div variants={itemVariants} className="flex items-center justify-between bg-white p-4 rounded-3xl border border-slate-50 shadow-sm">
             <div className="flex items-center gap-3 pl-4">
                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">
-                 Matrix Capacity: {filteredMedicines.length} NODES
+                 {selectedMainCategory !== 'All' && selectedBrand === 'All' ? `Available Brands: ${availableBrands.length}` : `Matrix Capacity: ${filteredMedicines.length} NODES`}
                </p>
                {selectedMainCategory !== 'All' && (
                  <span className="px-3 py-1 bg-primary-50 text-primary-600 text-[9px] font-black uppercase rounded-full border border-primary-100 animate-in zoom-in">
                    {selectedMainCategory}
                  </span>
                )}
+               {selectedBrand !== 'All' && (
+                 <span className="px-3 py-1 bg-blue-50 text-blue-600 text-[9px] font-black uppercase rounded-full border border-blue-100 animate-in zoom-in flex items-center gap-1">
+                   <Building2 size={10} /> {selectedBrand}
+                 </span>
+               )}
             </div>
-            <div className="flex items-center gap-2 p-1.5 bg-slate-50 rounded-2xl">
-              <button 
-                onClick={() => setViewMode('grid')}
-                className={`p-2.5 rounded-xl transition-all ${viewMode === 'grid' ? 'bg-white shadow-soft text-primary-600' : 'text-slate-400 hover:text-slate-600'}`}
-              >
-                <LayoutGrid size={20} />
-              </button>
-              <button 
-                onClick={() => setViewMode('list')}
-                className={`p-2.5 rounded-xl transition-all ${viewMode === 'list' ? 'bg-white shadow-soft text-primary-600' : 'text-slate-400 hover:text-slate-600'}`}
-              >
-                <List size={20} />
-              </button>
-            </div>
+            {!(selectedMainCategory !== 'All' && selectedBrand === 'All') && (
+              <div className="flex items-center gap-2 p-1.5 bg-slate-50 rounded-2xl">
+                <button 
+                  onClick={() => setViewMode('grid')}
+                  className={`p-2.5 rounded-xl transition-all ${viewMode === 'grid' ? 'bg-white shadow-soft text-primary-600' : 'text-slate-400 hover:text-slate-600'}`}
+                >
+                  <LayoutGrid size={20} />
+                </button>
+                <button 
+                  onClick={() => setViewMode('list')}
+                  className={`p-2.5 rounded-xl transition-all ${viewMode === 'list' ? 'bg-white shadow-soft text-primary-600' : 'text-slate-400 hover:text-slate-600'}`}
+                >
+                  <List size={20} />
+                </button>
+              </div>
+            )}
           </motion.div>
 
-          <AnimatePresence mode="popLayout">
-            {filteredMedicines.length > 0 ? (
-              <motion.div 
-                layout
-                className={`grid gap-8 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}
-              >
-                {filteredMedicines.map(med => (
-                  <motion.div 
-                    layout
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    key={med._id}
-                  >
-                    <MedicineCard medicine={med} onAddToCart={addToCart} />
-                  </motion.div>
-                ))}
-              </motion.div>
-            ) : (
+          {selectedMainCategory !== 'All' && selectedBrand === 'All' ? (
+            <motion.div 
+              variants={itemVariants}
+              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+            >
+              {availableBrands.map(brand => (
+                <button 
+                  key={brand._id}
+                  onClick={() => setSelectedBrand(brand.name)}
+                  className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover:shadow-xl hover:border-blue-100 transition-all group flex flex-col items-center justify-center text-center h-48 active:scale-95"
+                >
+                  <div className="w-20 h-20 mb-4 bg-slate-50 rounded-2xl flex items-center justify-center border border-slate-100 group-hover:bg-white overflow-hidden transition-all shadow-sm">
+                    {brand.logoUrl ? (
+                      <img src={brand.logoUrl} alt={brand.name} className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-500" />
+                    ) : (
+                      <Building2 size={32} className="text-slate-300 group-hover:text-blue-500 transition-colors" />
+                    )}
+                  </div>
+                  <h3 className="font-black text-slate-900 group-hover:text-blue-600 transition-colors uppercase tracking-tight text-sm">{brand.name}</h3>
+                </button>
+              ))}
+              {availableBrands.length === 0 && (
+                <div className="col-span-full py-20 text-center space-y-4">
+                  <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center text-slate-300 mx-auto">
+                    <Building2 size={32} />
+                  </div>
+                  <p className="text-slate-400 font-bold tracking-widest uppercase text-xs">No brands found in this category.</p>
+                </div>
+              )}
+            </motion.div>
+          ) : (
+            <AnimatePresence mode="popLayout">
+              {filteredMedicines.length > 0 ? (
+                <motion.div 
+                  layout
+                  className={`grid gap-8 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}
+                >
+                  {filteredMedicines.map(med => (
+                    <motion.div 
+                      layout
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      key={med._id}
+                    >
+                      <MedicineCard medicine={med} onAddToCart={addToCart} />
+                    </motion.div>
+                  ))}
+                </motion.div>
+              ) : (
               <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
