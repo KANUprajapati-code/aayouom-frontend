@@ -30,7 +30,7 @@ const Profile = () => {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/auth/profile', {
+        const res = await axios.get('https://ayuom-backend.vercel.app/api/auth/profile', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setProfileData({
@@ -56,7 +56,7 @@ const Profile = () => {
     
     try {
       const token = localStorage.getItem('token');
-      await axios.put('http://localhost:5000/api/auth/profile', profileData, {
+      await axios.put('https://ayuom-backend.vercel.app/api/auth/profile', profileData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setProfileMessage({ type: 'success', text: 'Profile updated successfully!' });
@@ -101,161 +101,113 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-20 md:pt-32 pb-32 md:pb-20 px-4 md:px-8">
-      <div className="max-w-4xl mx-auto space-y-10">
-        
-        <div className="text-center space-y-4">
-          <h1 className="text-4xl font-black text-slate-900 tracking-tighter">My <span className="text-emerald-600">Profile</span></h1>
-          <p className="text-slate-500 font-bold uppercase text-[10px] tracking-widest">Manage your personal and clinic details</p>
+    <div className="max-w-6xl mx-auto pb-20 px-4 md:px-8">
+      <div className="bg-white rounded-[40px] shadow-sm border border-slate-100 overflow-hidden flex flex-col md:flex-row min-h-[600px]">
+        {/* Profile Sidebar - From Image */}
+        <div className="w-full md:w-72 border-r border-slate-50 p-8 flex flex-col gap-8">
+           <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-brand-green/10 rounded-xl flex items-center justify-center text-brand-green">
+                 <User size={24} />
+              </div>
+              <h2 className="text-xl font-bold text-slate-900 tracking-tight">Account Settings</h2>
+           </div>
+
+           <nav className="flex flex-col gap-2">
+              <button className="flex items-center gap-3 px-4 py-3 rounded-xl bg-brand-green text-white font-bold text-sm shadow-lg shadow-brand-green/20">
+                 <User size={18} /> Profile
+              </button>
+              <button className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 font-medium text-sm transition-colors">
+                 <Building size={18} /> Addresses
+              </button>
+              <Link to="/orders" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 font-medium text-sm transition-colors">
+                 <Package size={18} /> Orders
+              </Link>
+              <button className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 font-medium text-sm transition-colors">
+                 <ShieldCheck size={18} /> Security
+              </button>
+           </nav>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 items-start">
-          
-          {/* Profile Details Form */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-[32px] p-6 md:p-8 border border-slate-100 shadow-xl shadow-slate-200/50"
-          >
-            <div className="flex items-center gap-3 mb-8">
-              <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl">
-                <ShieldCheck size={24} />
-              </div>
-              <h2 className="text-xl font-black text-slate-900 tracking-tight">Personal Info</h2>
-            </div>
+        {/* Profile Content - From Image */}
+        <div className="flex-grow flex flex-col">
+           {/* Green Header Bar */}
+           <div className="h-20 bg-brand-green w-full"></div>
 
-            {profileMessage.text && (
-              <div className={`p-4 rounded-xl mb-6 text-sm font-bold flex items-center gap-2 ${profileMessage.type === 'success' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
-                {profileMessage.type === 'success' && <CheckCircle2 size={18} />}
-                {profileMessage.text}
-              </div>
-            )}
-
-            <form onSubmit={handleProfileSubmit} className="space-y-5">
-              <div>
-                <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest block mb-2">Full Name</label>
-                <div className="relative">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                  <input 
-                    type="text" required
-                    value={profileData.name} onChange={e => setProfileData({...profileData, name: e.target.value})}
-                    className="w-full bg-slate-50 border-2 border-transparent focus:border-emerald-500 rounded-xl pl-12 pr-4 py-3 font-bold text-slate-900 outline-none transition-all"
-                  />
-                </div>
+           <div className="p-8 md:p-12 space-y-10">
+              <div className="flex items-center justify-between">
+                 <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Profile</h1>
+                 <button className="btn-primary !bg-brand-green !px-6 !py-2 !text-xs">Edit Profile</button>
               </div>
 
-              <div>
-                <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest block mb-2">Email Address</label>
-                <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                  <input 
-                    type="email" required
-                    value={profileData.email} onChange={e => setProfileData({...profileData, email: e.target.value})}
-                    className="w-full bg-slate-50 border-2 border-transparent focus:border-emerald-500 rounded-xl pl-12 pr-4 py-3 font-bold text-slate-900 outline-none transition-all"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest block mb-2">Phone Number</label>
-                <div className="relative">
-                  <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                  <input 
-                    type="text"
-                    value={profileData.phone} onChange={e => setProfileData({...profileData, phone: e.target.value})}
-                    className="w-full bg-slate-50 border-2 border-transparent focus:border-emerald-500 rounded-xl pl-12 pr-4 py-3 font-bold text-slate-900 outline-none transition-all"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest block mb-2">Clinic Name</label>
-                <div className="relative">
-                  <Building className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                  <input 
-                    type="text"
-                    value={profileData.clinicName} onChange={e => setProfileData({...profileData, clinicName: e.target.value})}
-                    className="w-full bg-slate-50 border-2 border-transparent focus:border-emerald-500 rounded-xl pl-12 pr-4 py-3 font-bold text-slate-900 outline-none transition-all"
-                  />
-                </div>
-              </div>
-
-              <button 
-                type="submit" disabled={profileLoading}
-                className="w-full py-4 mt-4 bg-slate-900 text-white rounded-xl font-black uppercase tracking-widest text-[11px] hover:bg-emerald-600 transition-colors flex items-center justify-center gap-2"
-              >
-                {profileLoading && <Loader2 className="animate-spin" size={16} />}
-                Save Changes
-              </button>
-            </form>
-          </motion.div>
-
-          {/* Password Form */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-            className="bg-slate-900 rounded-[32px] p-6 md:p-8 border border-slate-800 shadow-xl shadow-slate-900/50 text-white relative overflow-hidden"
-          >
-            <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500 rounded-full blur-[100px] opacity-20 -mr-32 -mt-32" />
-            
-            <div className="relative z-10">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="p-3 bg-white/10 text-emerald-400 rounded-2xl backdrop-blur-md border border-white/10">
-                  <KeyRound size={24} />
-                </div>
-                <h2 className="text-xl font-black text-white tracking-tight">Security</h2>
-              </div>
-
-              {passwordMessage.text && (
-                <div className={`p-4 rounded-xl mb-6 text-sm font-bold flex items-center gap-2 ${passwordMessage.type === 'success' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'}`}>
-                  {passwordMessage.type === 'success' && <CheckCircle2 size={18} />}
-                  {passwordMessage.text}
+              {profileMessage.text && (
+                <div className={`p-4 rounded-2xl text-sm font-bold flex items-center gap-2 ${profileMessage.type === 'success' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+                  {profileMessage.type === 'success' && <CheckCircle2 size={18} />}
+                  {profileMessage.text}
                 </div>
               )}
 
-              <form onSubmit={handlePasswordSubmit} className="space-y-5">
-                <div>
-                  <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest block mb-2">Current Password</label>
-                  <input 
-                    type="password" required
-                    value={passwordData.currentPassword} onChange={e => setPasswordData({...passwordData, currentPassword: e.target.value})}
-                    className="w-full bg-white/5 border border-white/10 focus:border-emerald-500 rounded-xl px-4 py-3 font-bold text-white outline-none transition-all placeholder:text-slate-600"
-                    placeholder="••••••••"
-                  />
-                </div>
+              <div className="bg-white rounded-3xl border border-slate-100 p-8 space-y-10 shadow-sm">
+                 {/* Profile Photo - Simplified circle */}
+                 <div className="flex items-center gap-6">
+                    <div className="w-24 h-24 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-300 relative group cursor-pointer border border-slate-200">
+                       <User size={48} />
+                       <div className="absolute inset-0 bg-black/40 rounded-2xl opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                          <CheckCircle2 size={24} className="text-white" />
+                       </div>
+                    </div>
+                    <div>
+                       <h3 className="text-lg font-bold text-slate-900 leading-none">Profile Photo</h3>
+                       <p className="text-xs text-slate-400 mt-2">Update your avatar from settings.</p>
+                    </div>
+                 </div>
 
-                <div>
-                  <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest block mb-2">New Password</label>
-                  <input 
-                    type="password" required
-                    value={passwordData.newPassword} onChange={e => setPasswordData({...passwordData, newPassword: e.target.value})}
-                    className="w-full bg-white/5 border border-white/10 focus:border-emerald-500 rounded-xl px-4 py-3 font-bold text-white outline-none transition-all placeholder:text-slate-600"
-                    placeholder="••••••••"
-                  />
-                </div>
+                 <form onSubmit={handleProfileSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-2">
+                       <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Full Name</label>
+                       <input 
+                         type="text" value={profileData.name} onChange={e => setProfileData({...profileData, name: e.target.value})}
+                         className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3.5 font-bold text-slate-900 focus:outline-none focus:border-brand-green/30 focus:ring-4 focus:ring-brand-green/5 transition-all"
+                       />
+                    </div>
+                    <div className="space-y-2">
+                       <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
+                       <input 
+                         type="email" value={profileData.email} onChange={e => setProfileData({...profileData, email: e.target.value})}
+                         className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3.5 font-bold text-slate-900 focus:outline-none focus:border-brand-green/30 focus:ring-4 focus:ring-brand-green/5 transition-all"
+                       />
+                    </div>
+                    <div className="space-y-2">
+                       <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Phone Number</label>
+                       <input 
+                         type="text" value={profileData.phone} onChange={e => setProfileData({...profileData, phone: e.target.value})}
+                         className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3.5 font-bold text-slate-900 focus:outline-none focus:border-brand-green/30 focus:ring-4 focus:ring-brand-green/5 transition-all"
+                       />
+                    </div>
+                    <div className="space-y-2">
+                       <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Clinic / Hospital</label>
+                       <input 
+                         type="text" value={profileData.clinicName} onChange={e => setProfileData({...profileData, clinicName: e.target.value})}
+                         className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3.5 font-bold text-slate-900 focus:outline-none focus:border-brand-green/30 focus:ring-4 focus:ring-brand-green/5 transition-all"
+                       />
+                    </div>
 
-                <div>
-                  <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest block mb-2">Confirm New Password</label>
-                  <input 
-                    type="password" required
-                    value={passwordData.confirmPassword} onChange={e => setPasswordData({...passwordData, confirmPassword: e.target.value})}
-                    className="w-full bg-white/5 border border-white/10 focus:border-emerald-500 rounded-xl px-4 py-3 font-bold text-white outline-none transition-all placeholder:text-slate-600"
-                    placeholder="••••••••"
-                  />
-                </div>
-
-                <button 
-                  type="submit" disabled={passwordLoading}
-                  className="w-full py-4 mt-4 bg-emerald-600 text-white rounded-xl font-black uppercase tracking-widest text-[11px] hover:bg-emerald-500 transition-colors flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/50"
-                >
-                  {passwordLoading && <Loader2 className="animate-spin" size={16} />}
-                  Update Password
-                </button>
-              </form>
-            </div>
-          </motion.div>
-          
+                    <div className="md:col-span-2 flex items-center gap-4 pt-4">
+                       <button 
+                         type="submit" disabled={profileLoading}
+                         className="btn-primary !bg-brand-green !px-10 !py-4"
+                       >
+                          {profileLoading && <Loader2 className="animate-spin mr-2" size={18} />}
+                          Save Changes
+                       </button>
+                       <button type="button" className="btn-secondary !px-10 !py-4">Cancel</button>
+                    </div>
+                 </form>
+              </div>
+           </div>
         </div>
       </div>
     </div>
+
   );
 };
 

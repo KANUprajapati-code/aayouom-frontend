@@ -11,7 +11,8 @@ import {
   ShieldCheck,
   ShoppingBag,
   MessageCircle,
-  Truck
+  Truck,
+  Tag
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -20,7 +21,7 @@ import { useAuth } from '../context/AuthContext';
 import SchemeBadge from '../components/common/SchemeBadge';
 
 const Cart = () => {
-  const { cart, updateQuantity, removeFromCart, clearCart, subtotal } = useCart();
+  const { cart, updateQuantity, removeFromCart, clearCart, subtotal, getFinalItemPrice } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -50,90 +51,65 @@ const Cart = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 pb-20">
-      <div className="flex items-end justify-between px-4 sm:px-0">
-        <div>
-          <h1 className="text-4xl font-black text-slate-900 italic tracking-tighter uppercase">Payload Matrix</h1>
-          <p className="text-text-muted mt-1 font-bold uppercase tracking-widest text-[10px] ml-1">Review your clinical order deployment</p>
-        </div>
-        <Link to="/products" className="text-primary-600 font-bold hover:underline mb-1 flex items-center gap-1 text-sm">
-          <Plus size={18} /> Add More
+    <div className="max-w-6xl mx-auto space-y-8 pb-20 px-4">
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold text-brand-green tracking-tight">Ayuone Cart</h1>
+        <Link to="/products" className="text-brand-green font-bold hover:underline flex items-center gap-1 text-sm">
+          <Plus size={18} /> Add Medicines
         </Link>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-8">
+        <div className="lg:col-span-2 space-y-6">
           {/* Cart Items */}
-          <div className="bg-white rounded-[40px] border border-slate-100 shadow-premium overflow-hidden">
-            <div className="p-6 bg-slate-50 border-b border-slate-100 text-[10px] font-black text-slate-400 uppercase tracking-widest hidden md:grid grid-cols-12 gap-4">
+          <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+            <div className="p-6 bg-slate-50 border-b border-slate-100 text-[11px] font-bold text-slate-500 uppercase tracking-widest hidden md:grid grid-cols-12 gap-4">
               <div className="col-span-6">Medicine Details</div>
               <div className="col-span-3 text-center">Quantity</div>
-              <div className="col-span-2 text-right">Total</div>
-              <div className="col-span-1"></div>
+              <div className="col-span-3 text-right">Total</div>
             </div>
 
             <div className="divide-y divide-slate-50">
               {cart.map(item => (
-                <div key={item._cartId} className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-12 gap-6 items-center group relative">
-                  <div className="col-span-1 md:col-span-6 flex gap-4 w-full pr-8 md:pr-0">
-                    <div className="w-20 h-20 bg-slate-50 rounded-2xl overflow-hidden shrink-0 border border-slate-100 p-2">
+                <div key={item._cartId} className="p-6 grid grid-cols-1 md:grid-cols-12 gap-6 items-center group relative">
+                  <div className="col-span-1 md:col-span-6 flex gap-4">
+                    <div className="w-20 h-20 bg-slate-50 rounded-2xl overflow-hidden shrink-0 border border-slate-50 p-2">
                       <img loading="lazy" src={item.image} alt={item.name} className="w-full h-full object-contain" />
                     </div>
                     <div className="space-y-1">
-                      <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest italic">{item.brand || 'Institutional'}</p>
-                      <h3 className="text-base font-black text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2 uppercase italic tracking-tighter">{item.name}</h3>
-                      <div className="flex flex-wrap items-center gap-2 pt-1 font-bold">
-                        {item.selectedVariant && (
-                           <span className="text-[10px] bg-slate-100 px-3 py-1 rounded-full text-slate-600">{item.selectedVariant.name}</span>
-                        )}
-                        <span className="text-[10px] text-emerald-600">₹{item.price} / unit</span>
-                      </div>
+                      <p className="text-[10px] font-bold text-brand-green uppercase tracking-wider">{item.brand || 'Ayuone'}</p>
+                      <h3 className="text-base font-bold text-slate-900 line-clamp-2 tracking-tight leading-tight">{item.name}</h3>
+                      <p className="text-xs text-slate-400 font-medium">₹{item.price} / unit</p>
                     </div>
                   </div>
 
                   <div className="col-span-1 md:col-span-3 flex justify-start md:justify-center">
-                    <div className="inline-flex items-center gap-4 px-4 py-2 bg-slate-50 rounded-2xl border border-slate-100">
+                    <div className="inline-flex items-center gap-3 px-3 py-1.5 bg-slate-50 rounded-xl border border-slate-100">
                       <button 
                         onClick={() => updateQuantity(item._cartId, item.quantity - 1)}
-                        className="text-slate-400 hover:text-black transition-all"
+                        className="p-1 text-slate-400 hover:text-brand-green transition-all"
                       >
-                        <Minus size={16} />
+                        <Minus size={14} />
                       </button>
-                      <span className="text-lg font-black text-slate-900 w-8 text-center">{item.quantity}</span>
+                      <span className="text-base font-bold text-slate-900 w-6 text-center">{item.quantity}</span>
                       <button 
                         onClick={() => updateQuantity(item._cartId, item.quantity + 1)}
-                        className="text-slate-400 hover:text-black transition-all"
+                        className="p-1 text-slate-400 hover:text-brand-green transition-all"
                       >
-                        <Plus size={16} />
+                        <Plus size={14} />
                       </button>
                     </div>
                   </div>
 
-                  <div className="col-span-1 md:col-span-2 flex flex-col md:items-end justify-center">
-                    {item.originalPrice && item.originalPrice > item.price && (
-                       <div className="flex flex-col md:items-end gap-0.5 mb-1">
-                          <div className="flex items-center gap-2">
-                             <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">M.R.P:</span>
-                             <p className="text-[10px] text-slate-400 font-bold line-through">₹{(item.originalPrice * item.quantity).toLocaleString()}</p>
-                          </div>
-                          <div className="flex gap-2 items-center">
-                             <span className="text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded text-[9px] uppercase font-black tracking-wider">{Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100)}% OFF</span>
-                             <span className="text-rose-500 text-[9px] font-bold">Save ₹{((item.originalPrice - item.price) * item.quantity).toLocaleString()}</span>
-                          </div>
-                       </div>
-                    )}
-                    <div className="flex items-baseline gap-1 mt-1">
-                       <span className="text-[10px] uppercase font-black text-slate-500 tracking-widest mr-1">Offer:</span>
-                       <p className="text-xl font-black text-slate-950 inline md:block tracking-tighter italic">₹{(item.price * item.quantity).toLocaleString()}</p>
+                  <div className="col-span-1 md:col-span-3 flex items-center justify-between md:justify-end gap-4">
+                    <div className="text-right">
+                       <p className="text-lg font-bold text-slate-900 tracking-tight">₹{(getFinalItemPrice(item) * item.quantity).toLocaleString()}</p>
                     </div>
-                  </div>
-
-                  <div className="absolute top-6 right-6 md:static md:col-span-1 flex justify-end">
                     <button 
                       onClick={() => removeFromCart(item._cartId)}
-                      className="p-3 text-slate-200 hover:text-rose-500 hover:bg-rose-50 rounded-2xl transition-all"
+                      className="p-2 text-slate-200 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all"
                     >
-                      <Trash2 size={20} />
+                      <Trash2 size={18} />
                     </button>
                   </div>
                 </div>
@@ -141,75 +117,66 @@ const Cart = () => {
             </div>
           </div>
 
-          {/* Savings Summary */}
-          <div className="p-8 bg-slate-950 rounded-[40px] text-white relative overflow-hidden group shadow-2xl">
-            <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 group-hover:scale-110 transition-transform duration-1000"></div>
-            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
-              <div className="space-y-4">
-                <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-400">
-                  <TrendingDown size={14} /> Matrix Discount Applied
-                </div>
-                <h2 className="text-3xl font-black italic tracking-tighter">Yield Saved: <span className="text-emerald-400">₹{savings.toLocaleString()}</span></h2>
-                <p className="text-slate-400 text-sm font-semibold max-w-sm">Institutional batch pricing and multi-unit schemes have been validated for this deployment payload.</p>
-              </div>
-              <div className="bg-white/5 p-6 rounded-3xl backdrop-blur-xl border border-white/10 text-center min-w-[200px]">
-                <p className="text-[10px] uppercase font-black tracking-widest text-emerald-400 mb-2">Clinic Points</p>
-                <p className="text-3xl font-black italic tracking-tighter text-white">+ {Math.floor(subtotal / 10)} PTS</p>
-              </div>
-            </div>
+          {/* Coupon Section - From Image */}
+          <div className="bg-white rounded-3xl border border-slate-100 p-6 flex flex-col md:flex-row gap-4 items-center">
+             <div className="relative flex-grow w-full">
+                <Tag className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                <input 
+                  type="text" 
+                  placeholder="Enter Coupon Code" 
+                  className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-brand-green/30 font-bold text-sm"
+                />
+             </div>
+             <button className="w-full md:w-auto btn-primary !bg-brand-green !px-10">Apply Coupon</button>
           </div>
         </div>
 
         <div className="space-y-8">
-          <div className="bg-white rounded-[40px] border border-slate-100 p-10 space-y-10 sticky top-24 shadow-premium">
-            <h2 className="text-2xl font-black text-slate-950 italic uppercase tracking-tighter border-b border-slate-50 pb-6 ml-1">Summary Matrix</h2>
+          <div className="bg-white rounded-3xl border border-slate-100 p-8 space-y-8 sticky top-24 shadow-sm">
+            <h2 className="text-xl font-bold text-slate-900 border-b border-slate-50 pb-4">Order Summary</h2>
             
-            <div className="space-y-6">
-               <div className="space-y-4">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                    <MapPin size={14} /> SHIPMENT NODE
-                  </p>
-                  <div className="p-5 bg-slate-50 rounded-3xl border border-slate-100 hover:border-blue-200 transition-all cursor-pointer group">
-                    <p className="text-sm font-black text-slate-950 uppercase italic tracking-tight">{user?.clinicName || 'Operational Hub'}</p>
-                    <p className="text-xs text-slate-500 mt-1 font-semibold leading-relaxed">{user?.address || 'Mumbai Cluster, Maharashtra'}</p>
-                  </div>
+            <div className="space-y-4">
+               <div className="flex justify-between text-sm font-medium text-slate-500">
+                  <span>Subtotal</span>
+                  <span>₹{subtotal.toLocaleString()}</span>
                </div>
-            </div>
-
-            <div className="pt-8 border-t border-slate-50 space-y-4">
-              <div className="flex justify-between text-slate-400 font-bold uppercase tracking-widest text-[10px]">
-                <span>Base Load Value</span>
-                <span>₹{subtotal.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between text-slate-400 font-bold uppercase tracking-widest text-[10px]">
-                <span>Node Logistics</span>
-                <span className="text-emerald-600 italic">SECURE & FREE</span>
-              </div>
-              <div className="h-px bg-slate-50 w-full"></div>
-              <div className="flex justify-between text-3xl font-black italic text-slate-950 tracking-tighter">
-                <span>TOTAL</span>
-                <span>₹{subtotal.toLocaleString()}</span>
-              </div>
+               <div className="flex justify-between text-sm font-medium text-slate-500">
+                  <span>Savings</span>
+                  <span className="text-emerald-600">- ₹{savings.toLocaleString()}</span>
+               </div>
+               <div className="flex justify-between text-sm font-medium text-slate-500">
+                  <span>Delivery</span>
+                  <span className="text-emerald-600 font-bold uppercase text-[10px]">Free</span>
+               </div>
+               <div className="h-px bg-slate-50 w-full"></div>
+               <div className="flex justify-between text-2xl font-bold text-slate-900">
+                  <span>Total</span>
+                  <span>₹{subtotal.toLocaleString()}</span>
+               </div>
             </div>
 
             <button 
               onClick={handleCheckout}
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-5 rounded-[32px] font-black uppercase tracking-[0.2em] text-xs flex items-center justify-center gap-3 shadow-2xl shadow-blue-500/20 transition-all active:scale-95"
+              className="w-full btn-primary !bg-brand-green !py-4 !rounded-2xl !text-sm"
             >
-              PROCEED TO PAYLOAD
-              <ArrowRight size={20} />
+              Proceed to Checkout
+              <ArrowRight size={20} className="ml-2" />
             </button>
             
-            <div className="flex items-center justify-center gap-3 opacity-30 grayscale">
-               <ShieldCheck size={20} />
-               <Package size={20} />
-               <Truck size={20} />
+            <div className="flex items-center justify-center gap-4 py-2">
+               <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                  <ShieldCheck size={14} className="text-brand-green" /> Secure
+               </div>
+               <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                  <Truck size={14} className="text-brand-green" /> Fast Delivery
+               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
   );
 };
 

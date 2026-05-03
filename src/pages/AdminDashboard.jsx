@@ -24,6 +24,7 @@ import BulkOrderCMS from '../components/admin/BulkOrderCMS';
 import AboutCMS from '../components/admin/AboutCMS';
 import UserApprovalCMS from '../components/admin/UserApprovalCMS';
 import AdminWalletCMS from '../components/admin/AdminWalletCMS';
+import OrdersCMS from '../components/admin/OrdersCMS';
 import { ShoppingBag as shoppingBagIcon, Wallet } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -187,6 +188,7 @@ const AdminDashboard = () => {
            </motion.section>
         );
       case 'products': return <ProductsCMS initialFilter={categoryFilter} />;
+      case 'orders': return <OrdersCMS />;
       case 'homecms': return <GlobalCMSHub />;
       case 'categories': return (
         <CategoriesCMS 

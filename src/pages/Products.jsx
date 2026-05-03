@@ -30,9 +30,15 @@ const Products = () => {
   const { addToCart } = useCart();
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('grid');
-  const [medicines, setMedicines] = useState([]);
-  const [brands, setBrands] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [medicines, setMedicines] = useState(() => {
+    const cached = localStorage.getItem('products_cache');
+    return cached ? JSON.parse(cached) : [];
+  });
+  const [brands, setBrands] = useState(() => {
+    const cached = localStorage.getItem('brands_cache');
+    return cached ? JSON.parse(cached) : [];
+  });
+  const [loading, setLoading] = useState(medicines.length === 0);
 
   // Hierarchical Filter States
   const [selectedMainCategory, setSelectedMainCategory] = useState('All'); // Homeopathy, Ayurveda, Others
@@ -49,6 +55,8 @@ const Products = () => {
         ]);
         setMedicines(prodRes.data);
         setBrands(brandRes.data);
+        localStorage.setItem('products_cache', JSON.stringify(prodRes.data));
+        localStorage.setItem('brands_cache', JSON.stringify(brandRes.data));
       } catch (err) {
         console.error('Failed to fetch marketplace data:', err);
       } finally {

@@ -27,8 +27,8 @@ const Promotions = () => {
     try {
       setLoading(true);
       const [couponRes, offerRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/promos/coupons'),
-        axios.get('http://localhost:5000/api/promos/offers')
+        axios.get('https://ayuom-backend.vercel.app/api/promos/coupons'),
+        axios.get('https://ayuom-backend.vercel.app/api/promos/offers')
       ]);
       setCoupons(couponRes.data);
       setOffers(offerRes.data);

@@ -13,6 +13,9 @@ const UserApprovalCMS = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('pending');
+  const [walletModalOpen, setWalletModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [pointsToAdd, setPointsToAdd] = useState('');
 
   const getAuthConfig = () => {
     const token = localStorage.getItem('token');
@@ -55,6 +58,22 @@ const UserApprovalCMS = () => {
       setUsers(users.filter(u => u._id !== id));
     } catch (err) {
       alert('Rejection failed.');
+    }
+  };
+
+  const handleAddPoints = async () => {
+    if (!pointsToAdd || Number(pointsToAdd) <= 0) return alert("Please enter a valid amount");
+    try {
+      await axios.put(`${API_BASE_URL}/admin/users/${selectedUser._id}/wallet`, {
+        points: Number(pointsToAdd),
+        description: 'Manual credit by Administrator'
+      }, getAuthConfig());
+      alert(`Successfully added ${pointsToAdd} points to ${selectedUser.name}!`);
+      setWalletModalOpen(false);
+      setPointsToAdd('');
+      fetchUsers();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to add points');
     }
   };
 
@@ -123,10 +142,34 @@ const UserApprovalCMS = () => {
                      <button onClick={() => handleReject(user._id)} className="flex-grow py-3 bg-white hover:bg-rose-50 text-rose-600 rounded-xl font-bold text-[10px] uppercase tracking-widest border border-rose-100 shadow-sm flex items-center justify-center gap-2 transition-all"><XCircle size={16} /> Block Node</button>
                   </div>
                )}
+               {user.status === 'approved' && (
+                  <div className="mt-auto flex gap-4 pt-6 border-t border-slate-100">
+                     <button onClick={() => { setSelectedUser(user); setWalletModalOpen(true); }} className="flex-grow py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-[10px] uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 transition-all"><Activity size={16} /> Credit Wallet Balance</button>
+                  </div>
+               )}
             </div>
           ))}
           {filteredUsers.length === 0 && <div className="col-span-full py-20 text-center text-slate-400 uppercase tracking-widest font-bold text-xs opacity-50">No users found in this buffer.</div>}
        </div>
+
+       {walletModalOpen && selectedUser && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl w-full max-w-md p-8 shadow-2xl animate-in fade-in zoom-in-95 duration-200 border border-slate-200">
+            <h3 className="text-2xl font-black text-slate-900 italic tracking-tighter uppercase">Credit Balance</h3>
+            <p className="text-sm text-slate-500 font-medium mt-1">Add manual cash balance to <span className="font-bold text-blue-600">{selectedUser.name}'s</span> account</p>
+            <div className="mt-6 space-y-4">
+              <div>
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Amount (₹)</label>
+                <input type="number" min="1" className="w-full mt-1 p-4 bg-slate-50 rounded-xl border border-slate-100 font-bold outline-none focus:bg-white focus:border-blue-600 transition-all text-xl" value={pointsToAdd} onChange={(e) => setPointsToAdd(e.target.value)} placeholder="e.g. 500" />
+              </div>
+            </div>
+            <div className="flex gap-4 mt-8">
+              <button onClick={() => { setWalletModalOpen(false); setPointsToAdd(''); }} className="flex-1 py-4 bg-slate-100 text-slate-600 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-200 transition-all active:scale-95">Cancel</button>
+              <button onClick={handleAddPoints} className="flex-1 py-4 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-blue-600/20 hover:bg-blue-700 transition-all active:scale-95 flex items-center justify-center gap-2"><CheckCircle2 size={16} /> Confirm</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

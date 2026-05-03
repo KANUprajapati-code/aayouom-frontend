@@ -16,6 +16,7 @@ import {
   History,
   IndianRupee
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const WalletDashboard = () => {
@@ -32,7 +33,7 @@ const WalletDashboard = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:5000/api/wallet/my-wallet', {
+      const res = await axios.get('https://ayuom-backend.vercel.app/api/wallet/my-wallet', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setWalletData(res.data);
@@ -51,7 +52,7 @@ const WalletDashboard = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/wallet/withdraw', {
+      await axios.post('https://ayuom-backend.vercel.app/api/wallet/withdraw', {
         amount: Number(withdrawAmount),
         method: 'UPI',
         details: withdrawDetails
@@ -69,7 +70,7 @@ const WalletDashboard = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/wallet/convert-points', {
+      await axios.post('https://ayuom-backend.vercel.app/api/wallet/convert-points', {
         points: Number(convertPoints)
       }, {
         headers: { Authorization: `Bearer ${token}` }
@@ -161,10 +162,18 @@ const WalletDashboard = () => {
               {walletData?.points || 0}
               <span className="text-slate-400 text-lg ml-2 font-bold uppercase">Points</span>
             </h2>
-            <p className="text-slate-500 text-[10px] font-bold mt-4 leading-relaxed">
-              Earn points on every purchase. <br />
-              100 Points = ₹100
-            </p>
+            <div className="flex items-center justify-between mt-4">
+               <p className="text-slate-500 text-[10px] font-bold leading-relaxed">
+                 Earn points on every purchase. <br />
+                 100 Points = ₹100
+               </p>
+               <button 
+                 onClick={() => setShowConvertModal(true)}
+                 className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-lg"
+               >
+                 Redeem to Cash
+               </button>
+            </div>
           </motion.div>
 
           <motion.div 

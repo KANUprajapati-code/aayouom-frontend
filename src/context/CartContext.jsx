@@ -78,7 +78,7 @@ export const CartProvider = ({ children }) => {
 
   const clearCart = () => setCart([]);
 
-  const subtotal = cart.reduce((total, item) => {
+  const getFinalItemPrice = (item) => {
     let itemPrice = Number(item.price) || 0;
     
     // Apply scheme rules if they exist
@@ -94,11 +94,15 @@ export const CartProvider = ({ children }) => {
       }
     }
     
-    return total + (itemPrice * (Number(item.quantity) || 0));
+    return itemPrice;
+  };
+
+  const subtotal = cart.reduce((total, item) => {
+    return total + (getFinalItemPrice(item) * (Number(item.quantity) || 0));
   }, 0);
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart, subtotal, isCartSliderOpen, setIsCartSliderOpen }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart, subtotal, isCartSliderOpen, setIsCartSliderOpen, getFinalItemPrice }}>
       {children}
     </CartContext.Provider>
   );

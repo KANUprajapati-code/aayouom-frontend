@@ -29,7 +29,7 @@ const SHIPPING_CHARGE = 50;
 const COD_CHARGE = 50;
 
 const Checkout = () => {
-  const { cart, subtotal, clearCart } = useCart();
+  const { cart, subtotal, clearCart, getFinalItemPrice } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
   
@@ -40,9 +40,17 @@ const Checkout = () => {
   const [userProfile, setUserProfile] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [showAddressForm, setShowAddressForm] = useState(false);
+  const [useWalletPoints, setUseWalletPoints] = useState(false);
+  
+  const finalCodCharge = paymentMethod === 'COD' ? COD_CHARGE : 0;
+  const rawTotal = subtotal + SHIPPING_CHARGE + finalCodCharge;
+  const walletDiscount = useWalletPoints ? Math.min(userProfile?.walletPoints || 0, rawTotal) : 0;
+  const finalPayableAmount = rawTotal - walletDiscount;
   
   const [newAddress, setNewAddress] = useState({
     customerName: '',
+    doctorName: '',
+    patientName: '',
     phone: '',
     fullAddress: '',
     city: '',
@@ -122,18 +130,19 @@ const Checkout = () => {
       const orderPayload = {
         customerName: selectedAddress.customerName,
         phone: selectedAddress.phone,
-        address: `${selectedAddress.fullAddress}, ${selectedAddress.city}, ${selectedAddress.state} - ${selectedAddress.pincode}`,
+        address: `${selectedAddress.fullAddress}, ${selectedAddress.city}, ${selectedAddress.state} - ${selectedAddress.pincode} (Doctor: ${selectedAddress.doctorName || 'N/A'}, Patient: ${selectedAddress.patientName || 'N/A'})`,
         products: cart.map(item => ({
           productId: item._id,
           name: item.name,
           variantName: item.selectedVariant?.name || '',
           quantity: item.quantity,
-          price: item.price
+          price: getFinalItemPrice(item)
         })),
-        totalAmount: calculateTotal(),
+        totalAmount: finalPayableAmount,
         shippingCharge: SHIPPING_CHARGE,
-        codCharge: paymentMethod === 'COD' ? COD_CHARGE : 0,
+        codCharge: finalCodCharge,
         paymentMethod: paymentMethod,
+        pointsUsed: walletDiscount,
         status: 'Pending'
       };
 
@@ -252,7 +261,10 @@ const Checkout = () => {
                              )}
                              <div className="flex items-start gap-3 mb-3">
                                 {addr.fullAddress.toLowerCase().includes('office') ? <Briefcase size={16} className="text-slate-400 mt-1" /> : <Home size={16} className="text-slate-400 mt-1" />}
-                                <p className="font-bold text-slate-900">{addr.customerName}</p>
+                                <div>
+                                   <p className="font-bold text-slate-900">{addr.customerName}</p>
+                                   <p className="text-[10px] text-brand-green font-bold uppercase tracking-wider">Doc: {addr.doctorName || 'N/A'} | Pat: {addr.patientName || 'N/A'}</p>
+                                </div>
                              </div>
                              <p className="text-xs text-slate-500 leading-relaxed mb-4">{addr.fullAddress}, {addr.city}, {addr.state} - {addr.pincode}</p>
                              <p className="text-xs font-bold text-slate-900">Phone: {addr.phone}</p>
@@ -286,6 +298,20 @@ const Checkout = () => {
                               value={newAddress.phone}
                               onChange={e => setNewAddress({...newAddress, phone: e.target.value})}
                               required
+                            />
+                            <input 
+                              type="text" 
+                              placeholder="Doctor's Name" 
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary-500/20 outline-none"
+                              value={newAddress.doctorName}
+                              onChange={e => setNewAddress({...newAddress, doctorName: e.target.value})}
+                            />
+                            <input 
+                              type="text" 
+                              placeholder="Patient's Name" 
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary-500/20 outline-none"
+                              value={newAddress.patientName}
+                              onChange={e => setNewAddress({...newAddress, patientName: e.target.value})}
                             />
                          </div>
                          <textarea 
@@ -462,7 +488,7 @@ const Checkout = () => {
                                <h4 className="text-sm font-black text-slate-900 leading-tight">{item.name}</h4>
                                <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">{item.selectedVariant?.name} • {item.quantity} Units</p>
                                <div className="pt-2 flex items-center justify-between">
-                                  <p className="text-sm font-black text-slate-900">₹{(item.price * item.quantity).toLocaleString()}</p>
+                                  <p className="text-sm font-black text-slate-900">₹{(getFinalItemPrice(item) * item.quantity).toLocaleString()}</p>
                                   <div className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
                                      SECURE PACKING
                                   </div>
@@ -521,15 +547,35 @@ const Checkout = () => {
                       <span className="text-amber-600">₹{COD_CHARGE}</span>
                    </div>
                  )}
+                 {userProfile?.walletPoints > 0 && (
+                   <div className="flex items-center justify-between mt-4 p-4 bg-primary-50 rounded-2xl border border-primary-100">
+                     <div className="flex flex-col">
+                       <span className="text-sm font-black text-primary-900 flex items-center gap-2">
+                         <CreditCard size={16} /> Ayuom Wallet
+                       </span>
+                       <span className="text-[10px] font-bold text-primary-600 uppercase">Bal: {userProfile.walletPoints} Points</span>
+                     </div>
+                     <label className="relative inline-flex items-center cursor-pointer">
+                       <input type="checkbox" className="sr-only peer" checked={useWalletPoints} onChange={() => setUseWalletPoints(!useWalletPoints)} />
+                       <div className="w-11 h-6 bg-primary-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
+                     </label>
+                   </div>
+                 )}
+                 {useWalletPoints && walletDiscount > 0 && (
+                   <div className="flex justify-between text-sm font-bold text-emerald-600 animate-in fade-in slide-in-from-right-2 duration-300">
+                      <span>Wallet Discount Used</span>
+                      <span>-₹{walletDiscount}</span>
+                   </div>
+                 )}
                  <div className="h-px bg-slate-100 w-full my-2"></div>
                  <div className="flex justify-between items-end">
                     <div>
                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Payable Amount</p>
-                       <p className="text-4xl font-black text-slate-900 tracking-tighter">₹{calculateTotal().toLocaleString()}</p>
+                       <p className="text-4xl font-black text-slate-900 tracking-tighter">₹{finalPayableAmount.toLocaleString()}</p>
                     </div>
                     <div className="flex flex-col items-end">
                        <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-100">
-                          TOTAL SAVINGS: ₹{Math.floor(subtotal * 0.15).toLocaleString()}
+                          TOTAL SAVINGS: ₹{Math.floor(subtotal * 0.15 + walletDiscount).toLocaleString()}
                        </span>
                     </div>
                  </div>

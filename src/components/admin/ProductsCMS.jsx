@@ -14,7 +14,7 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
 
   const [formData, setFormData] = useState({
     name: '', brand: '', price: '', originalPrice: '', category: 'Medicines',
-    image: '', images: [], description: '', stock: 0, showOnShop: true, showOnHome: false, showOnSchemes: false,
+    image: '', images: [], description: '', stock: 0, showOnShop: true, showOnHome: false, showOnSchemes: false, walletCashbackPercentage: 0,
     variants: [], schemeRules: [], freeUnitsScheme: { buy: '', free: '' }
   });
 
@@ -59,7 +59,7 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
       });
       setCurrentProductId(product._id);
     } else {
-      setFormData({ name: '', brand: '', price: '', originalPrice: '', category: 'Medicines', image: '', images: [], description: '', stock: 0, showOnShop: true, showOnHome: false, showOnSchemes: false, variants: [], schemeRules: [], freeUnitsScheme: { buy: '', free: '' } });
+      setFormData({ name: '', brand: '', price: '', originalPrice: '', category: 'Medicines', image: '', images: [], description: '', stock: 0, showOnShop: true, showOnHome: false, showOnSchemes: false, walletCashbackPercentage: 0, variants: [], schemeRules: [], freeUnitsScheme: { buy: '', free: '' } });
       setCurrentProductId(null);
     }
     setShowModal(true);
@@ -233,7 +233,7 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
                        </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid grid-cols-3 gap-6">
                        <div className="space-y-2">
                           <label className="text-xs font-bold text-slate-500">Category</label>
                           <select required className="w-full bg-slate-50 p-4 rounded-xl border border-slate-100 outline-none focus:bg-white focus:border-blue-600 transition-all font-bold" value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })}>
@@ -243,8 +243,12 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
                           </select>
                        </div>
                        <div className="space-y-2">
-                          <label className="text-xs font-bold text-slate-500">Stock Quantity</label>
+                          <label className="text-xs font-bold text-slate-500">Stock</label>
                           <input required type="number" className="w-full bg-slate-50 p-4 rounded-xl border border-slate-100 outline-none focus:bg-white focus:border-blue-600 transition-all font-bold" value={formData.stock} onChange={e => setFormData({ ...formData, stock: e.target.value })} />
+                       </div>
+                       <div className="space-y-2">
+                          <label className="text-xs font-bold text-slate-500">Wallet Cashback %</label>
+                          <input type="number" min="0" max="100" className="w-full bg-slate-50 p-4 rounded-xl border border-slate-100 outline-none focus:bg-white focus:border-blue-600 transition-all font-bold" value={formData.walletCashbackPercentage} onChange={e => setFormData({ ...formData, walletCashbackPercentage: e.target.value })} placeholder="e.g. 5" />
                        </div>
                     </div>
 
