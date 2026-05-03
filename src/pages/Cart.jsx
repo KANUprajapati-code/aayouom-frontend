@@ -25,12 +25,13 @@ const Cart = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [orderNote, setOrderNote] = useState('');
 
   const totalMRP = cart.reduce((acc, item) => acc + ((item.originalPrice || item.price) * item.quantity), 0);
   const savings = totalMRP - subtotal;
 
   const handleCheckout = () => {
-    navigate('/checkout');
+    navigate('/checkout', { state: { orderNote } });
   };
 
   if (cart.length === 0) {
@@ -128,6 +129,20 @@ const Cart = () => {
                 />
              </div>
              <button className="w-full md:w-auto btn-primary !bg-brand-green !px-10">Apply Coupon</button>
+          </div>
+
+          {/* User Request Note Section */}
+          <div className="bg-white rounded-3xl border border-slate-100 p-6 space-y-4">
+             <div className="flex items-center gap-2 text-slate-900 font-bold">
+                <MessageCircle size={20} className="text-brand-green" />
+                <h3>Add a Request / Note (Optional)</h3>
+             </div>
+             <textarea 
+               placeholder="Write any special requests, delivery instructions, or SMS message here..." 
+               value={orderNote}
+               onChange={(e) => setOrderNote(e.target.value)}
+               className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-green/30 resize-none h-24"
+             ></textarea>
           </div>
         </div>
 

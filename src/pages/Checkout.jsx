@@ -19,7 +19,7 @@ import {
   CreditCard as PaymentIcon,
   Trash2
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -32,6 +32,8 @@ const Checkout = () => {
   const { cart, subtotal, clearCart, getFinalItemPrice } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const orderNote = location.state?.orderNote || '';
   
   const [currentStep, setCurrentStep] = useState(1); // 1: Address, 2: Payment, 3: Review
   const [loading, setLoading] = useState(false);
@@ -110,6 +112,25 @@ const Checkout = () => {
     }
   };
 
+  const handleDeleteAddress = async (e, addressId) => {
+    e.stopPropagation();
+    if (!window.confirm("Are you sure you want to delete this address?")) return;
+    
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.delete(`https://ayuom-backend.vercel.app/api/auth/address/${addressId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setUserProfile({ ...userProfile, addresses: response.data });
+      if (selectedAddress?._id === addressId) {
+         setSelectedAddress(response.data.length > 0 ? response.data[0] : null);
+      }
+    } catch (err) {
+      console.error('Failed to delete address:', err);
+      alert('Failed to delete address. Please try again.');
+    }
+  };
+
   const calculateTotal = () => {
     let total = subtotal + SHIPPING_CHARGE;
     if (paymentMethod === 'COD') {
@@ -143,6 +164,7 @@ const Checkout = () => {
         codCharge: finalCodCharge,
         paymentMethod: paymentMethod,
         pointsUsed: walletDiscount,
+        orderNote: orderNote,
         status: 'Pending'
       };
 
@@ -267,7 +289,16 @@ const Checkout = () => {
                                 </div>
                              </div>
                              <p className="text-xs text-slate-500 leading-relaxed mb-4">{addr.fullAddress}, {addr.city}, {addr.state} - {addr.pincode}</p>
-                             <p className="text-xs font-bold text-slate-900">Phone: {addr.phone}</p>
+                             <div className="flex items-center justify-between mt-2">
+                               <p className="text-xs font-bold text-slate-900">Phone: {addr.phone}</p>
+                               <button 
+                                 onClick={(e) => handleDeleteAddress(e, addr._id)}
+                                 className="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-50 transition-colors"
+                                 title="Delete Address"
+                               >
+                                 <Trash2 size={16} />
+                               </button>
+                             </div>
                           </div>
                         ))}
                         <button 
