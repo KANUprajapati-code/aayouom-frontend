@@ -13,7 +13,7 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
   const [activeFilter, setActiveFilter] = useState(initialFilter);
 
   const [formData, setFormData] = useState({
-    name: '', brand: '', price: '', originalPrice: '', category: 'Medicines',
+    name: '', brand: '', price: '', originalPrice: '', mainCategory: 'Others', category: 'Medicines',
     image: '', images: [], description: '', stock: 0, showOnShop: true, showOnHome: false, showOnSchemes: false, walletCashbackPercentage: 0,
     variants: [], schemeRules: [], freeUnitsScheme: { buy: '', free: '' }
   });
@@ -59,7 +59,7 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
       });
       setCurrentProductId(product._id);
     } else {
-      setFormData({ name: '', brand: '', price: '', originalPrice: '', category: 'Medicines', image: '', images: [], description: '', stock: 0, showOnShop: true, showOnHome: false, showOnSchemes: false, walletCashbackPercentage: 0, variants: [], schemeRules: [], freeUnitsScheme: { buy: '', free: '' } });
+      setFormData({ name: '', brand: '', price: '', originalPrice: '', mainCategory: 'Others', category: 'Medicines', image: '', images: [], description: '', stock: 0, showOnShop: true, showOnHome: false, showOnSchemes: false, walletCashbackPercentage: 0, variants: [], schemeRules: [], freeUnitsScheme: { buy: '', free: '' } });
       setCurrentProductId(null);
     }
     setShowModal(true);
@@ -233,9 +233,19 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
                        </div>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-6">
+                    <div className="grid grid-cols-4 gap-6">
                        <div className="space-y-2">
-                          <label className="text-xs font-bold text-slate-500">Category</label>
+                          <label className="text-xs font-bold text-slate-500">Main Category</label>
+                          <select required className="w-full bg-slate-50 p-4 rounded-xl border border-slate-100 outline-none focus:bg-white focus:border-blue-600 transition-all font-bold" value={formData.mainCategory} onChange={e => setFormData({ ...formData, mainCategory: e.target.value })}>
+                             <option value="Homeopathic">Homeopathic</option>
+                             <option value="Ayurveda">Ayurveda</option>
+                             <option value="Surgical/Panchkarma equipment">Surgical/Panchkarma equipment</option>
+                             <option value="Allopathic">Allopathic</option>
+                             <option value="Others">Others</option>
+                          </select>
+                       </div>
+                       <div className="space-y-2">
+                          <label className="text-xs font-bold text-slate-500">Sub Category</label>
                           <select required className="w-full bg-slate-50 p-4 rounded-xl border border-slate-100 outline-none focus:bg-white focus:border-blue-600 transition-all font-bold" value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })}>
                              {categories.map(cat => (
                                <option key={cat} value={cat}>{cat}</option>

@@ -93,7 +93,10 @@ const Products = () => {
     let matchesMainCategory = true;
     if (selectedMainCategory !== 'All') {
       const brandData = brands.find(b => b.name === med.brand);
-      matchesMainCategory = (brandData?.mainCategory === selectedMainCategory) || (selectedMainCategory === 'Others' && !brandData?.mainCategory);
+      matchesMainCategory = 
+        (med.mainCategory && med.mainCategory === selectedMainCategory) || 
+        (!med.mainCategory && brandData?.mainCategory === selectedMainCategory) || 
+        (selectedMainCategory === 'Others' && !med.mainCategory && !brandData?.mainCategory);
     }
 
     // 3. Brand Filter

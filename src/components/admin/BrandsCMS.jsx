@@ -289,8 +289,10 @@ const BrandsCMS = () => {
                          onChange={(e) => setCurrentBrand({ ...currentBrand, mainCategory: e.target.value })}
                          className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-600 focus:bg-white rounded-2xl px-5 py-4 font-bold text-slate-900 transition-all outline-none"
                        >
-                          <option value="Homeopathy">Homeopathy</option>
+                          <option value="Homeopathic">Homeopathic</option>
                           <option value="Ayurveda">Ayurveda</option>
+                          <option value="Surgical/Panchkarma equipment">Surgical/Panchkarma equipment</option>
+                          <option value="Allopathic">Allopathic</option>
                           <option value="Others">Others</option>
                        </select>
                     </div>
