@@ -39,7 +39,9 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
          axios.get(`${API_BASE_URL}/brands`).catch(() => ({ data: [] }))
       ]);
       setProducts(prodRes.data || []);
-      setCategories(catRes.data?.map(c => c.name) || ['Medicines', 'Wellness']);
+      const catsData = catRes.data || [];
+      const finalCategories = catsData.length > 0 ? catsData.map(c => c.name) : ['Medicines', 'Wellness', 'Others'];
+      setCategories(finalCategories);
       setBrandList(brandRes.data || []);
     } catch (err) {
       console.error('Fetch error:', err);
@@ -247,6 +249,7 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
                        <div className="space-y-2">
                           <label className="text-xs font-bold text-slate-500">Sub Category</label>
                           <select required className="w-full bg-slate-50 p-4 rounded-xl border border-slate-100 outline-none focus:bg-white focus:border-blue-600 transition-all font-bold" value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })}>
+                             <option value="" disabled>Select Sub Category</option>
                              {categories.map(cat => (
                                <option key={cat} value={cat}>{cat}</option>
                              ))}

@@ -134,7 +134,7 @@ const BrandsCMS = () => {
             setCurrentBrand({ name: '', logoUrl: '', description: '', mainCategory: 'Others', status: 'Active' });
             setIsModalOpen(true);
           }}
-          className="bg-slate-900 hover:bg-black text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest flex items-center gap-3 transition-all shadow-xl shadow-slate-200 active:scale-95"
+          className="bg-slate-900 hover:bg-black text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-3 transition-all shadow-xl shadow-slate-200 active:scale-95 w-full md:w-auto"
         >
           <Plus size={18} /> Register New Brand
         </button>
@@ -154,7 +154,7 @@ const BrandsCMS = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
+          <table className="w-full text-left min-w-[800px]">
             <thead>
               <tr className="bg-slate-50/50 text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100">
                 <th className="px-8 py-6">Identity</th>
@@ -255,20 +255,20 @@ const BrandsCMS = () => {
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               className="relative bg-white w-full max-w-xl rounded-[40px] shadow-2xl overflow-hidden"
             >
-              <div className="p-8 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
-                <div className="flex items-center gap-4">
-                   <div className="w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center">
-                      <Building2 size={24} />
+              <div className="p-6 md:p-8 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
+                <div className="flex items-center gap-3 md:gap-4">
+                   <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center shrink-0">
+                      <Building2 size={20} className="md:w-6 md:h-6" />
                    </div>
                    <div>
-                      <h3 className="text-xl font-black text-slate-950 italic tracking-tighter uppercase">{currentBrand._id ? 'Edit Brand Identity' : 'Initialize New Partner'}</h3>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{currentBrand._id ? 'Update existing therapeutic provider' : 'Add a new member to the ecosystem'}</p>
+                      <h3 className="text-lg md:text-xl font-black text-slate-950 italic tracking-tighter uppercase">{currentBrand._id ? 'Edit Brand Identity' : 'Initialize New Partner'}</h3>
+                      <p className="text-[8px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest">{currentBrand._id ? 'Update existing therapeutic provider' : 'Add a new member to the ecosystem'}</p>
                    </div>
                 </div>
                 <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-900 p-2"><X size={24} /></button>
               </div>
 
-              <form onSubmit={handleSave} className="p-10 space-y-8">
+              <form onSubmit={handleSave} className="p-6 md:p-10 space-y-6 md:space-y-8 max-h-[80vh] overflow-y-auto no-scrollbar">
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-2">
                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Brand Name</label>
@@ -314,8 +314,8 @@ const BrandsCMS = () => {
 
                  <div className="space-y-2">
                     <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Identity Asset (Logo)</label>
-                    <div className="flex items-center gap-6 p-6 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200 group hover:border-blue-600/30 transition-all">
-                       <div className="w-24 h-24 bg-white rounded-2xl border border-slate-100 flex items-center justify-center overflow-hidden shrink-0 shadow-sm">
+                    <div className="flex flex-col md:flex-row items-center gap-6 p-6 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200 group hover:border-blue-600/30 transition-all text-center md:text-left">
+                       <div className="w-24 h-24 bg-white rounded-2xl border border-slate-100 flex items-center justify-center overflow-hidden shrink-0 shadow-sm mx-auto md:mx-0">
                           {uploading ? (
                              <Loader2 size={32} className="text-blue-600 animate-spin" />
                           ) : currentBrand.logoUrl ? (
