@@ -405,12 +405,21 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
                           </label>
                           <label className="flex items-center gap-3 cursor-pointer group">
                              <div 
-                               onClick={() => setFormData({ ...formData, showOnHome: !formData.showOnHome })}
-                               className={`w-10 h-6 rounded-full p-1 transition-all ${formData.showOnHome ? 'bg-emerald-600' : 'bg-slate-300'}`}
+                               onClick={() => setFormData({ ...formData, isFeatured: !formData.isFeatured })}
+                               className={`w-10 h-6 rounded-full p-1 transition-all ${formData.isFeatured ? 'bg-emerald-600' : 'bg-slate-300'}`}
                              >
-                                <div className={`w-4 h-4 bg-white rounded-full shadow-sm transition-all ${formData.showOnHome ? 'translate-x-4' : 'translate-x-0'}`} />
+                                <div className={`w-4 h-4 bg-white rounded-full shadow-sm transition-all ${formData.isFeatured ? 'translate-x-4' : 'translate-x-0'}`} />
                              </div>
-                             <span className="text-xs font-bold text-slate-600 uppercase tracking-tight">Show on Homepage</span>
+                             <span className="text-xs font-bold text-slate-600 uppercase tracking-tight">Show as Featured</span>
+                          </label>
+                          <label className="flex items-center gap-3 cursor-pointer group">
+                             <div 
+                               onClick={() => setFormData({ ...formData, isTrending: !formData.isTrending })}
+                               className={`w-10 h-6 rounded-full p-1 transition-all ${formData.isTrending ? 'bg-purple-600' : 'bg-slate-300'}`}
+                             >
+                                <div className={`w-4 h-4 bg-white rounded-full shadow-sm transition-all ${formData.isTrending ? 'translate-x-4' : 'translate-x-0'}`} />
+                             </div>
+                             <span className="text-xs font-bold text-slate-600 uppercase tracking-tight">Show as Trending</span>
                           </label>
                           <label className="flex items-center gap-3 cursor-pointer group">
                              <div 

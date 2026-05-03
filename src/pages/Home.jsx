@@ -113,6 +113,13 @@ const Home = () => {
     }
   });
 
+  // Calculate specific product displays with fallback to legacy slicing
+  const featured = homeProducts.filter(p => p.isFeatured);
+  const displayFeatured = featured.length > 0 ? featured : homeProducts.slice(0, 4);
+
+  const trending = homeProducts.filter(p => p.isTrending);
+  const displayTrending = trending.length > 0 ? trending : homeProducts.slice(0, 8).reverse().slice(0, 4);
+
   return (
     <div className="space-y-16 lg:space-y-28 pb-20 lg:pb-32 font-sans overflow-x-hidden bg-white">
       {/* 1. Hero Slider Section */}
@@ -281,7 +288,7 @@ const Home = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-          {homeProducts.slice(0, 4).map((p) => (
+          {displayFeatured.map((p) => (
             <MedicineCard key={p._id} medicine={p} onAddToCart={addToCart} />
           ))}
           {homeProducts.length === 0 && <div className="col-span-full py-20 text-center text-slate-400 font-medium border-2 border-dashed border-slate-100 rounded-3xl">No products found.</div>}
@@ -299,7 +306,7 @@ const Home = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-          {homeProducts.slice(0, 8).reverse().slice(0, 4).map((p) => (
+          {displayTrending.map((p) => (
             <MedicineCard key={p._id + '_trending'} medicine={p} onAddToCart={addToCart} />
           ))}
           {homeProducts.length === 0 && <div className="col-span-full py-20 text-center text-slate-400 font-medium border-2 border-dashed border-slate-100 rounded-3xl">No products found.</div>}
