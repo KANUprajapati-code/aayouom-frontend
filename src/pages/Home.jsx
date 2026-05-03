@@ -83,10 +83,6 @@ const Home = () => {
     }
   }, [cms?.heroBanners]);
 
-  const nextSlide = useCallback(() => setCurrentSlide(prev => (prev + 1) % (activeBanners?.length || 1)), [activeBanners]);
-  const prevSlide = useCallback(() => setCurrentSlide(prev => (prev - 1 + (activeBanners?.length || 1)) % (activeBanners?.length || 1)), [activeBanners]);
-
-
   const activeBanners = cms?.heroBanners?.length > 0
     ? cms.heroBanners
     : [{
@@ -96,6 +92,9 @@ const Home = () => {
       title2: "Bulk Medical Procurement",
       description: "A professional procurement platform for registered medical practitioners and clinics."
     }];
+
+  const nextSlide = useCallback(() => setCurrentSlide(prev => (prev + 1) % (activeBanners?.length || 1)), [activeBanners]);
+  const prevSlide = useCallback(() => setCurrentSlide(prev => (prev - 1 + (activeBanners?.length || 1)) % (activeBanners?.length || 1)), [activeBanners]);
 
   if (loading && homeProducts.length === 0) {
     return (
