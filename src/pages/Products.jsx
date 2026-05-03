@@ -461,6 +461,7 @@ const Products = () => {
               </motion.div>
             )}
           </AnimatePresence>
+          )}
         </div>
       </div>
     </motion.div>
