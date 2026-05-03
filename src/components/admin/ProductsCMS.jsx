@@ -61,7 +61,7 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
       });
       setCurrentProductId(product._id);
     } else {
-      setFormData({ name: '', brand: '', price: '', originalPrice: '', mainCategory: 'Others', category: 'Medicines', image: '', images: [], description: '', stock: 0, showOnShop: true, showOnHome: false, showOnSchemes: false, walletCashbackPercentage: 0, variants: [], schemeRules: [], freeUnitsScheme: { buy: '', free: '' } });
+      setFormData({ name: '', brand: '', price: '', originalPrice: '', mainCategory: 'Others', category: 'Medicines', image: '', images: [], description: '', stock: 0, showOnShop: true, showOnHome: false, isFeatured: false, isTrending: false, showOnSchemes: false, walletCashbackPercentage: 0, variants: [], schemeRules: [], freeUnitsScheme: { buy: '', free: '' } });
       setCurrentProductId(null);
     }
     setShowModal(true);
