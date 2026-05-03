@@ -23,11 +23,16 @@ import {
   X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 import MedicineCard from '../components/common/MedicineCard';
 import { useCart } from '../context/CartContext';
 
 const Products = () => {
   const { addToCart } = useCart();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const initialMainCategory = queryParams.get('mainCategory') || 'All';
+
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('grid');
   const [medicines, setMedicines] = useState(() => {
@@ -41,7 +46,7 @@ const Products = () => {
   const [loading, setLoading] = useState(medicines.length === 0);
 
   // Hierarchical Filter States
-  const [selectedMainCategory, setSelectedMainCategory] = useState('All'); // Homeopathy, Ayurveda, Others
+  const [selectedMainCategory, setSelectedMainCategory] = useState(initialMainCategory); // Homeopathy, Ayurveda, Others
   const [selectedBrand, setSelectedBrand] = useState('All');
   const [selectedCategory, setSelectedCategory] = useState('All'); // Clinical Segment
   const [minDiscount, setMinDiscount] = useState(0);
@@ -65,6 +70,16 @@ const Products = () => {
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const currentParams = new URLSearchParams(location.search);
+    const newMainCategory = currentParams.get('mainCategory');
+    if (newMainCategory && newMainCategory !== selectedMainCategory) {
+      setSelectedMainCategory(newMainCategory);
+      setSelectedBrand('All');
+      setSelectedCategory('All');
+    }
+  }, [location.search]);
 
   // Filter Logic
   const filteredMedicines = medicines.filter(med => {
@@ -183,28 +198,37 @@ const Products = () => {
             </div>
             <div className="p-3 space-y-1">
               {[
-                { id: 'All', label: 'Entire Matrix', icon: <Dna size={16} /> },
-                { id: 'Homeopathy', label: 'Homeopathy', icon: <Leaf size={16} /> },
-                { id: 'Ayurveda', label: 'Ayurveda', icon: <Leaf size={16} className="text-emerald-500" /> },
-                { id: 'Others', label: 'General / Others', icon: <Package size={16} /> }
+                { id: 'All', label: 'Entire Matrix', icon: <Dna size={16} />, available: true },
+                { id: 'Ayurveda', label: 'Ayurveda', icon: <Leaf size={16} className="text-emerald-500" />, available: true },
+                { id: 'Surgical/Panchkarma equipment', label: 'Surgical/Panchkarma Equipment', icon: <Stethoscope size={16} className="text-blue-500" />, available: true },
+                { id: 'Homeopathic', label: 'Homeopathic', icon: <Package size={16} className="text-purple-500" />, available: false },
+                { id: 'Allopathic', label: 'Allopathic', icon: <ShieldCheck size={16} className="text-rose-500" />, available: false }
               ].map(group => (
                 <button 
                   key={group.id}
                   onClick={() => {
-                    setSelectedMainCategory(group.id);
-                    setSelectedBrand('All');
-                    setSelectedCategory('All');
+                    if (group.available) {
+                      setSelectedMainCategory(group.id);
+                      setSelectedBrand('All');
+                      setSelectedCategory('All');
+                    }
                   }}
-                  className={`w-full text-left px-5 py-4 rounded-2xl text-sm font-black italic tracking-tight transition-all flex items-center gap-4 group ${
-                    selectedMainCategory === group.id 
-                      ? 'bg-primary-600 text-white shadow-xl shadow-primary-500/20' 
-                      : 'text-slate-500 hover:bg-primary-50 hover:text-primary-600'
+                  disabled={!group.available}
+                  className={`w-full text-left px-5 py-4 rounded-2xl text-sm font-black italic tracking-tight transition-all flex items-center justify-between group ${
+                    !group.available 
+                      ? 'opacity-50 cursor-not-allowed bg-slate-50 text-slate-400' 
+                      : selectedMainCategory === group.id 
+                        ? 'bg-primary-600 text-white shadow-xl shadow-primary-500/20' 
+                        : 'text-slate-500 hover:bg-primary-50 hover:text-primary-600'
                   }`}
                 >
-                  <span className={`${selectedMainCategory === group.id ? 'text-white' : 'text-slate-400 group-hover:text-primary-600'}`}>
-                    {group.icon}
-                  </span>
-                  <span>{group.label}</span>
+                  <div className="flex items-center gap-4">
+                    <span className={`${selectedMainCategory === group.id ? 'text-white' : 'text-slate-400 group-hover:text-primary-600'}`}>
+                      {group.icon}
+                    </span>
+                    <span>{group.label}</span>
+                  </div>
+                  {!group.available && <span className="text-[8px] uppercase tracking-widest bg-slate-200 text-slate-500 px-2 py-0.5 rounded-full not-italic">Soon</span>}
                 </button>
               ))}
             </div>

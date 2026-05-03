@@ -179,34 +179,43 @@ const Home = () => {
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-          {displayCategories.map((cat, index) => {
-            const pastelColors = ['bg-lavender', 'bg-pastel-blue', 'bg-peach', 'bg-mint', 'bg-rose', 'bg-pastel-yellow'];
-            const bgColor = pastelColors[index % pastelColors.length];
-            return (
-              <Link 
-                key={cat._id || index}
-                to={`/products?category=${cat.name}`}
-                className={`relative group overflow-hidden rounded-3xl p-6 h-64 flex flex-col justify-between transition-all duration-500 hover:scale-[1.02] hover:shadow-xl ${bgColor}`}
-              >
-                <div className="relative z-10">
-                  <h3 className="text-xl font-bold text-slate-900 leading-tight">{cat.name}</h3>
+          {[
+            { id: 'Ayurveda', name: 'Ayurveda', available: true, color: 'bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border-emerald-100' },
+            { id: 'Surgical/Panchkarma equipment', name: 'Surgical/Panchkarma Equipment', available: true, color: 'bg-blue-50 hover:bg-blue-100 text-blue-900 border-blue-100' },
+            { id: 'Homeopathic', name: 'Homeopathic', available: false, color: 'bg-slate-50 text-slate-400 border-slate-100' },
+            { id: 'Allopathic', name: 'Allopathic', available: false, color: 'bg-slate-50 text-slate-400 border-slate-100' }
+          ].map((cat, index) => {
+            const content = (
+              <div className="relative z-10 flex flex-col h-full justify-between">
+                <div>
+                  <h3 className={`text-xl font-bold leading-tight ${cat.available ? 'text-slate-900' : 'text-slate-500'}`}>{cat.name}</h3>
+                  {!cat.available && <span className="inline-block mt-2 px-2 py-1 bg-slate-200 text-slate-600 text-[10px] font-bold uppercase rounded-full tracking-widest">Coming Soon</span>}
                 </div>
-                
-                <div className="absolute right-0 bottom-0 w-32 h-32 md:w-40 md:h-40 transition-transform duration-500 group-hover:scale-110">
-                  {cat.imageUrl ? (
-                    <img src={cat.imageUrl} alt={cat.name} className="w-full h-full object-contain" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-slate-400 opacity-20">
-                       <Zap size={80} />
-                    </div>
-                  )}
-                </div>
-                
-                <div className="relative z-10 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <ArrowRight size={20} className="text-slate-900" />
-                </div>
-              </Link>
+                {cat.available && (
+                  <div className="w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity self-end mt-4 shadow-sm">
+                    <ArrowRight size={20} className="text-slate-900" />
+                  </div>
+                )}
+              </div>
             );
+
+            if (cat.available) {
+              return (
+                <Link 
+                  key={cat.id}
+                  to={`/products?mainCategory=${encodeURIComponent(cat.id)}`}
+                  className={`relative group overflow-hidden rounded-3xl p-6 h-48 border transition-all duration-500 hover:scale-[1.02] hover:shadow-xl ${cat.color}`}
+                >
+                  {content}
+                </Link>
+              );
+            } else {
+              return (
+                <div key={cat.id} className={`relative overflow-hidden rounded-3xl p-6 h-48 border opacity-70 cursor-not-allowed ${cat.color}`}>
+                  {content}
+                </div>
+              );
+            }
           })}
         </div>
       </section>
