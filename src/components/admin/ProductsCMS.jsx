@@ -248,12 +248,19 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
                        </div>
                        <div className="space-y-2">
                           <label className="text-xs font-bold text-slate-500">Sub Category</label>
-                          <select required className="w-full bg-slate-50 p-4 rounded-xl border border-slate-100 outline-none focus:bg-white focus:border-blue-600 transition-all font-bold" value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })}>
-                             <option value="" disabled>Select Sub Category</option>
+                          <input 
+                            required 
+                            list="category-options"
+                            className="w-full bg-slate-50 p-4 rounded-xl border border-slate-100 outline-none focus:bg-white focus:border-blue-600 transition-all font-bold" 
+                            value={formData.category} 
+                            onChange={e => setFormData({ ...formData, category: e.target.value })}
+                            placeholder="Select or type new sub-category..."
+                          />
+                          <datalist id="category-options">
                              {categories.map(cat => (
-                               <option key={cat} value={cat}>{cat}</option>
+                               <option key={cat} value={cat} />
                              ))}
-                          </select>
+                          </datalist>
                        </div>
                        <div className="space-y-2">
                           <label className="text-xs font-bold text-slate-500">Stock</label>

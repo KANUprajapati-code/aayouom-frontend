@@ -253,9 +253,9 @@ const BrandsCMS = () => {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative bg-white w-full max-w-xl rounded-[40px] shadow-2xl overflow-hidden"
+              className="relative bg-white w-full max-w-xl rounded-[40px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
             >
-              <div className="p-6 md:p-8 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
+              <div className="p-6 md:p-8 border-b border-slate-50 flex items-center justify-between bg-slate-50/50 shrink-0">
                 <div className="flex items-center gap-3 md:gap-4">
                    <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center shrink-0">
                       <Building2 size={20} className="md:w-6 md:h-6" />
@@ -268,7 +268,7 @@ const BrandsCMS = () => {
                 <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-900 p-2"><X size={24} /></button>
               </div>
 
-              <form onSubmit={handleSave} className="p-6 md:p-10 space-y-6 md:space-y-8 max-h-[80vh] overflow-y-auto no-scrollbar">
+              <form onSubmit={handleSave} className="p-6 md:p-10 space-y-6 md:space-y-8 overflow-y-auto no-scrollbar">
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-2">
                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Brand Name</label>
