@@ -24,6 +24,7 @@ const OrderHistory = () => {
   const [loading, setLoading] = useState(orders.length === 0);
   const [expandedOrderId, setExpandedOrderId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [activeStatusFilter, setActiveStatusFilter] = useState('All');
 
   const toggleOrderDetails = (orderId) => {
     setExpandedOrderId(expandedOrderId === orderId ? null : orderId);
@@ -51,9 +52,11 @@ const OrderHistory = () => {
     }
   }, [user]);
 
-  const filteredOrders = orders.filter(order => 
-    order._id.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredOrders = orders.filter(order => {
+    const matchesSearch = order._id.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = activeStatusFilter === 'All' || order.status === activeStatusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
   if (loading) {
     return (
@@ -88,7 +91,8 @@ const OrderHistory = () => {
          {['All', 'Pending', 'Delivered', 'Cancelled', 'Returned'].map(status => (
            <button 
              key={status}
-             className={`px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap ${status === 'All' ? 'bg-brand-green text-white shadow-lg shadow-brand-green/20' : 'bg-white border border-slate-100 text-slate-500 hover:bg-slate-50'}`}
+             onClick={() => setActiveStatusFilter(status)}
+             className={`px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap ${status === activeStatusFilter ? 'bg-brand-green text-white shadow-lg shadow-brand-green/20' : 'bg-white border border-slate-100 text-slate-500 hover:bg-slate-50'}`}
            >
              {status}
            </button>
