@@ -138,8 +138,26 @@ const OrdersCMS = () => {
                   </div>
                 </td>
                 <td className="p-4">
-                  <p className="font-bold text-slate-900">₹{(order.totalAmount || 0).toLocaleString()}</p>
-                  <p className="text-xs text-slate-500">{order.products?.length || 0} Items</p>
+                  <div className="space-y-2 mb-2 max-h-32 overflow-y-auto pr-1">
+                    {order.products?.map((item, idx) => {
+                      const imageSrc = item.productId?.image || 'https://via.placeholder.com/50';
+                      return (
+                        <div key={idx} className="flex items-center gap-2 bg-slate-50 p-1.5 rounded-lg border border-slate-100">
+                          <div className="w-8 h-8 bg-white rounded flex items-center justify-center shrink-0 border border-slate-100">
+                             <img src={imageSrc} alt="" className="max-w-full max-h-full object-contain" />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-xs font-bold text-slate-800 leading-tight truncate">{item.name || item.productId?.name}</p>
+                            <div className="flex gap-2 items-center">
+                              <p className="text-[10px] text-slate-500">Qty: <span className="font-bold">{item.quantity}</span></p>
+                              <p className="text-[10px] text-brand-green font-bold">₹{item.price}</p>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                  <p className="font-bold text-slate-900 mt-2 border-t border-slate-100 pt-2">Total: ₹{(order.totalAmount || 0).toLocaleString()}</p>
                 </td>
                 <td className="p-4">
                   <div className="relative inline-block w-40">
