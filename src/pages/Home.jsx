@@ -130,9 +130,9 @@ const Home = () => {
               >
                 <div className="w-full relative z-0">
                   {activeBanners[currentSlide].imageUrl ? (
-                    <img src={activeBanners[currentSlide].imageUrl} alt="" className="w-full h-auto object-contain block" />
+                    <img src={activeBanners[currentSlide].imageUrl} alt="" className="w-full h-[300px] md:h-[400px] lg:h-[500px] block" />
                   ) : (
-                    <div className="w-full aspect-[21/9] bg-slate-800 flex items-center justify-center">
+                    <div className="w-full h-[300px] md:h-[400px] lg:h-[500px] bg-slate-800 flex items-center justify-center">
                       <Sparkles size={64} className="text-slate-700" />
                     </div>
                   )}
