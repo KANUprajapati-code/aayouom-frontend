@@ -29,11 +29,20 @@ import { ShoppingBag as shoppingBagIcon, Wallet } from 'lucide-react';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(() => {
+    const cached = localStorage.getItem('admin_products_cache');
+    return cached ? JSON.parse(cached) : [];
+  });
   const [pendingUsers, setPendingUsers] = useState([]);
-  const [brandsCount, setBrandsCount] = useState(0);
-  const [categoryCount, setCategoryCount] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [brandsCount, setBrandsCount] = useState(() => {
+    const cached = localStorage.getItem('admin_brands_count');
+    return cached ? parseInt(cached) : 0;
+  });
+  const [categoryCount, setCategoryCount] = useState(() => {
+    const cached = localStorage.getItem('admin_category_count');
+    return cached ? parseInt(cached) : 0;
+  });
+  const [loading, setLoading] = useState(products.length === 0);
   const [categoryFilter, setCategoryFilter] = useState('All');
   
   const navigate = useNavigate();
@@ -57,13 +66,17 @@ const AdminDashboard = () => {
     try {
       const token = localStorage.getItem('token');
       const [prodRes, brandRes, catRes] = await Promise.all([
-        axios.get(`${API_BASE_URL}/products`),
+        axios.get(`${API_BASE_URL}/products?compact=true`),
         axios.get(`${API_BASE_URL}/brands`).catch(() => ({ data: [] })),
         axios.get(`${API_BASE_URL}/categories`).catch(() => ({ data: [] }))
       ]);
       setProducts(prodRes.data || []);
       setBrandsCount(brandRes.data?.length || 0);
       setCategoryCount(catRes.data?.length || 0);
+
+      localStorage.setItem('admin_products_cache', JSON.stringify(prodRes.data || []));
+      localStorage.setItem('admin_brands_count', (brandRes.data?.length || 0).toString());
+      localStorage.setItem('admin_category_count', (catRes.data?.length || 0).toString());
 
       if (token) {
         const userRes = await axios.get(`${API_BASE_URL}/admin/users/pending`, getAuthConfig()).catch(() => ({ data: [] }));

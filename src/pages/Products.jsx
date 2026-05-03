@@ -20,7 +20,8 @@ import {
   Leaf,
   Dna,
   Percent,
-  X
+  X,
+  ShieldCheck
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';

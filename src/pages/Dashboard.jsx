@@ -19,9 +19,15 @@ import MedicineCard from '../components/common/MedicineCard';
 
 const Dashboard = () => {
   const { user } = useAuth();
-  const [orders, setOrders] = useState([]);
-  const [wallet, setWallet] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [orders, setOrders] = useState(() => {
+    const cached = localStorage.getItem('user_orders_cache');
+    return cached ? JSON.parse(cached) : [];
+  });
+  const [wallet, setWallet] = useState(() => {
+    const cached = localStorage.getItem('user_wallet_cache');
+    return cached ? JSON.parse(cached) : null;
+  });
+  const [loading, setLoading] = useState(orders.length === 0);
   const [error, setError] = useState(null);
 
   const isAdmin = user?.role === 'admin';
@@ -36,6 +42,10 @@ const Dashboard = () => {
         ]);
         setOrders(ordersRes.data || []);
         setWallet(walletRes.data);
+        localStorage.setItem('user_orders_cache', JSON.stringify(ordersRes.data || []));
+        if (walletRes.data) {
+          localStorage.setItem('user_wallet_cache', JSON.stringify(walletRes.data));
+        }
       } catch (err) {
         console.error('Error fetching dashboard data:', err);
         setError('Failed to load dashboard data');
