@@ -95,11 +95,8 @@ const Dashboard = () => {
               Admin Panel
             </Link>
           )}
-          <Link to="/quick-order" className="btn-secondary !px-4 !py-2.5 !text-[10px] md:!text-sm">
-            <Plus size={18} className="md:w-5 md:h-5" />
-            Quick Order
-          </Link>
           <Link to="/products" className="btn-primary !px-4 !py-2.5 !text-[10px] md:!text-sm">
+            <Plus size={18} className="md:w-5 md:h-5" />
             Browse All
           </Link>
         </div>
