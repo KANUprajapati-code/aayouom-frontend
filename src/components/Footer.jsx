@@ -15,7 +15,11 @@ const Footer = () => {
           {/* Brand Column */}
           <div className="space-y-8">
             <Link to="/" className="inline-block">
-              <img src="/logo.png" alt="Logo" className="h-16 lg:h-20 object-contain brightness-0 invert" />
+              <img 
+                src="/logo.png" 
+                alt="Ayuone Logo" 
+                className="h-20 lg:h-28 object-contain brightness-0 invert" 
+              />
             </Link>
             <p className="text-white/70 font-medium leading-relaxed text-base">
               Ayuone is a premium B2B marketplace for pharmaceuticals, supplying verified healthcare essentials and wellness products across India with institutional-grade reliability.

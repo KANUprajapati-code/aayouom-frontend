@@ -19,8 +19,12 @@ const Navbar = ({ onMenuClick }) => {
             >
               <Menu size={24} />
             </button>
-            <Link to="/" className="flex items-center gap-1.5 md:gap-2 ml-1 md:ml-2 shrink-0">
-              <img src="/logo.png" alt="Logo" className="h-10 sm:h-12 md:h-16 object-contain brightness-0 invert" />
+            <Link to="/" className="inline-block">
+              <img 
+                src="/logo.png" 
+                alt="Ayuone Logo" 
+                className="h-20 lg:h-28 object-contain brightness-0 invert" 
+              />
             </Link>
           </div>
 

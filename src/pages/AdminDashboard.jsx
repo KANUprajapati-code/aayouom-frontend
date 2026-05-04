@@ -228,7 +228,11 @@ const AdminDashboard = () => {
       {/* SIDEBAR */}
       <aside className="w-72 h-screen fixed left-0 top-0 bg-white border-r border-slate-200 flex flex-col z-50">
         <div className="p-8 border-b border-slate-100 flex items-center gap-3">
-           <img src="/logo.png" alt="Logo" className="h-14 object-contain" />
+           <img 
+             src="/logo.png" 
+             alt="Logo" 
+             className="h-14 object-contain mix-blend-multiply" 
+           />
            <div>
               <h1 className="text-lg font-black text-slate-900 tracking-tight">Ayuone</h1>
               <span className="text-[9px] font-black text-blue-600 uppercase tracking-widest block">Admin Portal</span>
