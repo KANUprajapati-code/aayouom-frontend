@@ -139,6 +139,8 @@ const Checkout = () => {
     return total;
   };
 
+  const [orderRole, setOrderRole] = useState('Patient'); // 'Patient' or 'Doctor'
+
   const handlePlaceOrder = async () => {
     if (!selectedAddress) {
       alert("Please select or add a shipping address.");
@@ -165,6 +167,7 @@ const Checkout = () => {
         paymentMethod: paymentMethod,
         pointsUsed: walletDiscount,
         orderNote: orderNote,
+        orderRole: orderRole, // New field
         status: 'Pending'
       };
 
@@ -177,6 +180,7 @@ const Checkout = () => {
       const whatsappNumber = "919265401508"; 
       let message = `*📦 New Order from Ayuone*\n`;
       message += `--------------------------\n`;
+      message += `*Order For:* ${orderRole.toUpperCase()}\n`; // Added Role
       message += `*Customer:* ${selectedAddress.customerName}\n`;
       message += `*Phone:* ${selectedAddress.phone}\n`;
       message += `*Address:* ${selectedAddress.fullAddress}, ${selectedAddress.city}, ${selectedAddress.state} - ${selectedAddress.pincode}\n`;
@@ -547,8 +551,31 @@ const Checkout = () => {
 
              <AnimatePresence>
                {currentStep === 3 && (
-                 <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }} className="p-6 md:p-8 space-y-8">
-                    <div className="space-y-4">
+                  <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }} className="p-6 md:p-8 space-y-8">
+                     {/* Order Role Toggle */}
+                     <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100 space-y-4">
+                        <p className="text-xs font-black text-slate-500 uppercase tracking-widest">Who is this order for?</p>
+                        <div className="flex p-1 bg-white border border-slate-200 rounded-2xl w-full max-w-sm">
+                           <button 
+                             onClick={() => setOrderRole('Patient')}
+                             className={`flex-1 py-3 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+                               orderRole === 'Patient' ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/20' : 'text-slate-400 hover:text-slate-600'
+                             }`}
+                           >
+                             Patient
+                           </button>
+                           <button 
+                             onClick={() => setOrderRole('Doctor')}
+                             className={`flex-1 py-3 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+                               orderRole === 'Doctor' ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/20' : 'text-slate-400 hover:text-slate-600'
+                             }`}
+                           >
+                             Doctor
+                           </button>
+                        </div>
+                     </div>
+
+                     <div className="space-y-4">
                        {cart.map((item, idx) => (
                          <div key={idx} className="flex gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
                             <div className="w-20 h-20 bg-white rounded-xl border border-slate-100 p-2 flex items-center justify-center">
