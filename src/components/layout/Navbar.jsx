@@ -55,7 +55,7 @@ const Navbar = ({ onMenuClick }) => {
             
             {isAuthenticated ? (
               <Link 
-                to={user?.role === 'admin' ? '/admin/dashboard' : '/dashboard'}
+                to={user?.role === 'admin' ? '/admin/dashboard' : '/profile'}
                 className="flex items-center gap-3 p-1 pl-3 hover:bg-white/5 rounded-2xl transition-all border border-transparent hover:border-white/10 group"
               >
                 <div className="hidden text-right lg:block">
