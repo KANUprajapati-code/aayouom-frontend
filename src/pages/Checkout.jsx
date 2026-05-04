@@ -45,11 +45,20 @@ const Checkout = () => {
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [showAddressForm, setShowAddressForm] = useState(false);
   const [useWalletPoints, setUseWalletPoints] = useState(false);
+  const [useWalletCash, setUseWalletCash] = useState(false);
   
   const finalCodCharge = paymentMethod === 'COD' ? COD_CHARGE : 0;
   const rawTotal = subtotal + SHIPPING_CHARGE + finalCodCharge;
-  const walletDiscount = useWalletPoints ? Math.min(wallet?.points || 0, rawTotal) : 0;
-  const finalPayableAmount = rawTotal - walletDiscount;
+  
+  // Points Discount
+  const walletPointsDiscount = useWalletPoints ? Math.min(wallet?.points || 0, rawTotal) : 0;
+  
+  // Cash Discount (calculated after points discount)
+  const remainingAfterPoints = rawTotal - walletPointsDiscount;
+  const walletCashDiscount = useWalletCash ? Math.min(wallet?.balance || 0, remainingAfterPoints) : 0;
+  
+  const totalWalletDiscount = walletPointsDiscount + walletCashDiscount;
+  const finalPayableAmount = rawTotal - totalWalletDiscount;
   
   const [newAddress, setNewAddress] = useState({
     customerName: '',
@@ -175,9 +184,10 @@ const Checkout = () => {
         shippingCharge: SHIPPING_CHARGE,
         codCharge: finalCodCharge,
         paymentMethod: paymentMethod,
-        pointsUsed: walletDiscount,
+        pointsUsed: walletPointsDiscount,
+        cashUsed: walletCashDiscount,
         orderNote: orderNote,
-        orderRole: orderRole, // New field
+        orderRole: orderRole, 
         status: 'Pending'
       };
 
@@ -190,7 +200,7 @@ const Checkout = () => {
       const whatsappNumber = "919265401508"; 
       let message = `*📦 New Order from Ayuone*\n`;
       message += `--------------------------\n`;
-      message += `*Order For:* ${orderRole.toUpperCase()}\n`; // Added Role
+      message += `*Order For:* ${orderRole.toUpperCase()}\n`; 
       message += `*Customer:* ${selectedAddress.customerName}\n`;
       message += `*Phone:* ${selectedAddress.phone}\n`;
       message += `*Address:* ${selectedAddress.fullAddress}, ${selectedAddress.city}, ${selectedAddress.state} - ${selectedAddress.pincode}\n`;
@@ -205,7 +215,8 @@ const Checkout = () => {
       message += `Subtotal: ₹${subtotal.toLocaleString()}\n`;
       message += `Shipping: ₹${SHIPPING_CHARGE}\n`;
       if (paymentMethod === 'COD') message += `COD Fee: ₹${COD_CHARGE}\n`;
-      if (walletDiscount > 0) message += `Wallet Discount: -₹${walletDiscount}\n`;
+      if (walletPointsDiscount > 0) message += `Points Discount: -₹${walletPointsDiscount}\n`;
+      if (walletCashDiscount > 0) message += `Wallet Cash: -₹${walletCashDiscount}\n`;
       message += `*Total Payable: ₹${finalPayableAmount.toLocaleString()}*\n`;
       message += `\n*Payment Method:* ${paymentMethod}\n`;
       if (orderNote) message += `*Note:* ${orderNote}\n`;
@@ -655,47 +666,84 @@ const Checkout = () => {
                    </div>
                  )}
                   {wallet && (
-                    <div className="flex flex-col gap-3 mt-4 p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
-                      <div className="flex items-center justify-between">
-                        <div className="flex flex-col">
-                          <span className="text-[10px] font-black text-emerald-900 uppercase tracking-widest flex items-center gap-1.5">
-                            <Gift size={14} className="text-amber-500" /> Loyalty Points
-                          </span>
-                          <span className="text-xs font-black text-slate-900 mt-0.5">
-                            {wallet.points || 0} Pts Available
-                          </span>
-                        </div>
-                        {(wallet.points || 0) > 0 ? (
-                          <label className="relative inline-flex items-center cursor-pointer">
-                            <input 
-                              type="checkbox" 
-                              className="sr-only peer" 
-                              checked={useWalletPoints} 
-                              onChange={() => setUseWalletPoints(!useWalletPoints)} 
-                            />
-                            <div className="w-11 h-6 bg-emerald-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600 shadow-inner"></div>
-                          </label>
-                        ) : (
-                          <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest bg-white/60 px-2 py-1 rounded-md border border-slate-100">Zero</span>
-                        )}
-                      </div>
-                      
-                      <div className="pt-2 border-t border-emerald-100 flex items-center justify-between">
-                         <span className="text-[9px] font-bold text-emerald-700 uppercase tracking-tighter">1 Point = ₹1 Discount</span>
-                         {wallet.balance > 0 && (
-                            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
-                               Cash: ₹{wallet.balance}
+                    <div className="space-y-3 mt-4">
+                      {/* Loyalty Points Toggle */}
+                      <div className="flex flex-col gap-3 p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
+                        <div className="flex items-center justify-between">
+                          <div className="flex flex-col">
+                            <span className="text-[10px] font-black text-emerald-900 uppercase tracking-widest flex items-center gap-1.5">
+                              <Gift size={14} className="text-amber-500" /> Loyalty Points
                             </span>
-                         )}
+                            <span className="text-xs font-black text-slate-900 mt-0.5">
+                              {wallet.points || 0} Pts Available
+                            </span>
+                          </div>
+                          {(wallet.points || 0) > 0 ? (
+                            <label className="relative inline-flex items-center cursor-pointer">
+                              <input 
+                                type="checkbox" 
+                                className="sr-only peer" 
+                                checked={useWalletPoints} 
+                                onChange={() => setUseWalletPoints(!useWalletPoints)} 
+                              />
+                              <div className="w-11 h-6 bg-emerald-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600 shadow-inner"></div>
+                            </label>
+                          ) : (
+                            <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest bg-white/60 px-2 py-1 rounded-md border border-slate-100">Zero</span>
+                          )}
+                        </div>
+                        <div className="pt-2 border-t border-emerald-100">
+                           <span className="text-[9px] font-bold text-emerald-700 uppercase tracking-tighter">1 Point = ₹1 Discount</span>
+                        </div>
+                      </div>
+
+                      {/* Wallet Cash Toggle */}
+                      <div className="flex flex-col gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                        <div className="flex items-center justify-between">
+                          <div className="flex flex-col">
+                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-1.5">
+                              <Wallet size={14} className="text-slate-400" /> Wallet Cash
+                            </span>
+                            <span className="text-xs font-black text-slate-900 mt-0.5">
+                              ₹{wallet.balance || 0} Available
+                            </span>
+                          </div>
+                          {(wallet.balance || 0) > 0 ? (
+                            <label className="relative inline-flex items-center cursor-pointer">
+                              <input 
+                                type="checkbox" 
+                                className="sr-only peer" 
+                                checked={useWalletCash} 
+                                onChange={() => setUseWalletCash(!useWalletCash)} 
+                              />
+                              <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-slate-900 shadow-inner"></div>
+                            </label>
+                          ) : (
+                            <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest bg-white/60 px-2 py-1 rounded-md border border-slate-100">Zero</span>
+                          )}
+                        </div>
+                        <div className="pt-2 border-t border-slate-200">
+                           <span className="text-[9px] font-bold text-slate-500 uppercase tracking-tighter">Use cash balance for payment</span>
+                        </div>
                       </div>
                     </div>
                   )}
-                 {useWalletPoints && walletDiscount > 0 && (
-                   <div className="flex justify-between text-sm font-bold text-emerald-600 animate-in fade-in slide-in-from-right-2 duration-300">
-                      <span>Wallet Discount Used</span>
-                      <span>-₹{walletDiscount}</span>
-                   </div>
-                 )}
+
+                  {/* Discount Summary */}
+                  <div className="space-y-2">
+                    {useWalletPoints && walletPointsDiscount > 0 && (
+                      <div className="flex justify-between text-sm font-bold text-emerald-600 animate-in fade-in slide-in-from-right-2 duration-300">
+                        <span>Points Discount</span>
+                        <span>-₹{walletPointsDiscount}</span>
+                      </div>
+                    )}
+                    {useWalletCash && walletCashDiscount > 0 && (
+                      <div className="flex justify-between text-sm font-bold text-emerald-600 animate-in fade-in slide-in-from-right-2 duration-300">
+                        <span>Wallet Cash Used</span>
+                        <span>-₹{walletCashDiscount}</span>
+                      </div>
+                    )}
+                  </div>
                  <div className="h-px bg-slate-100 w-full my-2"></div>
                  <div className="flex justify-between items-end">
                     <div>
