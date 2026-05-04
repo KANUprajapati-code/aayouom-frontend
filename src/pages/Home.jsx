@@ -17,6 +17,7 @@ import {
   Filter
 } from 'lucide-react';
 import MedicineCard from '../components/common/MedicineCard';
+import SEO from '../components/common/SEO';
 import { useCart } from '../context/CartContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -122,6 +123,11 @@ const Home = () => {
 
   return (
     <div className="space-y-16 lg:space-y-28 pb-20 lg:pb-32 font-sans overflow-x-hidden bg-white">
+      <SEO 
+        title="Home" 
+        description="Ayuone B2B Marketplace - Premium pharmaceuticals, healthcare essentials, and wellness products. Buy in bulk with verified quality and instant delivery across India."
+        keywords="Healthcare B2B, Medicine Wholesale, Ayuone Home, Pharma Supply India"
+      />
       {/* 1. Hero Slider Section */}
       <section className="relative w-full rounded-[32px] md:rounded-[48px] overflow-hidden bg-slate-900 group shadow-2xl mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-4">
         <div className="w-full relative rounded-[32px] md:rounded-[48px] overflow-hidden">

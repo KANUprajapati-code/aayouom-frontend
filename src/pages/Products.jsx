@@ -27,6 +27,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import MedicineCard from '../components/common/MedicineCard';
+import SEO from '../components/common/SEO';
 import { useCart } from '../context/CartContext';
 
 const Products = () => {
@@ -164,6 +165,11 @@ const Products = () => {
       variants={containerVariants}
       className="space-y-8 pb-20"
     >
+      <SEO 
+        title="Store" 
+        description="Browse our extensive catalog of medicines, wellness products, and clinical devices. High-quality pharma supplies for B2B procurement."
+        keywords="Medicine Catalog, Buy Medicine Bulk, Healthcare Supplies, Ayuone Store"
+      />
       {/* Header & Search */}
       <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
