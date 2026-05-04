@@ -752,7 +752,7 @@ const Checkout = () => {
                     </div>
                     <div className="flex flex-col items-end">
                        <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-100">
-                          TOTAL SAVINGS: ₹{Math.floor(subtotal * 0.15 + walletDiscount).toLocaleString()}
+                          TOTAL SAVINGS: ₹{Math.floor(subtotal * 0.15 + totalWalletDiscount).toLocaleString()}
                        </span>
                     </div>
                  </div>
