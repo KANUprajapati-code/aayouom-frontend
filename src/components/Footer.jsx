@@ -18,7 +18,7 @@ const Footer = () => {
               <img 
                 src="/logo.png" 
                 alt="Ayuone Logo" 
-                className="h-20 lg:h-28 object-contain brightness-0 invert" 
+                className="h-24 lg:h-40 object-contain brightness-0 invert scale-110 origin-left" 
               />
             </Link>
             <p className="text-white/70 font-medium leading-relaxed text-base">
