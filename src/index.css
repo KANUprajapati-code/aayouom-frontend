@@ -80,9 +80,9 @@
     @apply font-heading font-bold tracking-tight text-slate-900;
   }
 
-  h1 { @apply text-4xl md:text-6xl leading-[1.1]; }
-  h2 { @apply text-3xl md:text-4xl leading-tight; }
-  h3 { @apply text-xl md:text-2xl font-bold; }
+  h1 { @apply text-3xl md:text-6xl leading-[1.1]; }
+  h2 { @apply text-2xl md:text-4xl leading-tight; }
+  h3 { @apply text-lg md:text-2xl font-bold; }
   
   p {
     @apply text-slate-500 font-medium;

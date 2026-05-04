@@ -52,6 +52,7 @@ const Products = () => {
   const [selectedBrand, setSelectedBrand] = useState('All');
   const [selectedCategory, setSelectedCategory] = useState('All'); // Clinical Segment
   const [minDiscount, setMinDiscount] = useState(0);
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -170,20 +171,26 @@ const Products = () => {
           <p className="text-text-muted mt-1 font-medium italic">Direct clinical access to {medicines.length}+ verified pharmaceuticals.</p>
         </div>
         
-        <div className="flex items-center gap-3">
-          <div className="relative group min-w-[320px]">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-600 transition-colors" size={20} />
+        <div className="flex items-center gap-2 md:gap-3">
+          <div className="relative group flex-grow md:min-w-[320px]">
+            <Search className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-600 transition-colors w-4 h-4 md:w-5 md:h-5" size={20} />
             <input 
               type="text" 
-              placeholder="Search by salt, brand, or name..."
+              placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 bg-white border border-surface-border rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all font-bold text-slate-800 placeholder:font-normal shadow-sm"
+              className="w-full pl-10 md:pl-12 pr-4 py-3 md:py-4 bg-white border border-surface-border rounded-xl md:rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all font-bold text-slate-800 placeholder:font-normal shadow-sm text-sm"
             />
           </div>
           <button 
+             onClick={() => setShowFilters(!showFilters)}
+             className="lg:hidden h-[48px] px-4 bg-primary-600 text-white rounded-xl font-black uppercase text-[10px] tracking-widest flex items-center gap-2 shadow-lg shadow-primary-600/20"
+          >
+            <Filter size={18} />
+          </button>
+          <button 
              onClick={resetFilters}
-             className="h-[56px] px-6 bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest flex items-center gap-3 hover:bg-black transition-all active:scale-95 shadow-2xl shadow-slate-900/10"
+             className="h-[48px] md:h-[56px] px-4 md:px-6 bg-slate-900 text-white rounded-xl md:rounded-2xl font-black uppercase text-[10px] tracking-widest flex items-center gap-2 md:gap-3 hover:bg-black transition-all active:scale-95 shadow-2xl shadow-slate-900/10"
           >
             <X size={18} />
             <span className="hidden md:inline">Reset</span>
@@ -193,7 +200,10 @@ const Products = () => {
 
       <div className="flex flex-col lg:flex-row gap-10">
         {/* Sidebar Hierarchical Filters */}
-        <motion.aside variants={itemVariants} className="lg:w-80 shrink-0 space-y-8">
+        <motion.aside 
+          variants={itemVariants} 
+          className={`lg:w-80 shrink-0 space-y-8 lg:block ${showFilters ? 'block' : 'hidden'}`}
+        >
           
           {/* Main Category Tree */}
           <div className="bg-white rounded-[32px] border border-slate-100 shadow-premium overflow-hidden">
@@ -356,35 +366,30 @@ const Products = () => {
 
         {/* Product Grid Area */}
         <div className="flex-grow space-y-8">
-          <motion.div variants={itemVariants} className="flex items-center justify-between bg-white p-4 rounded-3xl border border-slate-50 shadow-sm">
-            <div className="flex items-center gap-3 pl-4">
-               <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">
-                 {selectedMainCategory !== 'All' && selectedBrand === 'All' ? `Available Brands: ${availableBrands.length}` : `Matrix Capacity: ${filteredMedicines.length} NODES`}
+          <motion.div variants={itemVariants} className="flex items-center justify-between bg-white p-3 md:p-4 rounded-2xl md:rounded-3xl border border-slate-50 shadow-sm">
+            <div className="flex items-center gap-2 md:gap-3 pl-2 md:pl-4">
+               <p className="text-[8px] md:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] md:tracking-[0.3em] truncate max-w-[120px] md:max-w-none">
+                 {selectedMainCategory !== 'All' && selectedBrand === 'All' ? `Brands: ${availableBrands.length}` : `Nodes: ${filteredMedicines.length}`}
                </p>
                {selectedMainCategory !== 'All' && (
-                 <span className="px-3 py-1 bg-primary-50 text-primary-600 text-[9px] font-black uppercase rounded-full border border-primary-100 animate-in zoom-in">
+                 <span className="px-2 md:px-3 py-0.5 md:py-1 bg-primary-50 text-primary-600 text-[8px] md:text-[9px] font-black uppercase rounded-full border border-primary-100 animate-in zoom-in">
                    {selectedMainCategory}
-                 </span>
-               )}
-               {selectedBrand !== 'All' && (
-                 <span className="px-3 py-1 bg-blue-50 text-blue-600 text-[9px] font-black uppercase rounded-full border border-blue-100 animate-in zoom-in flex items-center gap-1">
-                   <Building2 size={10} /> {selectedBrand}
                  </span>
                )}
             </div>
             {!(selectedMainCategory !== 'All' && selectedBrand === 'All') && (
-              <div className="flex items-center gap-2 p-1.5 bg-slate-50 rounded-2xl">
+              <div className="flex items-center gap-1 md:gap-2 p-1 md:p-1.5 bg-slate-50 rounded-xl md:rounded-2xl">
                 <button 
                   onClick={() => setViewMode('grid')}
-                  className={`p-2.5 rounded-xl transition-all ${viewMode === 'grid' ? 'bg-white shadow-soft text-primary-600' : 'text-slate-400 hover:text-slate-600'}`}
+                  className={`p-1.5 md:p-2.5 rounded-lg md:rounded-xl transition-all ${viewMode === 'grid' ? 'bg-white shadow-soft text-primary-600' : 'text-slate-400 hover:text-slate-600'}`}
                 >
-                  <LayoutGrid size={20} />
+                  <LayoutGrid size={16} className="md:w-5 md:h-5" />
                 </button>
                 <button 
                   onClick={() => setViewMode('list')}
-                  className={`p-2.5 rounded-xl transition-all ${viewMode === 'list' ? 'bg-white shadow-soft text-primary-600' : 'text-slate-400 hover:text-slate-600'}`}
+                  className={`p-1.5 md:p-2.5 rounded-lg md:rounded-xl transition-all ${viewMode === 'list' ? 'bg-white shadow-soft text-primary-600' : 'text-slate-400 hover:text-slate-600'}`}
                 >
-                  <List size={20} />
+                  <List size={16} className="md:w-5 md:h-5" />
                 </button>
               </div>
             )}
@@ -425,7 +430,7 @@ const Products = () => {
               {filteredMedicines.length > 0 ? (
                 <motion.div 
                   layout
-                  className={`grid gap-8 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}
+                  className={`grid gap-4 md:gap-8 ${viewMode === 'grid' ? 'grid-cols-2 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}
                 >
                   {filteredMedicines.map(med => (
                     <motion.div 

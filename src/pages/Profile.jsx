@@ -112,19 +112,16 @@ const Profile = () => {
               <h2 className="text-xl font-bold text-slate-900 tracking-tight">Account Settings</h2>
            </div>
 
-           <nav className="flex flex-col gap-2">
-              <button className="flex items-center gap-3 px-4 py-3 rounded-xl bg-brand-green text-white font-bold text-sm shadow-lg shadow-brand-green/20">
-                 <User size={18} /> Profile
+           <nav className="flex flex-row md:flex-col gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
+              <button className="flex items-center gap-2 md:gap-3 px-3 md:px-4 py-2 md:py-3 rounded-lg md:rounded-xl bg-brand-green text-white font-bold text-[10px] md:text-sm shadow-lg shadow-brand-green/20 whitespace-nowrap">
+                 <User size={16} className="md:w-4.5 md:h-4.5" /> Profile
               </button>
-              <button className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 font-medium text-sm transition-colors">
-                 <Building size={18} /> Addresses
+              <button className="flex items-center gap-2 md:gap-3 px-3 md:px-4 py-2 md:py-3 rounded-lg md:rounded-xl text-slate-500 hover:bg-slate-50 font-medium text-[10px] md:text-sm transition-colors whitespace-nowrap">
+                 <Building size={16} className="md:w-4.5 md:h-4.5" /> Addresses
               </button>
-              <Link to="/orders" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 font-medium text-sm transition-colors">
-                 <Package size={18} /> Orders
+              <Link to="/orders" className="flex items-center gap-2 md:gap-3 px-3 md:px-4 py-2 md:py-3 rounded-lg md:rounded-xl text-slate-500 hover:bg-slate-50 font-medium text-[10px] md:text-sm transition-colors whitespace-nowrap">
+                 <Package size={16} className="md:w-4.5 md:h-4.5" /> Orders
               </Link>
-              <button className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 font-medium text-sm transition-colors">
-                 <ShieldCheck size={18} /> Security
-              </button>
            </nav>
         </div>
 
@@ -134,9 +131,9 @@ const Profile = () => {
            <div className="h-20 bg-brand-green w-full"></div>
 
            <div className="p-8 md:p-12 space-y-10">
-              <div className="flex items-center justify-between">
-                 <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Profile</h1>
-                 <button className="btn-primary !bg-brand-green !px-6 !py-2 !text-xs">Edit Profile</button>
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                 <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">Profile</h1>
+                 <button className="btn-primary !bg-brand-green !px-5 md:!px-6 !py-2 !text-[10px] md:!text-xs">Edit Profile</button>
               </div>
 
               {profileMessage.text && (
@@ -191,15 +188,15 @@ const Profile = () => {
                        />
                     </div>
 
-                    <div className="md:col-span-2 flex items-center gap-4 pt-4">
+                    <div className="md:col-span-2 flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-4 pt-4">
                        <button 
                          type="submit" disabled={profileLoading}
-                         className="btn-primary !bg-brand-green !px-10 !py-4"
+                         className="btn-primary !bg-brand-green !px-10 !py-3.5 md:!py-4 !text-xs md:!text-sm"
                        >
-                          {profileLoading && <Loader2 className="animate-spin mr-2" size={18} />}
+                          {profileLoading && <Loader2 className="animate-spin mr-2" size={16} />}
                           Save Changes
                        </button>
-                       <button type="button" className="btn-secondary !px-10 !py-4">Cancel</button>
+                       <button type="button" className="btn-secondary !px-10 !py-3.5 md:!py-4 !text-xs md:!text-sm">Cancel</button>
                     </div>
                  </form>
               </div>

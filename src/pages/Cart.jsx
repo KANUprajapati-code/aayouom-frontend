@@ -53,8 +53,8 @@ const Cart = () => {
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 pb-20 px-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-brand-green tracking-tight">Ayuone Cart</h1>
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <h1 className="text-2xl md:text-3xl font-bold text-brand-green tracking-tight">Ayuone Cart</h1>
         <Link to="/products" className="text-brand-green font-bold hover:underline flex items-center gap-1 text-sm">
           <Plus size={18} /> Add Medicines
         </Link>
@@ -74,37 +74,39 @@ const Cart = () => {
               {cart.map(item => (
                 <div key={item._cartId} className="p-6 grid grid-cols-1 md:grid-cols-12 gap-6 items-center group relative">
                   <div className="col-span-1 md:col-span-6 flex gap-4">
-                    <div className="w-20 h-20 bg-slate-50 rounded-2xl overflow-hidden shrink-0 border border-slate-50 p-2">
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-slate-50 rounded-xl md:rounded-2xl overflow-hidden shrink-0 border border-slate-50 p-1 md:p-2">
                       <img loading="lazy" src={item.image} alt={item.name} className="w-full h-full object-contain" />
                     </div>
-                    <div className="space-y-1">
-                      <p className="text-[10px] font-bold text-brand-green uppercase tracking-wider">{item.brand || 'Ayuone'}</p>
-                      <h3 className="text-base font-bold text-slate-900 line-clamp-2 tracking-tight leading-tight">{item.name}</h3>
-                      <p className="text-xs text-slate-400 font-medium">₹{item.price} / unit</p>
+                    <div className="space-y-0.5 md:space-y-1">
+                      <p className="text-[8px] md:text-[10px] font-bold text-brand-green uppercase tracking-wider">{item.brand || 'Ayuone'}</p>
+                      <h3 className="text-sm md:text-base font-bold text-slate-900 line-clamp-2 tracking-tight leading-tight">{item.name}</h3>
+                      <p className="text-[10px] md:text-xs text-slate-400 font-medium">₹{item.price} / unit</p>
                     </div>
                   </div>
 
-                  <div className="col-span-1 md:col-span-3 flex justify-start md:justify-center">
-                    <div className="inline-flex items-center gap-3 px-3 py-1.5 bg-slate-50 rounded-xl border border-slate-100">
+                  <div className="col-span-1 md:col-span-3 flex justify-between md:justify-center items-center">
+                    <span className="md:hidden text-[10px] font-bold text-slate-400 uppercase tracking-widest">Quantity</span>
+                    <div className="inline-flex items-center gap-3 px-2 md:px-3 py-1 md:py-1.5 bg-slate-50 rounded-lg md:rounded-xl border border-slate-100">
                       <button 
                         onClick={() => updateQuantity(item._cartId, item.quantity - 1)}
                         className="p-1 text-slate-400 hover:text-brand-green transition-all"
                       >
-                        <Minus size={14} />
+                        <Minus size={12} className="md:w-3.5 md:h-3.5" />
                       </button>
-                      <span className="text-base font-bold text-slate-900 w-6 text-center">{item.quantity}</span>
+                      <span className="text-sm md:text-base font-bold text-slate-900 w-5 md:w-6 text-center">{item.quantity}</span>
                       <button 
                         onClick={() => updateQuantity(item._cartId, item.quantity + 1)}
                         className="p-1 text-slate-400 hover:text-brand-green transition-all"
                       >
-                        <Plus size={14} />
+                        <Plus size={12} className="md:w-3.5 md:h-3.5" />
                       </button>
                     </div>
                   </div>
 
-                  <div className="col-span-1 md:col-span-3 flex items-center justify-between md:justify-end gap-4">
+                  <div className="col-span-1 md:col-span-3 flex items-center justify-between md:justify-end gap-2 md:gap-4">
+                    <span className="md:hidden text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total</span>
                     <div className="text-right">
-                       <p className="text-lg font-bold text-slate-900 tracking-tight">₹{(getFinalItemPrice(item) * item.quantity).toLocaleString()}</p>
+                       <p className="text-base md:text-lg font-bold text-slate-900 tracking-tight">₹{(getFinalItemPrice(item) * item.quantity).toLocaleString()}</p>
                     </div>
                     <button 
                       onClick={() => removeFromCart(item._cartId)}
@@ -119,16 +121,16 @@ const Cart = () => {
           </div>
 
           {/* Coupon Section - From Image */}
-          <div className="bg-white rounded-3xl border border-slate-100 p-6 flex flex-col md:flex-row gap-4 items-center">
+          <div className="bg-white rounded-2xl md:rounded-3xl border border-slate-100 p-4 md:p-6 flex flex-col md:flex-row gap-3 md:gap-4 items-center">
              <div className="relative flex-grow w-full">
-                <Tag className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                <Tag className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                 <input 
                   type="text" 
                   placeholder="Enter Coupon Code" 
-                  className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-brand-green/30 font-bold text-sm"
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-xl md:rounded-2xl focus:outline-none focus:border-brand-green/30 font-bold text-sm"
                 />
              </div>
-             <button className="w-full md:w-auto btn-primary !bg-brand-green !px-10">Apply Coupon</button>
+             <button className="w-full md:w-auto btn-primary !bg-brand-green !px-10 !py-3">Apply Coupon</button>
           </div>
 
           {/* User Request Note Section */}

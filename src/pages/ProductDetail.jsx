@@ -98,12 +98,12 @@ Link: ${window.location.origin}/product/${medicine._id}`;
       <div className="grid lg:grid-cols-2 gap-12">
         {/* Gallery Section */}
         <div className="space-y-4">
-          <div className="aspect-square rounded-[48px] bg-white border border-slate-100 p-12 flex items-center justify-center relative overflow-hidden shadow-sm group">
+          <div className="aspect-square rounded-[32px] md:rounded-[48px] bg-white border border-slate-100 p-6 md:p-12 flex items-center justify-center relative overflow-hidden shadow-sm group">
               {/* Scheme Badge Top-Left */}
-              <div className="absolute top-8 left-8 z-10 pointer-events-none">
+              <div className="absolute top-4 left-4 md:top-8 md:left-8 z-10 pointer-events-none">
                  {(medicine.scheme || (medicine.schemeRules && medicine.schemeRules.length > 0)) && (
-                   <div className="bg-brand-green text-white text-[10px] font-bold px-4 py-2 rounded-xl shadow-lg flex items-center gap-2 uppercase tracking-widest border border-white/20">
-                      <Zap size={14} className="fill-white" /> BULK SAVINGS
+                   <div className="bg-brand-green text-white text-[8px] md:text-[10px] font-bold px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl shadow-lg flex items-center gap-2 uppercase tracking-widest border border-white/20">
+                      <Zap size={12} className="md:w-3.5 md:h-3.5 fill-white" /> BULK SAVINGS
                    </div>
                  )}
               </div>
@@ -148,12 +148,12 @@ Link: ${window.location.origin}/product/${medicine._id}`;
 
         {/* Info Section */}
         <div className="space-y-8">
-           <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               <div className="flex items-center gap-2">
-                 <span className="text-[10px] font-bold text-brand-green uppercase tracking-widest bg-brand-green/5 px-3 py-1 rounded-lg border border-brand-green/10">{medicine.brand || "Ayuone Premium"}</span>
-                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{medicine.category}</span>
+                 <span className="text-[9px] md:text-[10px] font-bold text-brand-green uppercase tracking-widest bg-brand-green/5 px-2 md:px-3 py-0.5 md:py-1 rounded-lg border border-brand-green/10">{medicine.brand || "Ayuone Premium"}</span>
+                 <span className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest">{medicine.category}</span>
               </div>
-              <h1 className="text-4xl font-bold text-slate-900 leading-[1.2] tracking-tight">{medicine.name}</h1>
+              <h1 className="text-2xl md:text-4xl font-bold text-slate-900 leading-[1.2] tracking-tight">{medicine.name}</h1>
            </div>
 
            {/* Variant Selection */}
@@ -179,12 +179,12 @@ Link: ${window.location.origin}/product/${medicine._id}`;
              </div>
            )}
 
-           <div className="p-8 bg-slate-50 rounded-[40px] border border-slate-100 space-y-8">
-              <div className="flex items-end justify-between px-2">
+            <div className="p-6 md:p-8 bg-slate-50 rounded-[32px] md:rounded-[40px] border border-slate-100 space-y-6 md:space-y-8">
+              <div className="flex items-end justify-between px-1 md:px-2">
                 <div className="space-y-1">
-                   {displayOriginal && <p className="text-xs text-slate-400 line-through font-bold">MRP ₹{displayOriginal}</p>}
-                   <div className="flex items-baseline gap-3">
-                     <span className="text-5xl font-bold text-slate-900 tracking-tight">₹{displayPrice}</span>
+                   {displayOriginal && <p className="text-[10px] md:text-xs text-slate-400 line-through font-bold">MRP ₹{displayOriginal}</p>}
+                   <div className="flex items-baseline gap-2 md:gap-3">
+                     <span className="text-3xl md:text-5xl font-bold text-slate-900 tracking-tight">₹{displayPrice}</span>
                    </div>
                 </div>
                 <div className="text-right">
@@ -205,15 +205,15 @@ Link: ${window.location.origin}/product/${medicine._id}`;
                 </div>
               </div>
 
-              {(medicine.scheme || medicine.freeUnitsScheme?.buy) && (
-                <div className="p-6 bg-brand-green rounded-3xl text-white flex items-center justify-between shadow-xl shadow-brand-green/20 relative overflow-hidden group">
-                   <div className="flex items-center gap-4 relative z-10">
-                     <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md border border-white/20 shrink-0">
-                        <Zap size={24} className="fill-white" />
+               {(medicine.scheme || medicine.freeUnitsScheme?.buy) && (
+                <div className="p-4 md:p-6 bg-brand-green rounded-2xl md:rounded-3xl text-white flex items-center justify-between shadow-xl shadow-brand-green/20 relative overflow-hidden group">
+                   <div className="flex items-center gap-3 md:gap-4 relative z-10">
+                     <div className="w-10 h-10 md:w-12 md:h-12 bg-white/20 rounded-xl md:rounded-2xl flex items-center justify-center backdrop-blur-md border border-white/20 shrink-0">
+                        <Zap size={20} className="md:w-6 md:h-6 fill-white" />
                      </div>
                      <div>
-                       <p className="text-[10px] font-bold uppercase tracking-widest text-white/70 leading-none mb-1.5">Special Offer</p>
-                       <p className="text-xl font-bold tracking-tight">
+                       <p className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-white/70 leading-none mb-1 md:mb-1.5">Special Offer</p>
+                       <p className="text-lg md:text-xl font-bold tracking-tight">
                          {medicine.freeUnitsScheme?.buy 
                            ? `Buy ${medicine.freeUnitsScheme.buy} Get ${medicine.freeUnitsScheme.free} Free` 
                            : medicine.scheme}
@@ -221,7 +221,7 @@ Link: ${window.location.origin}/product/${medicine._id}`;
                      </div>
                    </div>
                 </div>
-              )}
+               )}
 
               {/* Selection & Cart Controls */}
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
@@ -259,26 +259,26 @@ Link: ${window.location.origin}/product/${medicine._id}`;
         </div>
       </div>
 
-      {/* Schemes / Bulk Discounts Table */}
+       {/* Schemes / Bulk Discounts Table */}
       {medicine.schemeRules && medicine.schemeRules.length > 0 && (
-        <section className="bg-slate-900 rounded-[48px] p-10 md:p-16 text-white relative overflow-hidden">
+        <section className="bg-slate-900 rounded-[32px] md:rounded-[48px] p-6 md:p-16 text-white relative overflow-hidden">
            <div className="absolute top-0 right-0 w-80 h-80 bg-brand-green/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
-           <div className="relative z-10 space-y-10">
+           <div className="relative z-10 space-y-8 md:space-y-10">
               <div className="space-y-2">
-                 <div className="flex items-center gap-3 text-brand-green font-bold text-[11px] uppercase tracking-widest">
-                    <Zap size={16} className="fill-brand-green" /> Yield Maximization
+                 <div className="flex items-center gap-2 md:gap-3 text-brand-green font-bold text-[10px] md:text-[11px] uppercase tracking-widest">
+                    <Zap size={14} className="md:w-4 md:h-4 fill-brand-green" /> Yield Maximization
                  </div>
-                 <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Bulk Purchase Benefits</h2>
-                 <p className="text-slate-400 text-sm font-medium max-w-xl">Save more when you stock up. These discounts are automatically applied to your cart based on quantity.</p>
+                 <h2 className="text-2xl md:text-4xl font-bold tracking-tight">Bulk Purchase Benefits</h2>
+                 <p className="text-slate-400 text-xs md:text-sm font-medium max-w-xl">Save more when you stock up. These discounts are automatically applied to your cart based on quantity.</p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
                  {medicine.schemeRules.sort((a,b) => a.minUnits - b.minUnits).map((rule, idx) => (
-                   <div key={idx} className="bg-white/5 border border-white/10 p-8 rounded-3xl text-center space-y-4 backdrop-blur-md hover:bg-white/10 transition-all group">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Min. Quantity</p>
-                      <p className="text-3xl font-bold">{rule.minUnits} Units</p>
-                      <div className="h-0.5 w-8 bg-brand-green mx-auto rounded-full group-hover:w-16 transition-all duration-500"></div>
-                      <p className="text-2xl font-bold text-brand-green">{rule.discountPercentage}% OFF</p>
+                   <div key={idx} className="bg-white/5 border border-white/10 p-4 md:p-8 rounded-2xl md:rounded-3xl text-center space-y-2 md:space-y-4 backdrop-blur-md hover:bg-white/10 transition-all group">
+                      <p className="text-[8px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest">Min. Qty</p>
+                      <p className="text-xl md:text-3xl font-bold">{rule.minUnits} Units</p>
+                      <div className="h-0.5 w-6 md:w-8 bg-brand-green mx-auto rounded-full group-hover:w-16 transition-all duration-500"></div>
+                      <p className="text-lg md:text-2xl font-bold text-brand-green">{rule.discountPercentage}% OFF</p>
                    </div>
                  ))}
               </div>
@@ -287,14 +287,14 @@ Link: ${window.location.origin}/product/${medicine._id}`;
       )}
 
       {/* Product Description */}
-      <section className="bg-white rounded-[48px] border border-slate-100 p-10 md:p-16 shadow-sm grid md:grid-cols-3 gap-12">
-         <div className="md:col-span-2 space-y-8">
+      <section className="bg-white rounded-[32px] md:rounded-[48px] border border-slate-100 p-6 md:p-16 shadow-sm grid md:grid-cols-3 gap-8 md:gap-12">
+         <div className="md:col-span-2 space-y-6 md:space-y-8">
             <div className="space-y-4">
-               <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-3">
+               <h2 className="text-xl md:text-2xl font-bold text-slate-900 flex items-center gap-3">
                   <div className="w-1.5 h-6 bg-brand-green rounded-full"></div>
                   Clinical Information
                </h2>
-               <div className="text-slate-500 text-base leading-relaxed font-medium p-8 bg-slate-50 rounded-3xl border border-slate-50">
+               <div className="text-slate-500 text-sm md:text-base leading-relaxed font-medium p-6 md:p-8 bg-slate-50 rounded-2xl md:rounded-3xl border border-slate-50">
                   {medicine.description || "Detailed clinical specifications and professional guidance are provided upon procurement."}
                </div>
             </div>

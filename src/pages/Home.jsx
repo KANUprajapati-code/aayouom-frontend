@@ -137,10 +137,10 @@ const Home = () => {
               >
                 <div className="w-full relative z-0">
                   {activeBanners[currentSlide].imageUrl ? (
-                    <img src={activeBanners[currentSlide].imageUrl} alt="" className="w-full h-[300px] md:h-[400px] lg:h-[500px] block" />
+                    <img src={activeBanners[currentSlide].imageUrl} alt="" className="w-full h-[220px] md:h-[400px] lg:h-[500px] object-cover md:object-contain block" />
                   ) : (
-                    <div className="w-full h-[300px] md:h-[400px] lg:h-[500px] bg-slate-800 flex items-center justify-center">
-                      <Sparkles size={64} className="text-slate-700" />
+                    <div className="w-full h-[220px] md:h-[400px] lg:h-[500px] bg-slate-800 flex items-center justify-center">
+                      <Sparkles size={48} className="text-slate-700 md:w-16 md:h-16" />
                     </div>
                   )}
 
@@ -163,7 +163,7 @@ const Home = () => {
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.3 }}
-                          className="text-[20px] md:text-4xl lg:text-5xl font-black text-white italic leading-[1.2] tracking-tighter"
+                          className="text-[18px] md:text-4xl lg:text-5xl font-black text-white italic leading-[1.2] tracking-tighter"
                         >
                           {activeBanners[currentSlide].title1} <br />
                           <span className="text-blue-500">{activeBanners[currentSlide].title2}</span>
@@ -174,7 +174,7 @@ const Home = () => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.4 }}
-                            className="text-[16px] text-blue-100/70 font-medium max-w-lg leading-relaxed line-clamp-2 md:line-clamp-none"
+                            className="text-[12px] md:text-[16px] text-blue-100/70 font-medium max-w-lg leading-relaxed line-clamp-2 md:line-clamp-none"
                           >
                             {activeBanners[currentSlide].description}
                           </motion.p>
@@ -203,12 +203,12 @@ const Home = () => {
 
           {/* Navigation Arrows */}
           {activeBanners.length > 1 && (
-            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-4 md:px-10 z-20 pointer-events-none">
-              <button onClick={prevSlide} className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white hover:text-slate-900 transition-all pointer-events-auto active:scale-90">
-                <ChevronLeft size={18} className="md:w-6 md:h-6" />
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-2 md:px-10 z-20 pointer-events-none">
+              <button onClick={prevSlide} className="w-7 h-7 md:w-12 md:h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white hover:text-slate-900 transition-all pointer-events-auto active:scale-90">
+                <ChevronLeft size={14} className="md:w-6 md:h-6" />
               </button>
-              <button onClick={nextSlide} className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white hover:text-slate-900 transition-all pointer-events-auto active:scale-90">
-                <ChevronRight size={18} className="md:w-6 md:h-6" />
+              <button onClick={nextSlide} className="w-7 h-7 md:w-12 md:h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white hover:text-slate-900 transition-all pointer-events-auto active:scale-90">
+                <ChevronRight size={14} className="md:w-6 md:h-6" />
               </button>
             </div>
           )}
@@ -245,12 +245,12 @@ const Home = () => {
             const content = (
               <div className="relative z-10 flex flex-col h-full justify-between">
                 <div>
-                  <h3 className={`text-xl font-bold leading-tight ${cat.available ? 'text-slate-900' : 'text-slate-500'}`}>{cat.name}</h3>
-                  {!cat.available && <span className="inline-block mt-2 px-2 py-1 bg-slate-200 text-slate-600 text-[10px] font-bold uppercase rounded-full tracking-widest">Coming Soon</span>}
+                  <h3 className={`text-lg md:text-xl font-bold leading-tight ${cat.available ? 'text-slate-900' : 'text-slate-500'}`}>{cat.name}</h3>
+                  {!cat.available && <span className="inline-block mt-2 px-2 py-1 bg-slate-200 text-slate-600 text-[8px] md:text-[10px] font-bold uppercase rounded-full tracking-widest">Coming Soon</span>}
                 </div>
                 {cat.available && (
-                  <div className="w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity self-end mt-4 shadow-sm">
-                    <ArrowRight size={20} className="text-slate-900" />
+                  <div className="w-8 h-8 md:w-10 md:h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity self-end mt-4 shadow-sm">
+                    <ArrowRight size={16} className="md:w-5 md:h-5 text-slate-900" />
                   </div>
                 )}
               </div>
@@ -261,14 +261,14 @@ const Home = () => {
                 <Link
                   key={cat.id}
                   to={`/products?mainCategory=${encodeURIComponent(cat.id)}`}
-                  className={`relative group overflow-hidden rounded-3xl p-6 h-48 border transition-all duration-500 hover:scale-[1.02] hover:shadow-xl ${cat.color}`}
+                  className={`relative group overflow-hidden rounded-2xl md:rounded-3xl p-4 md:p-6 h-40 md:h-48 border transition-all duration-500 hover:scale-[1.02] hover:shadow-xl ${cat.color}`}
                 >
                   {content}
                 </Link>
               );
             } else {
               return (
-                <div key={cat.id} className={`relative overflow-hidden rounded-3xl p-6 h-48 border opacity-70 cursor-not-allowed ${cat.color}`}>
+                <div key={cat.id} className={`relative overflow-hidden rounded-2xl md:rounded-3xl p-4 md:p-6 h-40 md:h-48 border opacity-70 cursor-not-allowed ${cat.color}`}>
                   {content}
                 </div>
               );
@@ -287,7 +287,7 @@ const Home = () => {
           <Link to="/products" className="text-brand-green font-bold text-sm hover:underline flex items-center gap-1">View All <ChevronRight size={16} /></Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
           {displayFeatured.map((p) => (
             <MedicineCard key={p._id} medicine={p} onAddToCart={addToCart} />
           ))}
@@ -305,7 +305,7 @@ const Home = () => {
           <Link to="/products?sort=trending" className="text-brand-green font-bold text-sm hover:underline flex items-center gap-1">View All <ChevronRight size={16} /></Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
           {displayTrending.map((p) => (
             <MedicineCard key={p._id + '_trending'} medicine={p} onAddToCart={addToCart} />
           ))}
@@ -320,44 +320,44 @@ const Home = () => {
           <p className="text-slate-500 font-medium text-sm max-w-2xl mx-auto">Direct institutional supply from the world's leading pharmaceutical brands.</p>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-6 md:gap-10">
+        <div className="flex flex-wrap justify-center gap-4 md:gap-10">
           {brands.map((brand) => (
             <button
               key={brand._id}
               onClick={() => setSelectedBrand(brand.name === selectedBrand ? null : brand.name)}
-              className={`group flex flex-col items-center gap-3 transition-all ${selectedBrand === brand.name ? 'scale-110' : 'opacity-70 hover:opacity-100'}`}
+              className={`group flex flex-col items-center gap-2 md:gap-3 transition-all ${selectedBrand === brand.name ? 'scale-110' : 'opacity-70 hover:opacity-100'}`}
             >
-              <div className={`w-20 h-20 md:w-28 md:h-28 rounded-2xl border flex items-center justify-center transition-all duration-300 overflow-hidden ${selectedBrand === brand.name ? 'bg-brand-green/5 border-brand-green shadow-lg' : 'bg-white border-slate-100 hover:border-slate-200'}`}>
+              <div className={`w-16 h-16 md:w-28 md:h-28 rounded-xl md:rounded-2xl border flex items-center justify-center transition-all duration-300 overflow-hidden ${selectedBrand === brand.name ? 'bg-brand-green/5 border-brand-green shadow-lg' : 'bg-white border-slate-100 hover:border-slate-200'}`}>
                 {brand.logoUrl ? (
-                  <img src={brand.logoUrl} alt={brand.name} className="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform duration-300" />
+                  <img src={brand.logoUrl} alt={brand.name} className="w-full h-full object-contain p-2 md:p-4 group-hover:scale-110 transition-transform duration-300" />
                 ) : (
-                  <span className="text-2xl font-bold text-slate-300">{brand.name.charAt(0)}</span>
+                  <span className="text-xl md:text-2xl font-bold text-slate-300">{brand.name.charAt(0)}</span>
                 )}
               </div>
-              <span className={`text-xs font-bold transition-colors ${selectedBrand === brand.name ? 'text-brand-green' : 'text-slate-500'}`}>{brand.name}</span>
+              <span className={`text-[10px] md:text-xs font-bold transition-colors ${selectedBrand === brand.name ? 'text-brand-green' : 'text-slate-500'}`}>{brand.name}</span>
             </button>
           ))}
         </div>
       </section>
 
       {/* 6. Trust Section */}
-      <section className="bg-slate-50 rounded-[48px] py-20 px-8 mx-4 sm:mx-8">
-        <div className="max-w-6xl mx-auto text-center space-y-16">
-          <div className="space-y-4">
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight" dangerouslySetInnerHTML={{ __html: cms.trustTitle || "Authentic Healthcare <br /> Solutions" }}></h2>
-            <p className="text-slate-500 text-lg max-w-2xl mx-auto font-medium leading-relaxed">
+      <section className="bg-slate-50 rounded-[32px] md:rounded-[48px] py-12 md:py-20 px-6 md:px-8 mx-4 md:mx-8">
+        <div className="max-w-6xl mx-auto text-center space-y-10 md:space-y-16">
+          <div className="space-y-3 md:space-y-4">
+            <h2 className="text-2xl md:text-5xl font-bold text-slate-900 tracking-tight" dangerouslySetInnerHTML={{ __html: cms.trustTitle || "Authentic Healthcare <br /> Solutions" }}></h2>
+            <p className="text-slate-500 text-sm md:text-lg max-w-2xl mx-auto font-medium leading-relaxed">
               {cms.trustSubtitle || "Providing a secure, high-focus platform for hospitals and independent clinics to source authentic pharmaceuticals at institutional scale."}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
             {[1, 2, 3].map(i => (
-              <div key={i} className="space-y-4 flex flex-col items-center group">
-                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-brand-green shadow-sm group-hover:bg-brand-green group-hover:text-white transition-all duration-300">
-                  {cms?.[`trustItem${i}Img`] ? <img src={cms[`trustItem${i}Img`]} alt="" className="w-full h-full object-contain" /> : <ShieldCheck size={32} />}
+              <div key={i} className="space-y-3 md:space-y-4 flex flex-col items-center group">
+                <div className="w-12 h-12 md:w-16 md:h-16 bg-white rounded-xl md:rounded-2xl flex items-center justify-center text-brand-green shadow-sm group-hover:bg-brand-green group-hover:text-white transition-all duration-300">
+                  {cms?.[`trustItem${i}Img`] ? <img src={cms[`trustItem${i}Img`]} alt="" className="w-full h-full object-contain" /> : <ShieldCheck size={28} className="md:w-8 md:h-8" />}
                 </div>
-                <h4 className="text-xl font-bold text-slate-900">{cms[`trustItem${i}Title`] || "Secure Supply Chain"}</h4>
-                <p className="text-slate-500 text-sm font-medium leading-relaxed">{cms[`trustItem${i}Desc`] || "Optimized logistics and authenticated supply chain protocols."}</p>
+                <h4 className="text-lg md:text-xl font-bold text-slate-900">{cms[`trustItem${i}Title`] || "Secure Supply Chain"}</h4>
+                <p className="text-slate-500 text-xs md:text-sm font-medium leading-relaxed">{cms[`trustItem${i}Desc`] || "Optimized logistics and authenticated supply chain protocols."}</p>
               </div>
             ))}
           </div>

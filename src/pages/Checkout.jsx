@@ -193,12 +193,12 @@ const Checkout = () => {
           <CheckCircle2 size={48} />
         </motion.div>
         <div className="space-y-4">
-           <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase">Order Confirmed!</h1>
-           <p className="text-slate-500 font-bold leading-relaxed text-lg">Thank you for your order. We've received it and will start processing it right away.</p>
+           <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter uppercase">Order Confirmed!</h1>
+           <p className="text-slate-500 font-bold leading-relaxed text-base md:text-lg">Thank you for your order. We've received it and will start processing it right away.</p>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-           <button onClick={() => navigate('/orders')} className="py-4 bg-slate-900 text-white rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-black transition-all">Track Order</button>
-           <button onClick={() => navigate('/products')} className="py-4 bg-white text-slate-900 border border-slate-200 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-slate-50 transition-all">Continue Shopping</button>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+           <button onClick={() => navigate('/orders')} className="py-3 md:py-4 bg-slate-900 text-white rounded-xl md:rounded-2xl font-black uppercase text-[10px] md:text-xs tracking-widest hover:bg-black transition-all">Track Order</button>
+           <button onClick={() => navigate('/products')} className="py-3 md:py-4 bg-white text-slate-900 border border-slate-200 rounded-xl md:rounded-2xl font-black uppercase text-[10px] md:text-xs tracking-widest hover:bg-slate-50 transition-all">Continue Shopping</button>
         </div>
       </div>
     );

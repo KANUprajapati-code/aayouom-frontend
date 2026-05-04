@@ -37,74 +37,74 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
       whileHover={{ y: -5 }}
-      className={`group flex flex-col relative bg-white rounded-3xl border-2 border-slate-200 p-4 transition-all duration-500 hover:shadow-xl hover:border-brand-green/40 h-full overflow-hidden ${isBestDeal ? 'ring-2 ring-brand-green/20 ring-offset-2' : ''}`}
+      className={`group flex flex-col relative bg-white rounded-2xl md:rounded-3xl border-2 border-slate-200 p-3 md:p-4 transition-all duration-500 hover:shadow-xl hover:border-brand-green/40 h-full overflow-hidden ${isBestDeal ? 'ring-2 ring-brand-green/20 ring-offset-2' : ''}`}
     >
       {/* Top Floating Badges */}
-      <div className="absolute top-4 left-4 z-10 flex flex-col gap-2 pointer-events-none">
+      <div className="absolute top-3 left-3 md:top-4 md:left-4 z-10 flex flex-col gap-1 md:gap-2 pointer-events-none">
         {isBestDeal && (
           <motion.div 
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-brand-green text-white text-[9px] font-bold px-3 py-1.5 rounded-lg shadow-lg flex items-center gap-1.5 uppercase tracking-wider"
+            className="bg-brand-green text-white text-[8px] md:text-[9px] font-bold px-2 md:px-3 py-1 md:py-1.5 rounded-lg shadow-lg flex items-center gap-1 md:gap-1.5 uppercase tracking-wider"
           >
-            <TrendingUp size={12} className="animate-pulse" />
+            <TrendingUp size={10} className="md:w-3 md:h-3 animate-pulse" />
             Top Deal
           </motion.div>
         )}
         
         {scheme && (
-          <div className="bg-emerald-500 text-white text-[9px] font-bold px-3 py-1.5 rounded-lg shadow-lg flex items-center gap-1.5 uppercase tracking-wider border border-emerald-400">
-            <Tag size={12} />
+          <div className="bg-emerald-500 text-white text-[8px] md:text-[9px] font-bold px-2 md:px-3 py-1 md:py-1.5 rounded-lg shadow-lg flex items-center gap-1 md:gap-1.5 uppercase tracking-wider border border-emerald-400">
+            <Tag size={10} className="md:w-3 md:h-3" />
             {scheme}
           </div>
         )}
       </div>
 
       {/* Image Block */}
-      <Link to={`/product/${_id}`} className="block relative h-56 mb-4 bg-slate-50 rounded-2xl overflow-hidden group-hover:bg-brand-green/5 transition-colors duration-500 flex items-center justify-center p-2">
+      <Link to={`/product/${_id}`} className="block relative h-40 md:h-56 mb-3 md:mb-4 bg-slate-50 rounded-xl md:rounded-2xl overflow-hidden group-hover:bg-brand-green/5 transition-colors duration-500 flex items-center justify-center p-2">
         <img loading="lazy" src={image || 'https://via.placeholder.com/300'} 
           alt={name} 
           className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 ease-out"
         />
-        <div className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-md rounded-xl text-slate-400 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-sm">
-          <Info size={16} />
+        <div className="absolute top-2 right-2 p-1.5 md:p-2 bg-white/80 backdrop-blur-md rounded-lg md:rounded-xl text-slate-400 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-sm">
+          <Info size={14} className="md:w-4 md:h-4" />
         </div>
       </Link>
 
       {/* Details Area */}
       <div className="flex flex-col flex-grow">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-[10px] font-bold text-brand-green uppercase tracking-wider bg-brand-green/5 px-2 py-1 rounded-md">
+        <div className="flex justify-between items-center mb-1.5 md:mb-2">
+          <span className="text-[9px] md:text-[10px] font-bold text-brand-green uppercase tracking-wider bg-brand-green/5 px-2 py-0.5 md:py-1 rounded-md">
             {brand || "Ayuone"}
           </span>
           <div className="flex items-center gap-1 text-slate-400">
-             <ShieldCheck size={14} className="text-brand-green" />
-             <span className="text-[9px] font-bold uppercase">Safe</span>
+             <ShieldCheck size={12} className="md:w-3.5 md:h-3.5 text-brand-green" />
+             <span className="text-[8px] md:text-[9px] font-bold uppercase">Safe</span>
           </div>
         </div>
 
-        <Link to={`/product/${_id}`} className="block mb-3">
-          <h3 className="text-base font-bold text-slate-800 line-clamp-2 group-hover:text-brand-green transition-colors tracking-tight leading-snug">
+        <Link to={`/product/${_id}`} className="block mb-2 md:mb-3">
+          <h3 className="text-sm md:text-base font-bold text-slate-800 line-clamp-2 group-hover:text-brand-green transition-colors tracking-tight leading-snug">
             {name}
           </h3>
         </Link>
         
-        <div className="mt-auto pt-4 border-t border-slate-100 border-dashed">
+        <div className="mt-auto pt-3 md:pt-4 border-t border-slate-100 border-dashed">
             {/* Pricing Matrix */}
-            <div className="flex items-baseline gap-2 mb-4">
-              <span className="text-xl font-bold text-slate-900">₹{price}</span>
+            <div className="flex items-baseline gap-1.5 md:gap-2 mb-3 md:mb-4">
+              <span className="text-lg md:text-xl font-bold text-slate-900">₹{price}</span>
               {numOriginalPrice > 0 && numOriginalPrice > numPrice && (
-                <span className="text-sm text-slate-400 line-through">₹{numOriginalPrice}</span>
+                <span className="text-[10px] md:text-sm text-slate-400 line-through">₹{numOriginalPrice}</span>
               )}
               {calculatedDiscount > 0 && (
-                <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded ml-auto">
+                <span className="text-[9px] md:text-xs font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded ml-auto">
                   {calculatedDiscount}% OFF
                 </span>
               )}
             </div>
 
             {/* Actions */}
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-1.5 md:gap-2">
               <motion.button 
                 whileTap={{ scale: 0.95 }}
                 onClick={(e) => {
@@ -112,19 +112,19 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
                   e.stopPropagation();
                   if(onAddToCart) onAddToCart(medicine);
                 }}
-                className="py-2.5 bg-brand-green hover:bg-brand-dark text-white rounded-xl transition-all flex items-center justify-center gap-2"
+                className="py-2 md:py-2.5 bg-brand-green hover:bg-brand-dark text-white rounded-lg md:rounded-xl transition-all flex items-center justify-center gap-1.5 md:gap-2"
               >
-                <ShoppingCart size={16} />
-                <span className="text-[10px] font-bold uppercase">Add</span>
+                <ShoppingCart size={14} className="md:w-4 md:h-4" />
+                <span className="text-[9px] md:text-[10px] font-bold uppercase">Add</span>
               </motion.button>
               
               <motion.button 
                 whileTap={{ scale: 0.95 }}
                 onClick={handleWhatsApp}
-                className="py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 rounded-xl transition-all flex items-center justify-center gap-2"
+                className="py-2 md:py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 rounded-lg md:rounded-xl transition-all flex items-center justify-center gap-1.5 md:gap-2"
               >
-                <MessageCircle size={16} />
-                <span className="text-[10px] font-bold uppercase">Query</span>
+                <MessageCircle size={14} className="md:w-4 md:h-4" />
+                <span className="text-[9px] md:text-[10px] font-bold uppercase">Query</span>
               </motion.button>
             </div>
         </div>
@@ -132,8 +132,8 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
       
       {/* Out of Stock Overlay */}
       {availableStock <= 0 && (
-        <div className="absolute inset-0 bg-white/80 backdrop-blur-sm rounded-3xl flex items-center justify-center z-20">
-          <div className="bg-slate-900 text-white text-[11px] font-bold px-6 py-3 rounded-2xl uppercase tracking-wider">
+        <div className="absolute inset-0 bg-white/80 backdrop-blur-sm rounded-2xl md:rounded-3xl flex items-center justify-center z-20">
+          <div className="bg-slate-900 text-white text-[10px] md:text-[11px] font-bold px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl uppercase tracking-wider">
             Out of Stock
           </div>
         </div>

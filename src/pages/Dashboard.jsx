@@ -83,23 +83,23 @@ const Dashboard = () => {
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Welcome Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Good morning, Dr. {user?.name?.split(' ')[0] || 'Member'}</h1>
-          <p className="text-text-muted mt-1">Here is what's happening with your practice today.</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-900">Good morning, Dr. {user?.name?.split(' ')[0] || 'Member'}</h1>
+          <p className="text-sm text-text-muted mt-1">Here is what's happening with your practice today.</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-2 md:gap-3">
           {isAdmin && (
             <Link to="/admin/dashboard" className="btn-secondary border-emerald-500 text-emerald-600 hover:bg-emerald-50">
               <ShieldCheck size={20} />
               Admin Panel
             </Link>
           )}
-          <Link to="/quick-order" className="btn-secondary">
-            <Plus size={20} />
+          <Link to="/quick-order" className="btn-secondary !px-4 !py-2.5 !text-[10px] md:!text-sm">
+            <Plus size={18} className="md:w-5 md:h-5" />
             Quick Order
           </Link>
-          <Link to="/products" className="btn-primary">
+          <Link to="/products" className="btn-primary !px-4 !py-2.5 !text-[10px] md:!text-sm">
             Browse All
           </Link>
         </div>
@@ -112,8 +112,8 @@ const Dashboard = () => {
             <div className={`absolute top-0 left-0 w-1 h-full bg-${stat.color}-500 group-hover:w-2 transition-all duration-300`}></div>
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-xs font-bold text-text-muted uppercase tracking-wider mb-2">{stat.label}</p>
-                <h3 className="text-3xl font-bold text-slate-900">{stat.value}</h3>
+                <p className="text-[10px] md:text-xs font-bold text-text-muted uppercase tracking-wider mb-1 md:mb-2">{stat.label}</p>
+                <h3 className="text-2xl md:text-3xl font-bold text-slate-900">{stat.value}</h3>
               </div>
               <div className={`w-12 h-12 rounded-2xl bg-${stat.color}-50 flex items-center justify-center text-${stat.color}-600`}>
                 <stat.icon size={24} />
@@ -202,8 +202,8 @@ const Dashboard = () => {
                    <p className="text-emerald-100 font-bold uppercase text-[10px] tracking-widest">Available Balance</p>
                    <Wallet className="text-emerald-200 opacity-50" size={20} />
                 </div>
-                <h3 className="text-4xl font-black tracking-tighter flex items-center gap-1">
-                   <IndianRupee size={32} strokeWidth={3} />
+                <h3 className="text-3xl md:text-4xl font-black tracking-tighter flex items-center gap-1">
+                   <IndianRupee size={24} className="md:w-8 md:h-8" strokeWidth={3} />
                    {wallet?.balance || 0}
                 </h3>
                 
