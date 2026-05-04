@@ -1,11 +1,11 @@
 import React from 'react';
-import { ShoppingCart, Search, Bell, User, Menu, LogIn } from 'lucide-react';
+import { ShoppingCart, Search, Bell, User, LogIn, LogOut } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 
-const Navbar = ({ onMenuClick }) => {
-  const { user, isAuthenticated } = useAuth();
+const Navbar = () => {
+  const { user, isAuthenticated, logout } = useAuth();
   const { cart } = useCart();
 
   return (
@@ -13,12 +13,6 @@ const Navbar = ({ onMenuClick }) => {
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="flex justify-between items-center h-16 lg:h-20 gap-4">
           <div className="flex items-center shrink-0">
-            <button
-              onClick={onMenuClick}
-              className="p-2 rounded-xl lg:hidden text-white/70 hover:text-white hover:bg-white/10"
-            >
-              <Menu size={24} />
-            </button>
             <Link to="/" className="flex items-center">
               <img 
                 src="/logo.png" 
@@ -54,17 +48,26 @@ const Navbar = ({ onMenuClick }) => {
             <div className="hidden sm:block h-6 w-[1px] bg-white/10 mx-2"></div>
             
             {isAuthenticated ? (
-              <Link 
-                to={user?.role === 'admin' ? '/admin/dashboard' : '/profile'}
-                className="flex items-center gap-3 p-1 pl-3 hover:bg-white/5 rounded-2xl transition-all border border-transparent hover:border-white/10 group"
-              >
-                <div className="hidden text-right lg:block">
-                  <p className="text-sm font-bold text-white group-hover:text-white/90 transition-colors leading-none">{user?.name?.split(' ')[0] || 'User'}</p>
-                </div>
-                <div className="w-9 h-9 bg-white/10 border border-white/20 rounded-full flex items-center justify-center text-white overflow-hidden shrink-0 group-hover:scale-105 transition-transform">
-                  <User size={20} />
-                </div>
-              </Link>
+              <div className="flex items-center gap-2">
+                <Link 
+                  to={user?.role === 'admin' ? '/admin/dashboard' : '/profile'}
+                  className="flex items-center gap-3 p-1 pl-3 hover:bg-white/5 rounded-2xl transition-all border border-transparent hover:border-white/10 group"
+                >
+                  <div className="hidden text-right lg:block">
+                    <p className="text-sm font-bold text-white group-hover:text-white/90 transition-colors leading-none">{user?.name?.split(' ')[0] || 'User'}</p>
+                  </div>
+                  <div className="w-9 h-9 bg-white/10 border border-white/20 rounded-full flex items-center justify-center text-white overflow-hidden shrink-0 group-hover:scale-105 transition-transform">
+                    <User size={20} />
+                  </div>
+                </Link>
+                <button 
+                  onClick={logout}
+                  className="p-2 text-white/70 hover:text-rose-400 transition-colors"
+                  title="Logout"
+                >
+                  <LogOut size={20} />
+                </button>
+              </div>
             ) : (
               <Link 
                 to="/login" 
