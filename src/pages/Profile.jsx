@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { User, ShieldCheck, Mail, Phone, Building, KeyRound, Loader2, CheckCircle2 } from 'lucide-react';
+import { User, ShieldCheck, Mail, Phone, Building, KeyRound, Loader2, CheckCircle2, Package } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Profile = () => {
