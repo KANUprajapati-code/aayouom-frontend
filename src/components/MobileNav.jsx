@@ -53,7 +53,7 @@ const MobileNav = () => {
 
       {/* Floating WhatsApp Button */}
       <a 
-        href="https://wa.me/911234567890" 
+        href="https://wa.me/919265401508" 
         className="md:hidden fixed bottom-24 right-5 w-14 h-14 bg-secondary-500 rounded-2xl flex items-center justify-center text-white shadow-2xl shadow-secondary-200 z-40 animate-pulse-slow cursor-pointer group hover:scale-110 transition-transform"
       >
         <MessageSquare className="w-7 h-7" />

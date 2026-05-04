@@ -25,7 +25,7 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
     e.preventDefault();
     e.stopPropagation();
     const message = `Hello Ayuone! I'm interested in buying bulk quantities of: *${name}* (Brand: ${brand}). Could you share the best negotiated price and availability?`;
-    window.open(`https://wa.me/919999988888?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(`https://wa.me/919265401508?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   const calculatedDiscount = discount || (numOriginalPrice > numPrice ? Math.round(((numOriginalPrice - numPrice) / numOriginalPrice) * 100) : 0);

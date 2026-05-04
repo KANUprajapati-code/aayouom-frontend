@@ -10,11 +10,11 @@ const Support = () => {
       icon: Phone,
       title: "Call Us",
       desc: "Mon-Sat from 9am to 6pm",
-      action: "+91 98765 43210",
+      action: "+91 92654 01508",
       color: "text-blue-600",
       bg: "bg-blue-50",
       border: "border-blue-100",
-      href: "tel:+919876543210"
+      href: "tel:+919265401508"
     },
     {
       icon: MessageCircle,
@@ -24,7 +24,7 @@ const Support = () => {
       color: "text-green-600",
       bg: "bg-green-50",
       border: "border-green-100",
-      href: "https://wa.me/919876543210"
+      href: "https://wa.me/919265401508"
     },
     {
       icon: Mail,

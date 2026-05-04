@@ -174,7 +174,7 @@ const Checkout = () => {
       });
 
       // 2. Construct WhatsApp Message
-      const whatsappNumber = "911234567890"; // Replace with actual admin number
+      const whatsappNumber = "919265401508"; 
       let message = `*📦 New Order from Ayuone*\n`;
       message += `--------------------------\n`;
       message += `*Customer:* ${selectedAddress.customerName}\n`;

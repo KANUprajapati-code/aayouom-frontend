@@ -1,5 +1,5 @@
 export const generateWhatsAppLink = (cart, customerInfo) => {
-  const phone = "911234567890"; // Replace with actual business number
+  const phone = "919265401508"; // Official business number
   
   let message = `*NEW ORDER FROM Ayuone*\n\n`;
   message += `*Customer Details:*\n`;
@@ -16,5 +16,5 @@ export const generateWhatsAppLink = (cart, customerInfo) => {
   message += `\n*Order Subtotal: ₹${subtotal}*\n`;
   message += `\nThank you for shopping with Ayuone! Please confirm the order.`;
 
-  return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+  return `https://wa.me/919265401508?text=${encodeURIComponent(message)}`;
 };

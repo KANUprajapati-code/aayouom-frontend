@@ -56,7 +56,7 @@ const ProductDetail = () => {
 
   const handleWhatsAppBuyNow = () => {
     if (!medicine) return;
-    const whatsappNumber = "917990411390"; 
+    const whatsappNumber = "919265401508"; 
     const variantStr = selectedVariant ? ` (Variant: ${selectedVariant.name})` : '';
     const message = `*📦 New Buy Request*\n` +
                    `--------------------------\n` +
