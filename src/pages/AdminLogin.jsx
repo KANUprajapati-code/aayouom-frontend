@@ -97,7 +97,7 @@ const Login = () => {
           </form>
 
           <div className="mt-10 pt-10 border-t border-slate-50 text-center">
-            <p className="text-slate-400 font-bold text-sm mb-4 italic">New to Wedome?</p>
+            <p className="text-slate-400 font-bold text-sm mb-4 italic">New to Ayuone?</p>
             <Link to="/register" className="inline-flex items-center gap-2 text-primary-600 font-black uppercase tracking-widest text-[10px] hover:text-primary-700 transition-colors">
               <UserPlus className="w-4 h-4" /> Request Access
             </Link>

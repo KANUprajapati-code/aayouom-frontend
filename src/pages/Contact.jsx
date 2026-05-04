@@ -51,7 +51,7 @@ const Contact = () => {
 
   const contactItems = [
     { icon: Phone, title: "Phone Support", info: cms?.contactPhone || "+91 123 456 7890" },
-    { icon: Mail, title: "Email Us", info: cms?.contactEmail || "support@wedome.com" },
+    { icon: Mail, title: "Email Us", info: cms?.contactEmail || "support@Ayuone.com" },
     { icon: MapPin, title: "Visit Clinic", info: cms?.contactAddress || "Healthcare Hub, Ahmedabad, India" }
   ];
 

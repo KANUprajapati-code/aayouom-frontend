@@ -67,7 +67,7 @@ const About = () => {
                       transition={{ delay: 0.2, duration: 0.8 }}
                       className="text-4xl md:text-5xl lg:text-7xl font-black text-white tracking-tighter italic uppercase"
                     >
-                        Wedome <span className="text-primary-500">Group</span>
+                        Ayuone <span className="text-primary-500">Group</span>
                     </motion.h1>
                     <motion.p 
                       initial={{ opacity: 0 }}
@@ -149,7 +149,7 @@ const About = () => {
                 <div className="bg-primary-900 rounded-[32px] md:rounded-[56px] p-8 md:p-12 lg:p-24 text-center text-white relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-80 h-80 bg-primary-600 rounded-full blur-[120px] opacity-20"></div>
                     <div className="relative z-10 space-y-10">
-                        <h2 className="text-4xl lg:text-6xl font-black italic tracking-tighter uppercase leading-tight">Ready to join the <br /> Wedome ecosystem?</h2>
+                        <h2 className="text-4xl lg:text-6xl font-black italic tracking-tighter uppercase leading-tight">Ready to join the <br /> Ayuone ecosystem?</h2>
                         <div className="flex flex-wrap justify-center gap-6">
                             <button className="bg-white text-primary-900 px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center gap-2 hover:bg-primary-50 transition-all">
                                 Partner With Us <ArrowRight size={18} />

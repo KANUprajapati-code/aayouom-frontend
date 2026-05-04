@@ -57,7 +57,7 @@ const ReferAndEarn = () => {
     {
       icon: ShieldCheck,
       title: "Friend Joins",
-      desc: "They register on Wedome using your code and get verified.",
+      desc: "They register on Ayuone using your code and get verified.",
       color: "emerald"
     },
     {
@@ -95,7 +95,7 @@ const ReferAndEarn = () => {
                 <span className="text-emerald-600 italic">Earn Rewards.</span>
               </h1>
               <p className="text-lg text-slate-500 font-bold max-w-md leading-relaxed">
-                Invite your medical community to Wedome and earn loyalty points for every successful referral. 
+                Invite your medical community to Ayuone and earn loyalty points for every successful referral. 
                 They get a welcome bonus too!
               </p>
             </motion.div>
@@ -123,8 +123,8 @@ const ReferAndEarn = () => {
                     onClick={() => {
                         if (navigator.share) {
                             navigator.share({
-                                title: 'Join Wedome!',
-                                text: `Use my referral code ${walletData?.referralCode} to get 50 bonus points on Wedome healthcare marketplace.`,
+                                title: 'Join Ayuone!',
+                                text: `Use my referral code ${walletData?.referralCode} to get 50 bonus points on Ayuone healthcare marketplace.`,
                                 url: shareLink,
                             });
                         } else {

@@ -202,7 +202,7 @@ const Promotions = () => {
         >
            <div className="relative z-10 space-y-4">
               <h2 className="text-4xl font-black text-white tracking-tighter">Never miss a <span className="text-emerald-500 italic">deal.</span></h2>
-              <p className="text-slate-400 font-bold uppercase text-[10px] tracking-[0.3em]">Join 10,000+ medical professionals already saving on Wedome</p>
+              <p className="text-slate-400 font-bold uppercase text-[10px] tracking-[0.3em]">Join 10,000+ medical professionals already saving on Ayuone</p>
               <div className="flex flex-col md:flex-row gap-4 justify-center pt-8">
                  <input 
                   type="email" 

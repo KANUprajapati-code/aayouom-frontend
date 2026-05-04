@@ -55,7 +55,7 @@ const Navbar = () => {
             <input
               type="text"
               className="block w-full bg-white border-2 border-primary-600 rounded-l-xl pl-4 pr-12 font-bold text-slate-900 placeholder:text-slate-400 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm"
-              placeholder="Search Wedome healthcare marketplace..."
+              placeholder="Search Ayuone healthcare marketplace..."
             />
             <button className="bg-secondary-400 hover:bg-secondary-500 text-slate-900 px-6 rounded-r-xl border-2 border-primary-600 border-l-0 flex items-center justify-center transition-all group active:scale-95">
               <Search className="h-5 w-5 group-hover:scale-110 transition-transform" />

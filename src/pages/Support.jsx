@@ -30,11 +30,11 @@ const Support = () => {
       icon: Mail,
       title: "Email Support",
       desc: "Expect reply in 24 hrs",
-      action: "care@wedomedoctors.com",
+      action: "care@ayuone.com",
       color: "text-orange-600",
       bg: "bg-orange-50",
       border: "border-orange-100",
-      href: "mailto:care@wedomedoctors.com"
+      href: "mailto:care@ayuone.com"
     }
   ];
 

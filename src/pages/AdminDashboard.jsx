@@ -232,7 +232,7 @@ const AdminDashboard = () => {
               W
            </div>
            <div>
-              <h1 className="text-lg font-black text-slate-900 tracking-tight">WEDOME</h1>
+              <h1 className="text-lg font-black text-slate-900 tracking-tight">Ayuone</h1>
               <span className="text-[9px] font-black text-blue-600 uppercase tracking-widest block">Admin Portal</span>
            </div>
         </div>

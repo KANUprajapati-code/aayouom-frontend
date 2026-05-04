@@ -24,7 +24,7 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
   const handleWhatsApp = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    const message = `Hello Wedome! I'm interested in buying bulk quantities of: *${name}* (Brand: ${brand}). Could you share the best negotiated price and availability?`;
+    const message = `Hello Ayuone! I'm interested in buying bulk quantities of: *${name}* (Brand: ${brand}). Could you share the best negotiated price and availability?`;
     window.open(`https://wa.me/919999988888?text=${encodeURIComponent(message)}`, '_blank');
   };
 

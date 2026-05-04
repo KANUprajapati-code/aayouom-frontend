@@ -58,7 +58,7 @@ const Register = () => {
         {/* Form Section */}
         <div className="p-8 lg:p-16 space-y-8">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Join Wedome Doctors</h1>
+            <h1 className="text-3xl font-bold text-slate-900">Join Ayuone Doctors</h1>
             <p className="text-text-muted mt-2">Set up your professional account to start bulk ordering.</p>
           </div>
 
