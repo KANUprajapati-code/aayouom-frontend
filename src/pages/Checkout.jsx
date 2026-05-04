@@ -644,20 +644,26 @@ const Checkout = () => {
                       <span className="text-amber-600">₹{COD_CHARGE}</span>
                    </div>
                  )}
-                 {userProfile?.walletPoints > 0 && (
-                   <div className="flex items-center justify-between mt-4 p-4 bg-primary-50 rounded-2xl border border-primary-100">
-                     <div className="flex flex-col">
-                       <span className="text-sm font-black text-primary-900 flex items-center gap-2">
-                         <CreditCard size={16} /> Ayuom Wallet
-                       </span>
-                       <span className="text-[10px] font-bold text-primary-600 uppercase">Bal: {userProfile.walletPoints} Points</span>
-                     </div>
-                     <label className="relative inline-flex items-center cursor-pointer">
-                       <input type="checkbox" className="sr-only peer" checked={useWalletPoints} onChange={() => setUseWalletPoints(!useWalletPoints)} />
-                       <div className="w-11 h-6 bg-primary-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
-                     </label>
-                   </div>
-                 )}
+                 {userProfile && (
+                    <div className="flex items-center justify-between mt-4 p-4 bg-primary-50 rounded-2xl border border-primary-100">
+                      <div className="flex flex-col">
+                        <span className="text-sm font-black text-primary-900 flex items-center gap-2">
+                          <CreditCard size={16} /> Ayuom Wallet
+                        </span>
+                        <span className="text-[10px] font-bold text-primary-600 uppercase tracking-wider">
+                          Balance: {userProfile.walletPoints || 0} Points
+                        </span>
+                      </div>
+                      {userProfile.walletPoints > 0 ? (
+                        <label className="relative inline-flex items-center cursor-pointer">
+                          <input type="checkbox" className="sr-only peer" checked={useWalletPoints} onChange={() => setUseWalletPoints(!useWalletPoints)} />
+                          <div className="w-11 h-6 bg-primary-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
+                        </label>
+                      ) : (
+                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest bg-white/50 px-2 py-1 rounded-md">Empty</span>
+                      )}
+                    </div>
+                  )}
                  {useWalletPoints && walletDiscount > 0 && (
                    <div className="flex justify-between text-sm font-bold text-emerald-600 animate-in fade-in slide-in-from-right-2 duration-300">
                       <span>Wallet Discount Used</span>

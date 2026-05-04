@@ -69,7 +69,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       )}
 
       <aside className={`
-        fixed top-0 left-0 bottom-0 z-50 w-64 bg-white border-r border-slate-100 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:sticky lg:top-20 lg:h-[calc(100vh-5rem)]
+        fixed top-0 left-0 bottom-0 z-50 w-64 bg-white border-r border-slate-100 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:sticky lg:top-20 lg:h-[calc(100vh-5rem)] overflow-y-auto scrollbar-thin
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         <div className="flex flex-col h-full p-4 overflow-y-auto">

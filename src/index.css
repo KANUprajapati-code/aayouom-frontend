@@ -132,5 +132,20 @@
 .bg-peach { background-color: var(--color-cat-peach); }
 .bg-mint { background-color: var(--color-cat-mint); }
 .bg-rose { background-color: var(--color-cat-rose); }
+
+/* Custom Scrollbar */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 5px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
 .bg-pastel-yellow { background-color: var(--color-cat-yellow); }
 
