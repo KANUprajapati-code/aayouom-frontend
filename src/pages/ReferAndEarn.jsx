@@ -26,7 +26,7 @@ const ReferAndEarn = () => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('https://ayuone-backend.vercel.app/api/wallet/my-wallet', {
+        const res = await axios.get('https://ayuom-backend.vercel.app/api/wallet/my-wallet', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setWalletData(res.data);

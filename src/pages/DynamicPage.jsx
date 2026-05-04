@@ -27,7 +27,7 @@ const DynamicPage = () => {
   const fetchPageData = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get(`https://ayuone-backend.vercel.app/api/pages/${slug}`);
+      const { data } = await axios.get(`https://ayuom-backend.vercel.app/api/pages/${slug}`);
       setPage(data);
     } catch (err) {
       console.error('Failed to fetch dynamic page:', err);
@@ -38,7 +38,7 @@ const DynamicPage = () => {
 
   const fetchProducts = async () => {
     try {
-      const { data } = await axios.get('https://ayuone-backend.vercel.app/api/products');
+      const { data } = await axios.get('https://ayuom-backend.vercel.app/api/products');
       setProducts(data);
     } catch (err) {
       console.error('Failed to fetch products for dynamic page:', err);

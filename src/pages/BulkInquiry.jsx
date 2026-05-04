@@ -22,7 +22,7 @@ const BulkInquiry = () => {
         setLoading(true);
         try {
             setError('');
-            await axios.post('https://ayuone-backend.vercel.app/api/bulk-orders', formData);
+            await axios.post('https://ayuom-backend.vercel.app/api/bulk-orders', formData);
             setSubmitted(true);
         } catch (err) {
             setError('System error submitting inquiry. Please text our emergency WhatsApp line.');

@@ -24,9 +24,9 @@ const Schemes = () => {
     const fetchData = async () => {
       try {
         const [contentRes, productsRes, schemesRes] = await Promise.all([
-          axios.get('https://ayuone-backend.vercel.app/api/content/schemes').catch(() => ({ data: null })),
-          axios.get('https://ayuone-backend.vercel.app/api/products?placement=schemes').catch(() => ({ data: [] })),
-          axios.get('https://ayuone-backend.vercel.app/api/schemesData').catch(() => ({ data: [] }))
+          axios.get('https://ayuom-backend.vercel.app/api/content/schemes').catch(() => ({ data: null })),
+          axios.get('https://ayuom-backend.vercel.app/api/products?placement=schemes').catch(() => ({ data: [] })),
+          axios.get('https://ayuom-backend.vercel.app/api/schemesData').catch(() => ({ data: [] }))
         ]);
         
         if (contentRes.data) {

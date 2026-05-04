@@ -46,10 +46,10 @@ const Home = () => {
     const fetchData = async () => {
       try {
         const [prodRes, cmsRes, catRes, brandsRes] = await Promise.all([
-          axios.get(`https://ayuone-backend.vercel.app/api/products?placement=home${selectedBrand ? `&brand=${selectedBrand}` : ''}`),
-          axios.get('https://ayuone-backend.vercel.app/api/content/homepage').catch(() => ({ data: {} })),
-          axios.get('https://ayuone-backend.vercel.app/api/categories').catch(() => ({ data: [] })),
-          axios.get('https://ayuone-backend.vercel.app/api/brands').catch(() => ({ data: [] }))
+          axios.get(`https://ayuom-backend.vercel.app/api/products?placement=home${selectedBrand ? `&brand=${selectedBrand}` : ''}`),
+          axios.get('https://ayuom-backend.vercel.app/api/content/homepage').catch(() => ({ data: {} })),
+          axios.get('https://ayuom-backend.vercel.app/api/categories').catch(() => ({ data: [] })),
+          axios.get('https://ayuom-backend.vercel.app/api/brands').catch(() => ({ data: [] }))
         ]);
         setHomeProducts(Array.isArray(prodRes.data) ? prodRes.data : []);
         setCms(cmsRes.data || {});

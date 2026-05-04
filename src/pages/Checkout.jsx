@@ -68,10 +68,10 @@ const Checkout = () => {
       try {
         const token = localStorage.getItem('token');
         const [profileRes, walletRes] = await Promise.all([
-          axios.get('https://ayuone-backend.vercel.app/api/auth/profile', {
+          axios.get('https://ayuom-backend.vercel.app/api/auth/profile', {
             headers: { Authorization: `Bearer ${token}` }
           }),
-          axios.get('https://ayuone-backend.vercel.app/api/wallet/my-wallet', {
+          axios.get('https://ayuom-backend.vercel.app/api/wallet/my-wallet', {
             headers: { Authorization: `Bearer ${token}` }
           }).catch(() => ({ data: { points: 0 } }))
         ]);
@@ -107,7 +107,7 @@ const Checkout = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post('https://ayuone-backend.vercel.app/api/auth/address', newAddress, {
+      const response = await axios.post('https://ayuom-backend.vercel.app/api/auth/address', newAddress, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUserProfile({ ...userProfile, addresses: response.data });
@@ -128,7 +128,7 @@ const Checkout = () => {
     
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.delete(`https://ayuone-backend.vercel.app/api/auth/address/${addressId}`, {
+      const response = await axios.delete(`https://ayuom-backend.vercel.app/api/auth/address/${addressId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUserProfile({ ...userProfile, addresses: response.data });
@@ -182,7 +182,7 @@ const Checkout = () => {
       };
 
       // 1. Save to Database
-      await axios.post('https://ayuone-backend.vercel.app/api/orders', orderPayload, {
+      await axios.post('https://ayuom-backend.vercel.app/api/orders', orderPayload, {
          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
 
