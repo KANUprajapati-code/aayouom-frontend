@@ -36,7 +36,7 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const { data } = await axios.get(`https://ayuom-backend.vercel.app/api/products/${id}`);
+        const { data } = await axios.get(`https://ayuone-backend.vercel.app/api/products/${id}`);
         setMedicine(data);
         if (data) {
            setMainImage(data.images?.length > 0 ? data.images[0] : (data.image || 'https://via.placeholder.com/400'));

@@ -37,8 +37,8 @@ const Dashboard = () => {
       try {
         const token = localStorage.getItem('token');
         const [ordersRes, walletRes] = await Promise.all([
-          axios.get('https://ayuom-backend.vercel.app/api/orders/my-orders', { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: [] })),
-          axios.get('https://ayuom-backend.vercel.app/api/wallet/my-wallet', { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: null }))
+          axios.get('https://ayuone-backend.vercel.app/api/orders/my-orders', { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: [] })),
+          axios.get('https://ayuone-backend.vercel.app/api/wallet/my-wallet', { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: null }))
         ]);
         setOrders(ordersRes.data || []);
         setWallet(walletRes.data);

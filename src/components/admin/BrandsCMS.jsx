@@ -19,7 +19,7 @@ const BrandsCMS = () => {
     status: 'Active'
   });
 
-  const API_BASE_URL = 'https://ayuom-backend.vercel.app/api';
+  const API_BASE_URL = 'https://ayuone-backend.vercel.app/api';
 
   const getAuthConfig = () => {
     const token = localStorage.getItem('token');

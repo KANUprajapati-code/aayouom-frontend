@@ -13,7 +13,7 @@ const HomePageCMS = () => {
 
   const fetchData = async () => {
     try {
-      const { data } = await axios.get('https://ayuom-backend.vercel.app/api/content/homepage');
+      const { data } = await axios.get('https://ayuone-backend.vercel.app/api/content/homepage');
       // Initialize heroBanners if empty
       if (!data.heroBanners || data.heroBanners.length === 0) {
         data.heroBanners = [{
@@ -63,7 +63,7 @@ const HomePageCMS = () => {
       const uploadData = new FormData();
       uploadData.append('image', file);
       
-      const { data } = await axios.post('https://ayuom-backend.vercel.app/api/upload', uploadData);
+      const { data } = await axios.post('https://ayuone-backend.vercel.app/api/upload', uploadData);
       handleBannerChange(index, 'imageUrl', data.url);
     } catch (error) {
        console.error("Error uploading image:", error);
@@ -76,7 +76,7 @@ const HomePageCMS = () => {
     setSaving(true);
     try {
       const token = localStorage.getItem('token');
-      await axios.put('https://ayuom-backend.vercel.app/api/content/homepage', formData, {
+      await axios.put('https://ayuone-backend.vercel.app/api/content/homepage', formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       alert('Home page content updated successfully!');

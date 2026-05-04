@@ -33,7 +33,7 @@ const WalletDashboard = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const res = await axios.get('https://ayuom-backend.vercel.app/api/wallet/my-wallet', {
+      const res = await axios.get('https://ayuone-backend.vercel.app/api/wallet/my-wallet', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setWalletData(res.data);
@@ -52,7 +52,7 @@ const WalletDashboard = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.post('https://ayuom-backend.vercel.app/api/wallet/withdraw', {
+      await axios.post('https://ayuone-backend.vercel.app/api/wallet/withdraw', {
         amount: Number(withdrawAmount),
         method: 'UPI',
         details: withdrawDetails
@@ -70,7 +70,7 @@ const WalletDashboard = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.post('https://ayuom-backend.vercel.app/api/wallet/convert-points', {
+      await axios.post('https://ayuone-backend.vercel.app/api/wallet/convert-points', {
         points: Number(convertPoints)
       }, {
         headers: { Authorization: `Bearer ${token}` }

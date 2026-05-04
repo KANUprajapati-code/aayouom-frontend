@@ -59,8 +59,8 @@ const Products = () => {
     const fetchData = async () => {
       try {
         const [prodRes, brandRes] = await Promise.all([
-          axios.get('https://ayuom-backend.vercel.app/api/products?placement=shop'),
-          axios.get('https://ayuom-backend.vercel.app/api/brands')
+          axios.get('https://ayuone-backend.vercel.app/api/products?placement=shop'),
+          axios.get('https://ayuone-backend.vercel.app/api/brands')
         ]);
         setMedicines(prodRes.data);
         setBrands(brandRes.data);

@@ -31,7 +31,7 @@ const Profile = () => {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('https://ayuom-backend.vercel.app/api/auth/profile', {
+        const res = await axios.get('https://ayuone-backend.vercel.app/api/auth/profile', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setProfileData({
@@ -57,7 +57,7 @@ const Profile = () => {
     
     try {
       const token = localStorage.getItem('token');
-      await axios.put('https://ayuom-backend.vercel.app/api/auth/profile', profileData, {
+      await axios.put('https://ayuone-backend.vercel.app/api/auth/profile', profileData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setProfileMessage({ type: 'success', text: 'Profile updated successfully!' });

@@ -34,7 +34,7 @@ const Contact = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get('https://ayuom-backend.vercel.app/api/content/homepage');
+        const { data } = await axios.get('https://ayuone-backend.vercel.app/api/content/homepage');
         setCms(data);
       } catch (err) {
         console.error('Failed to fetch Contact content:', err);
