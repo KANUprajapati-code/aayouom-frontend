@@ -49,7 +49,23 @@ const Checkout = () => {
   const [useWalletCash, setUseWalletCash] = useState(false);
   
   const finalCodCharge = paymentMethod === 'COD' ? COD_CHARGE : 0;
-  const rawTotal = subtotal + SHIPPING_CHARGE + finalCodCharge;
+  
+  // Calculate Item Total and GST
+  const itemTotals = cart.reduce((acc, item) => {
+    const price = getFinalItemPrice(item);
+    const quantity = item.quantity;
+    const itemSubtotal = price * quantity;
+    const gstAmount = itemSubtotal * ((item.gstPercentage || 0) / 100);
+    
+    return {
+      subtotal: acc.subtotal + itemSubtotal,
+      gst: acc.gst + gstAmount
+    };
+  }, { subtotal: 0, gst: 0 });
+
+  const currentSubtotal = itemTotals.subtotal;
+  const totalGST = itemTotals.gst;
+  const rawTotal = currentSubtotal + totalGST + SHIPPING_CHARGE + finalCodCharge;
   
   // Points Discount
   const walletPointsDiscount = useWalletPoints ? Math.min(wallet?.points || 0, rawTotal) : 0;
@@ -179,9 +195,13 @@ const Checkout = () => {
           name: item.name,
           variantName: item.selectedVariant?.name || '',
           quantity: item.quantity,
-          price: getFinalItemPrice(item)
+          price: getFinalItemPrice(item),
+          gstPercentage: item.gstPercentage || 0,
+          gstAmount: (getFinalItemPrice(item) * item.quantity) * ((item.gstPercentage || 0) / 100)
         })),
         totalAmount: finalPayableAmount,
+        subtotal: currentSubtotal,
+        totalGst: totalGST,
         shippingCharge: SHIPPING_CHARGE,
         codCharge: finalCodCharge,
         paymentMethod: paymentMethod,
@@ -209,11 +229,13 @@ const Checkout = () => {
       message += `\n*Items:*\n`;
       
       cart.forEach((item, index) => {
-        message += `${index + 1}. ${item.name} (${item.selectedVariant?.name || 'Standard'}) x ${item.quantity} = ₹${(getFinalItemPrice(item) * item.quantity).toLocaleString()}\n`;
+        const itemGst = (getFinalItemPrice(item) * item.quantity) * ((item.gstPercentage || 0) / 100);
+        message += `${index + 1}. ${item.name} (${item.selectedVariant?.name || 'Standard'}) x ${item.quantity} = ₹${(getFinalItemPrice(item) * item.quantity).toLocaleString()} ${item.gstPercentage > 0 ? `(+₹${itemGst.toLocaleString()} GST)` : ''}\n`;
       });
 
       message += `\n*Summary:*\n`;
-      message += `Subtotal: ₹${subtotal.toLocaleString()}\n`;
+      message += `Subtotal: ₹${currentcurrentSubtotal.toLocaleString()}\n`;
+      if (totalGST > 0) message += `Total GST: ₹${totalGST.toLocaleString()}\n`;
       message += `Shipping: ₹${SHIPPING_CHARGE}\n`;
       if (paymentMethod === 'COD') message += `COD Fee: ₹${COD_CHARGE}\n`;
       if (walletPointsDiscount > 0) message += `Points Discount: -₹${walletPointsDiscount}\n`;
@@ -654,7 +676,7 @@ const Checkout = () => {
               <div className="space-y-4">
                  <div className="flex justify-between text-sm font-bold text-slate-500">
                     <span>Order Subtotal</span>
-                    <span className="text-slate-900">₹{subtotal.toLocaleString()}</span>
+                    <span className="text-slate-900">₹{currentSubtotal.toLocaleString()}</span>
                  </div>
                  <div className="flex justify-between text-sm font-bold text-slate-500">
                     <span className="flex items-center gap-2">Logistics Fee <Info size={14} className="text-slate-300" /></span>
@@ -753,7 +775,7 @@ const Checkout = () => {
                     </div>
                     <div className="flex flex-col items-end">
                        <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-100">
-                          TOTAL SAVINGS: ₹{Math.floor(subtotal * 0.15 + totalWalletDiscount).toLocaleString()}
+                          TOTAL SAVINGS: ₹{Math.floor(currentSubtotal * 0.15 + totalWalletDiscount).toLocaleString()}
                        </span>
                     </div>
                  </div>

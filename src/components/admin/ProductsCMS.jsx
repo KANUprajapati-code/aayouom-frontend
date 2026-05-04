@@ -270,6 +270,10 @@ const ProductsCMS = ({ initialFilter = 'All' }) => {
                           <label className="text-xs font-bold text-slate-500">Wallet Cashback %</label>
                           <input type="number" min="0" max="100" className="w-full bg-slate-50 p-4 rounded-xl border border-slate-100 outline-none focus:bg-white focus:border-blue-600 transition-all font-bold" value={formData.walletCashbackPercentage} onChange={e => setFormData({ ...formData, walletCashbackPercentage: e.target.value })} placeholder="e.g. 5" />
                        </div>
+                       <div className="space-y-2">
+                          <label className="text-xs font-bold text-slate-500">GST % (Applied in Checkout)</label>
+                          <input type="number" min="0" max="100" className="w-full bg-slate-50 p-4 rounded-xl border border-slate-100 outline-none focus:bg-white focus:border-blue-600 transition-all font-bold" value={formData.gstPercentage || ''} onChange={e => setFormData({ ...formData, gstPercentage: e.target.value })} placeholder="e.g. 12" />
+                       </div>
                     </div>
 
                     <div className="space-y-2">
