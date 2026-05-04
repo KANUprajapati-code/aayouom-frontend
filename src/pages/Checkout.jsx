@@ -40,13 +40,14 @@ const Checkout = () => {
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('COD'); // COD or Prepaid
   const [userProfile, setUserProfile] = useState(null);
+  const [wallet, setWallet] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [showAddressForm, setShowAddressForm] = useState(false);
   const [useWalletPoints, setUseWalletPoints] = useState(false);
   
   const finalCodCharge = paymentMethod === 'COD' ? COD_CHARGE : 0;
   const rawTotal = subtotal + SHIPPING_CHARGE + finalCodCharge;
-  const walletDiscount = useWalletPoints ? Math.min(userProfile?.walletPoints || 0, rawTotal) : 0;
+  const walletDiscount = useWalletPoints ? Math.min(wallet?.points || 0, rawTotal) : 0;
   const finalPayableAmount = rawTotal - walletDiscount;
   
   const [newAddress, setNewAddress] = useState({
@@ -62,24 +63,32 @@ const Checkout = () => {
   });
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('https://ayuom-backend.vercel.app/api/auth/profile', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setUserProfile(response.data);
-        if (response.data.addresses && response.data.addresses.length > 0) {
-          const defaultAddr = response.data.addresses.find(a => a.isDefault) || response.data.addresses[0];
+        const [profileRes, walletRes] = await Promise.all([
+          axios.get('https://ayuom-backend.vercel.app/api/auth/profile', {
+            headers: { Authorization: `Bearer ${token}` }
+          }),
+          axios.get('https://ayuom-backend.vercel.app/api/wallet/my-wallet', {
+            headers: { Authorization: `Bearer ${token}` }
+          }).catch(() => ({ data: { points: 0 } }))
+        ]);
+
+        setUserProfile(profileRes.data);
+        setWallet(walletRes.data);
+
+        if (profileRes.data.addresses && profileRes.data.addresses.length > 0) {
+          const defaultAddr = profileRes.data.addresses.find(a => a.isDefault) || profileRes.data.addresses[0];
           setSelectedAddress(defaultAddr);
         } else {
           setShowAddressForm(true);
         }
       } catch (err) {
-        console.error('Error fetching profile:', err);
+        console.error('Error fetching checkout data:', err);
       }
     };
-    fetchProfile();
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -644,17 +653,17 @@ const Checkout = () => {
                       <span className="text-amber-600">₹{COD_CHARGE}</span>
                    </div>
                  )}
-                 {userProfile && (
+                  {wallet && (
                     <div className="flex items-center justify-between mt-4 p-4 bg-primary-50 rounded-2xl border border-primary-100">
                       <div className="flex flex-col">
                         <span className="text-sm font-black text-primary-900 flex items-center gap-2">
                           <CreditCard size={16} /> Ayuom Wallet
                         </span>
                         <span className="text-[10px] font-bold text-primary-600 uppercase tracking-wider">
-                          Balance: {userProfile.walletPoints || 0} Points
+                          Balance: {wallet.points || 0} Points
                         </span>
                       </div>
-                      {userProfile.walletPoints > 0 ? (
+                      {(wallet.points || 0) > 0 ? (
                         <label className="relative inline-flex items-center cursor-pointer">
                           <input type="checkbox" className="sr-only peer" checked={useWalletPoints} onChange={() => setUseWalletPoints(!useWalletPoints)} />
                           <div className="w-11 h-6 bg-primary-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
