@@ -53,12 +53,19 @@ const ProductDetail = () => {
     fetchProduct();
   }, [id]);
 
-  const handleInquiry = () => {
+  const handleWhatsAppBuyNow = () => {
     if (!medicine) return;
     const whatsappNumber = "917990411390"; 
     const variantStr = selectedVariant ? ` (Variant: ${selectedVariant.name})` : '';
-    const message = `Hi, I am interested in *${medicine.name}*${variantStr} (Price: ₹${selectedVariant ? selectedVariant.price : medicine.price}). Can you provide more details? 
-Link: ${window.location.origin}/product/${medicine._id}`;
+    const message = `*📦 New Buy Request*\n` +
+                   `--------------------------\n` +
+                   `*Product:* ${medicine.name}${variantStr}\n` +
+                   `*Quantity:* ${quantity}\n` +
+                   `*Price per unit:* ₹${displayPrice}\n` +
+                   `*Total Amount:* ₹${(displayPrice * quantity).toLocaleString()}\n` +
+                   `--------------------------\n` +
+                   `Link: ${window.location.origin}/product/${medicine._id}\n` +
+                   `_Sent from Ayuone Marketplace_`;
     window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
   };
 
@@ -223,38 +230,41 @@ Link: ${window.location.origin}/product/${medicine._id}`;
                 </div>
                )}
 
-              {/* Selection & Cart Controls */}
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                 <div className="flex items-center gap-6 bg-white border border-slate-100 rounded-2xl px-6 py-4">
+              {/* Selection & Action Buttons */}
+              <div className="space-y-4 pt-4">
+                 <div className="flex flex-col sm:flex-row gap-4">
+                    <div className="flex items-center justify-between bg-white border border-slate-100 rounded-2xl px-6 py-4 sm:w-40">
+                       <button 
+                         onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                         className="text-slate-400 hover:text-brand-green transition-colors"
+                       >
+                         <Minus size={18} />
+                       </button>
+                       <span className="text-xl font-bold text-slate-900">{quantity}</span>
+                       <button 
+                         onClick={() => setQuantity(quantity + 1)}
+                         className="text-slate-400 hover:text-brand-green transition-colors"
+                       >
+                         <Plus size={18} />
+                       </button>
+                    </div>
                     <button 
-                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="text-slate-400 hover:text-brand-green transition-colors"
+                      onClick={() => addToCart(medicine, quantity, selectedVariant)}
+                      className="flex-grow py-4 bg-white border-2 border-brand-green text-brand-green hover:bg-brand-green/5 rounded-2xl font-bold text-sm tracking-widest shadow-sm flex items-center justify-center gap-3 transition-all active:scale-95"
                     >
-                      <Minus size={18} />
-                    </button>
-                    <span className="text-xl font-bold w-6 text-center text-slate-900">{quantity}</span>
-                    <button 
-                      onClick={() => setQuantity(quantity + 1)}
-                      className="text-slate-400 hover:text-brand-green transition-colors"
-                    >
-                      <Plus size={18} />
+                       ADD TO CART
+                       <ShoppingCart size={18} />
                     </button>
                  </div>
+                 
                  <button 
-                   onClick={() => addToCart(medicine, quantity, selectedVariant)}
-                   className="flex-grow py-4 bg-brand-green hover:bg-brand-green/90 text-white rounded-2xl font-bold text-sm tracking-widest shadow-lg shadow-brand-green/20 flex items-center justify-center gap-3 transition-all active:scale-95"
+                   onClick={handleWhatsAppBuyNow}
+                   className="w-full py-4 bg-brand-green hover:bg-brand-green/90 text-white rounded-2xl font-bold text-sm tracking-widest shadow-lg shadow-brand-green/20 flex items-center justify-center gap-3 transition-all active:scale-95"
                  >
-                    ADD TO CART
-                    <ShoppingCart size={18} />
+                    <MessageCircle size={20} className="fill-white/20" />
+                    BUY NOW ON WHATSAPP
                  </button>
               </div>
-
-              <button 
-                onClick={handleInquiry}
-                className="w-full py-4 bg-white text-emerald-600 rounded-2xl font-bold tracking-wider text-xs flex items-center justify-center gap-3 hover:bg-emerald-50 border border-emerald-100 transition-all shadow-sm"
-              >
-                 <MessageCircle size={18} /> Contact Specialist (WhatsApp)
-              </button>
            </div>
         </div>
       </div>

@@ -168,12 +168,48 @@ const Checkout = () => {
         status: 'Pending'
       };
 
+      // 1. Save to Database
       await axios.post('https://ayuom-backend.vercel.app/api/orders', orderPayload, {
          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
 
+      // 2. Construct WhatsApp Message
+      const whatsappNumber = "911234567890"; // Replace with actual admin number
+      let message = `*📦 New Order from Ayuone*\n`;
+      message += `--------------------------\n`;
+      message += `*Customer:* ${selectedAddress.customerName}\n`;
+      message += `*Phone:* ${selectedAddress.phone}\n`;
+      message += `*Address:* ${selectedAddress.fullAddress}, ${selectedAddress.city}, ${selectedAddress.state} - ${selectedAddress.pincode}\n`;
+      if (selectedAddress.doctorName) message += `*Doctor:* ${selectedAddress.doctorName}\n`;
+      message += `\n*Items:*\n`;
+      
+      cart.forEach((item, index) => {
+        message += `${index + 1}. ${item.name} (${item.selectedVariant?.name || 'Standard'}) x ${item.quantity} = ₹${(getFinalItemPrice(item) * item.quantity).toLocaleString()}\n`;
+      });
+
+      message += `\n*Summary:*\n`;
+      message += `Subtotal: ₹${subtotal.toLocaleString()}\n`;
+      message += `Shipping: ₹${SHIPPING_CHARGE}\n`;
+      if (paymentMethod === 'COD') message += `COD Fee: ₹${COD_CHARGE}\n`;
+      if (walletDiscount > 0) message += `Wallet Discount: -₹${walletDiscount}\n`;
+      message += `*Total Payable: ₹${finalPayableAmount.toLocaleString()}*\n`;
+      message += `\n*Payment Method:* ${paymentMethod}\n`;
+      if (orderNote) message += `*Note:* ${orderNote}\n`;
+      message += `--------------------------\n`;
+      message += `_Sent from Ayuone Marketplace_`;
+
+      const encodedMessage = encodeURIComponent(message);
+      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+
+      // 3. Clear Cart and Update State
       setOrderSuccess(true);
       clearCart();
+
+      // 4. Redirect to WhatsApp (wait slightly for state update)
+      setTimeout(() => {
+        window.open(whatsappUrl, '_blank');
+      }, 1000);
+
     } catch (err) {
       console.error('Checkout failed:', err);
       alert('Order placement failed. Please try again.');
