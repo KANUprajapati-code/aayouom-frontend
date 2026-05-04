@@ -38,7 +38,7 @@ const Checkout = () => {
   const [currentStep, setCurrentStep] = useState(1); // 1: Address, 2: Payment, 3: Review
   const [loading, setLoading] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState('COD'); // COD or Prepaid
+  const [paymentMethod, setPaymentMethod] = useState('Prepaid'); // Default to Prepaid
   const [userProfile, setUserProfile] = useState(null);
   const [wallet, setWallet] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
@@ -654,23 +654,39 @@ const Checkout = () => {
                    </div>
                  )}
                   {wallet && (
-                    <div className="flex items-center justify-between mt-4 p-4 bg-primary-50 rounded-2xl border border-primary-100">
-                      <div className="flex flex-col">
-                        <span className="text-sm font-black text-primary-900 flex items-center gap-2">
-                          <CreditCard size={16} /> Ayuom Wallet
-                        </span>
-                        <span className="text-[10px] font-bold text-primary-600 uppercase tracking-wider">
-                          Balance: {wallet.points || 0} Points
-                        </span>
+                    <div className="flex flex-col gap-3 mt-4 p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
+                      <div className="flex items-center justify-between">
+                        <div className="flex flex-col">
+                          <span className="text-[10px] font-black text-emerald-900 uppercase tracking-widest flex items-center gap-1.5">
+                            <Gift size={14} className="text-amber-500" /> Loyalty Points
+                          </span>
+                          <span className="text-xs font-black text-slate-900 mt-0.5">
+                            {wallet.points || 0} Pts Available
+                          </span>
+                        </div>
+                        {(wallet.points || 0) > 0 ? (
+                          <label className="relative inline-flex items-center cursor-pointer">
+                            <input 
+                              type="checkbox" 
+                              className="sr-only peer" 
+                              checked={useWalletPoints} 
+                              onChange={() => setUseWalletPoints(!useWalletPoints)} 
+                            />
+                            <div className="w-11 h-6 bg-emerald-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600 shadow-inner"></div>
+                          </label>
+                        ) : (
+                          <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest bg-white/60 px-2 py-1 rounded-md border border-slate-100">Zero</span>
+                        )}
                       </div>
-                      {(wallet.points || 0) > 0 ? (
-                        <label className="relative inline-flex items-center cursor-pointer">
-                          <input type="checkbox" className="sr-only peer" checked={useWalletPoints} onChange={() => setUseWalletPoints(!useWalletPoints)} />
-                          <div className="w-11 h-6 bg-primary-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
-                        </label>
-                      ) : (
-                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest bg-white/50 px-2 py-1 rounded-md">Empty</span>
-                      )}
+                      
+                      <div className="pt-2 border-t border-emerald-100 flex items-center justify-between">
+                         <span className="text-[9px] font-bold text-emerald-700 uppercase tracking-tighter">1 Point = ₹1 Discount</span>
+                         {wallet.balance > 0 && (
+                            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
+                               Cash: ₹{wallet.balance}
+                            </span>
+                         )}
+                      </div>
                     </div>
                   )}
                  {useWalletPoints && walletDiscount > 0 && (
