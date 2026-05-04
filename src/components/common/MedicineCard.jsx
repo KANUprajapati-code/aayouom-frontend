@@ -73,38 +73,38 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
 
       {/* Details Area */}
       <div className="flex flex-col flex-grow">
-        <div className="flex justify-between items-center mb-1.5 md:mb-2">
-          <span className="text-[9px] md:text-[10px] font-bold text-brand-green uppercase tracking-wider bg-brand-green/5 px-2 py-0.5 md:py-1 rounded-md">
+        <div className="flex justify-between items-center mb-1 md:mb-2">
+          <span className="text-[8px] md:text-[10px] font-bold text-brand-green uppercase tracking-wider bg-brand-green/5 px-1.5 md:px-2 py-0.5 md:py-1 rounded-md">
             {brand || "Ayuone"}
           </span>
           <div className="flex items-center gap-1 text-slate-400">
-             <ShieldCheck size={12} className="md:w-3.5 md:h-3.5 text-brand-green" />
-             <span className="text-[8px] md:text-[9px] font-bold uppercase">Safe</span>
+             <ShieldCheck size={10} className="md:w-3.5 md:h-3.5 text-brand-green" />
+             <span className="text-[7px] md:text-[9px] font-bold uppercase tracking-tighter">Safe</span>
           </div>
         </div>
 
-        <Link to={`/product/${_id}`} className="block mb-2 md:mb-3">
-          <h3 className="text-sm md:text-base font-bold text-slate-800 line-clamp-2 group-hover:text-brand-green transition-colors tracking-tight leading-snug">
+        <Link to={`/product/${_id}`} className="block mb-1.5 md:mb-3">
+          <h3 className="text-[13px] md:text-base font-bold text-slate-800 line-clamp-2 group-hover:text-brand-green transition-colors tracking-tight leading-tight">
             {name}
           </h3>
         </Link>
         
-        <div className="mt-auto pt-3 md:pt-4 border-t border-slate-100 border-dashed">
+        <div className="mt-auto pt-2 md:pt-4 border-t border-slate-100 border-dashed">
             {/* Pricing Matrix */}
-            <div className="flex items-baseline gap-1.5 md:gap-2 mb-3 md:mb-4">
-              <span className="text-lg md:text-xl font-bold text-slate-900">₹{price}</span>
+            <div className="flex items-baseline gap-1 md:gap-2 mb-2 md:mb-4 flex-wrap">
+              <span className="text-base md:text-xl font-bold text-slate-900">₹{price}</span>
               {numOriginalPrice > 0 && numOriginalPrice > numPrice && (
                 <span className="text-[10px] md:text-sm text-slate-400 line-through">₹{numOriginalPrice}</span>
               )}
               {calculatedDiscount > 0 && (
-                <span className="text-[9px] md:text-xs font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded ml-auto">
+                <span className="text-[9px] md:text-xs font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded ml-auto sm:ml-0">
                   {calculatedDiscount}% OFF
                 </span>
               )}
             </div>
 
             {/* Actions */}
-            <div className="grid grid-cols-2 gap-1.5 md:gap-2">
+            <div className="grid grid-cols-2 gap-1 md:gap-2">
               <motion.button 
                 whileTap={{ scale: 0.95 }}
                 onClick={(e) => {
@@ -112,19 +112,19 @@ const MedicineCard = ({ medicine, onAddToCart }) => {
                   e.stopPropagation();
                   if(onAddToCart) onAddToCart(medicine);
                 }}
-                className="py-2 md:py-2.5 bg-brand-green hover:bg-brand-dark text-white rounded-lg md:rounded-xl transition-all flex items-center justify-center gap-1.5 md:gap-2"
+                className="py-1.5 md:py-2.5 bg-brand-green hover:bg-brand-dark text-white rounded-lg md:rounded-xl transition-all flex items-center justify-center gap-1 md:gap-2"
               >
-                <ShoppingCart size={14} className="md:w-4 md:h-4" />
-                <span className="text-[9px] md:text-[10px] font-bold uppercase">Add</span>
+                <ShoppingCart size={12} className="md:w-4 md:h-4" />
+                <span className="text-[8px] md:text-[10px] font-bold uppercase">Add</span>
               </motion.button>
               
               <motion.button 
                 whileTap={{ scale: 0.95 }}
                 onClick={handleWhatsApp}
-                className="py-2 md:py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 rounded-lg md:rounded-xl transition-all flex items-center justify-center gap-1.5 md:gap-2"
+                className="py-1.5 md:py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 rounded-lg md:rounded-xl transition-all flex items-center justify-center gap-1 md:gap-2"
               >
-                <MessageCircle size={14} className="md:w-4 md:h-4" />
-                <span className="text-[9px] md:text-[10px] font-bold uppercase">Query</span>
+                <MessageCircle size={12} className="md:w-4 md:h-4" />
+                <span className="text-[8px] md:text-[10px] font-bold uppercase">Query</span>
               </motion.button>
             </div>
         </div>

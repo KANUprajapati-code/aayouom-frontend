@@ -143,9 +143,9 @@ const Home = () => {
               >
                 <div className="w-full relative z-0">
                   {activeBanners[currentSlide].imageUrl ? (
-                    <img src={activeBanners[currentSlide].imageUrl} alt="" className="w-full h-[220px] md:h-[400px] lg:h-[500px] object-cover md:object-contain block" />
+                    <img src={activeBanners[currentSlide].imageUrl} alt="" className="w-full h-[250px] sm:h-[350px] md:h-[450px] lg:h-[550px] object-cover md:object-contain block" />
                   ) : (
-                    <div className="w-full h-[220px] md:h-[400px] lg:h-[500px] bg-slate-800 flex items-center justify-center">
+                    <div className="w-full h-[250px] sm:h-[350px] md:h-[450px] lg:h-[550px] bg-slate-800 flex items-center justify-center">
                       <Sparkles size={48} className="text-slate-700 md:w-16 md:h-16" />
                     </div>
                   )}
@@ -169,7 +169,7 @@ const Home = () => {
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.3 }}
-                          className="text-[18px] md:text-4xl lg:text-5xl font-black text-white italic leading-[1.2] tracking-tighter"
+                          className="text-[22px] sm:text-3xl md:text-5xl lg:text-6xl font-black text-white italic leading-[1.1] tracking-tighter"
                         >
                           {activeBanners[currentSlide].title1} <br />
                           <span className="text-blue-500">{activeBanners[currentSlide].title2}</span>
@@ -241,7 +241,7 @@ const Home = () => {
           <p className="text-slate-500 font-medium text-sm">Browse our specialized therapeutic matrix</p>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
           {[
             { id: 'Ayurveda', name: 'Ayurveda', available: true, color: 'bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border-emerald-100' },
             { id: 'Surgical/Panchkarma equipment', name: 'Surgical/Panchkarma Equipment', available: true, color: 'bg-blue-50 hover:bg-blue-100 text-blue-900 border-blue-100' },
@@ -251,30 +251,30 @@ const Home = () => {
             const content = (
               <div className="relative z-10 flex flex-col h-full justify-between">
                 <div>
-                  <h3 className={`text-lg md:text-xl font-bold leading-tight ${cat.available ? 'text-slate-900' : 'text-slate-500'}`}>{cat.name}</h3>
-                  {!cat.available && <span className="inline-block mt-2 px-2 py-1 bg-slate-200 text-slate-600 text-[8px] md:text-[10px] font-bold uppercase rounded-full tracking-widest">Coming Soon</span>}
+                  <h3 className={`text-sm sm:text-lg md:text-xl font-bold leading-tight ${cat.available ? 'text-slate-900' : 'text-slate-500'}`}>{cat.name}</h3>
+                  {!cat.available && <span className="inline-block mt-1 px-1.5 py-0.5 bg-slate-200 text-slate-600 text-[8px] md:text-[9px] font-bold uppercase rounded-full tracking-widest">Soon</span>}
                 </div>
                 {cat.available && (
-                  <div className="w-8 h-8 md:w-10 md:h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity self-end mt-4 shadow-sm">
-                    <ArrowRight size={16} className="md:w-5 md:h-5 text-slate-900" />
+                  <div className="w-7 h-7 md:w-10 md:h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity self-end mt-2 shadow-sm">
+                    <ArrowRight size={14} className="md:w-5 md:h-5 text-slate-900" />
                   </div>
                 )}
               </div>
             );
-
+ 
             if (cat.available) {
               return (
                 <Link
                   key={cat.id}
                   to={`/products?mainCategory=${encodeURIComponent(cat.id)}`}
-                  className={`relative group overflow-hidden rounded-2xl md:rounded-3xl p-4 md:p-6 h-40 md:h-48 border transition-all duration-500 hover:scale-[1.02] hover:shadow-xl ${cat.color}`}
+                  className={`relative group overflow-hidden rounded-xl md:rounded-3xl p-3 md:p-6 h-32 sm:h-40 md:h-48 border transition-all duration-500 hover:scale-[1.02] hover:shadow-xl ${cat.color}`}
                 >
                   {content}
                 </Link>
               );
             } else {
               return (
-                <div key={cat.id} className={`relative overflow-hidden rounded-2xl md:rounded-3xl p-4 md:p-6 h-40 md:h-48 border opacity-70 cursor-not-allowed ${cat.color}`}>
+                <div key={cat.id} className={`relative overflow-hidden rounded-xl md:rounded-3xl p-3 md:p-6 h-32 sm:h-40 md:h-48 border opacity-70 cursor-not-allowed ${cat.color}`}>
                   {content}
                 </div>
               );

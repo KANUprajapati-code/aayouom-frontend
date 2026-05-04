@@ -250,7 +250,10 @@ const Checkout = () => {
               <button onClick={() => navigate('/cart')} className="p-2 hover:bg-slate-100 rounded-full transition-all">
                 <ChevronLeft size={24} className="text-slate-600" />
               </button>
-              <h1 className="text-xl md:text-2xl font-black text-slate-900">Checkout</h1>
+              <div>
+                <h1 className="text-xl font-black text-slate-900">Checkout</h1>
+                <p className="md:hidden text-[10px] font-bold text-primary-600 uppercase tracking-widest">Step {currentStep} of 3</p>
+              </div>
             </div>
             
             <div className="hidden md:flex items-center gap-8">

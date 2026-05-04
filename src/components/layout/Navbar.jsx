@@ -19,12 +19,12 @@ const Navbar = ({ onMenuClick }) => {
             >
               <Menu size={24} />
             </button>
-            <Link to="/" className="flex items-center gap-2 ml-2">
-              <img src="/logo.png" alt="Logo" className="h-12 md:h-16 object-contain brightness-0 invert" />
+            <Link to="/" className="flex items-center gap-1.5 md:gap-2 ml-1 md:ml-2 shrink-0">
+              <img src="/logo.png" alt="Logo" className="h-10 sm:h-12 md:h-16 object-contain brightness-0 invert" />
             </Link>
           </div>
 
-          <div className="hidden md:flex flex-1 max-w-xl items-center justify-center px-4 mx-auto">
+          <div className="hidden lg:flex flex-1 max-w-xl items-center justify-center px-4 mx-auto">
             <div className="relative w-full">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-white/40">
                 <Search size={18} />
@@ -32,16 +32,16 @@ const Navbar = ({ onMenuClick }) => {
               <input
                 type="text"
                 placeholder="Search for medicines or brands..."
-                className="block w-full pl-11 pr-4 py-2.5 bg-white/10 border border-white/10 rounded-2xl focus:outline-none focus:border-white/30 focus:ring-4 focus:ring-white/5 transition-all text-sm font-medium text-white placeholder:text-white/40"
+                className="block w-full pl-11 pr-4 py-2 bg-white/10 border border-white/10 rounded-2xl focus:outline-none focus:border-white/30 focus:ring-4 focus:ring-white/5 transition-all text-sm font-medium text-white placeholder:text-white/40"
               />
             </div>
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <Link to="/cart" className="flex p-2.5 text-white/70 hover:text-white hover:bg-white/10 rounded-2xl relative transition-colors border border-transparent hover:border-white/10">
-              <ShoppingCart size={22} />
+            <Link to="/cart" className="flex p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-2xl relative transition-colors border border-transparent hover:border-white/10">
+              <ShoppingCart size={20} className="sm:w-[22px] sm:h-[22px]" />
               {cart && cart.reduce((total, item) => total + item.quantity, 0) > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-white text-brand-green text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-brand-green">
+                <span className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-white text-brand-green text-[8px] sm:text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-brand-green">
                   {cart.reduce((total, item) => total + item.quantity, 0)}
                 </span>
               )}

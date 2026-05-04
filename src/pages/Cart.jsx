@@ -135,9 +135,9 @@ const Cart = () => {
 
           {/* User Request Note Section */}
           <div className="bg-white rounded-3xl border border-slate-100 p-6 space-y-4">
-             <div className="flex items-center gap-2 text-slate-900 font-bold">
+             <div className="flex items-center gap-2 text-slate-900 font-bold mb-4">
                 <MessageCircle size={20} className="text-brand-green" />
-                <h3>Add a Request / Note (Optional)</h3>
+                <h3 className="text-sm md:text-base">Special Requests / Notes</h3>
              </div>
              <textarea 
                placeholder="Write any special requests, delivery instructions, or SMS message here..." 
