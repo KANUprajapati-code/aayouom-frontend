@@ -30,8 +30,8 @@ import Support from './pages/Support';
 import Checkout from './pages/Checkout';
 
 const LoadingFallback = () => (
-  <div className="flex items-center justify-center min-h-screen">
-    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+  <div className="fixed top-0 left-0 w-full h-1 bg-brand-green/20 z-50 overflow-hidden">
+    <div className="h-full bg-brand-green animate-pulse w-1/2 rounded"></div>
   </div>
 );
 

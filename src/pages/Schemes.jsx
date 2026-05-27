@@ -65,12 +65,7 @@ const Schemes = () => {
   const nextSlide = useCallback(() => setCurrentSlide(prev => (prev + 1) % banners.length), [banners]);
   const prevSlide = useCallback(() => setCurrentSlide(prev => (prev - 1 + banners.length) % banners.length), [banners]);
 
-  if (loading) return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6">
-      <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-      <p className="text-xs font-black uppercase tracking-[0.4em] text-slate-300 animate-pulse">Syncing Scheme Nodes...</p>
-    </div>
-  );
+  // Removed full screen blocker loader for smooth instant layout render
 
   return (
     <motion.div initial="hidden" animate="visible" className="space-y-16 pb-24 font-sans px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -194,7 +189,20 @@ const Schemes = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {schemesData.map((scheme) => {
+          {loading && schemesData.length === 0 ? (
+            Array(3).fill(0).map((_, i) => (
+              <div key={i} className="bg-white rounded-[32px] p-8 border border-slate-200 animate-pulse flex flex-col">
+                <div className="w-14 h-14 rounded-2xl bg-slate-100 mb-8"></div>
+                <div className="h-6 bg-slate-100 rounded w-2/3 mb-3"></div>
+                <div className="h-4 bg-slate-100 rounded w-full mb-2"></div>
+                <div className="h-4 bg-slate-100 rounded w-5/6"></div>
+                <div className="mt-8 pt-8 border-t border-slate-50 flex items-center justify-between">
+                  <div className="h-4 bg-slate-100 rounded w-1/4"></div>
+                  <div className="w-10 h-10 bg-slate-100 rounded-xl"></div>
+                </div>
+              </div>
+            ))
+          ) : schemesData.map((scheme) => {
             const Icon = IconMap[scheme.icon] || Zap;
             return (
               <div key={scheme._id} className="bg-white rounded-[32px] p-8 border border-slate-200 hover:border-blue-600/30 hover:shadow-xl transition-all duration-300 flex flex-col group">
@@ -228,7 +236,19 @@ const Schemes = () => {
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
-            {products.map((product, idx) => {
+            {loading && products.length === 0 ? (
+              Array(4).fill(0).map((_, i) => (
+                <div key={i} className="bg-white rounded-[24px] md:rounded-[32px] p-4 md:p-6 border border-slate-200 animate-pulse flex flex-col">
+                  <div className="aspect-square rounded-2xl bg-slate-100 mb-6"></div>
+                  <div className="h-3 bg-slate-100 rounded w-1/3 mb-2"></div>
+                  <div className="h-4 bg-slate-100 rounded w-3/4"></div>
+                  <div className="mt-auto pt-4 border-t border-slate-50 flex items-center justify-between">
+                    <div className="h-6 bg-slate-100 rounded w-1/4"></div>
+                    <div className="w-10 h-10 bg-slate-100 rounded-xl"></div>
+                  </div>
+                </div>
+              ))
+            ) : products.map((product, idx) => {
               const hasFreeScheme = product.freeUnitsScheme && product.freeUnitsScheme.buy && product.freeUnitsScheme.free;
               const hasRules = product.schemeRules && product.schemeRules.length > 0;
               const schemeText = hasFreeScheme 

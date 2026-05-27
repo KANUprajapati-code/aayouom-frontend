@@ -49,11 +49,7 @@ const Promotions = () => {
     setTimeout(() => setCopiedCode(null), 2000);
   };
 
-  if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50">
-      <Loader2 className="animate-spin text-emerald-600" size={40} />
-    </div>
-  );
+  // Removed full screen blocker loader for smooth instant layout render
 
   return (
     <div className="min-h-screen bg-slate-50 pt-20 md:pt-32 pb-32 md:pb-20 px-4 md:px-8">
@@ -108,7 +104,23 @@ const Promotions = () => {
               exit={{ opacity: 0, y: -20 }}
               className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
             >
-              {coupons.length > 0 ? coupons.map((coupon, i) => (
+              {loading && coupons.length === 0 ? (
+                Array(3).fill(0).map((_, i) => (
+                  <div key={i} className="bg-white border border-slate-100 rounded-[32px] p-8 space-y-6 animate-pulse">
+                    <div className="flex justify-between items-start">
+                      <div className="w-12 h-12 bg-slate-100 rounded-2xl"></div>
+                      <div className="w-20 h-6 bg-slate-100 rounded-full"></div>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="h-8 bg-slate-100 rounded w-1/3"></div>
+                      <div className="h-4 bg-slate-100 rounded w-1/2"></div>
+                    </div>
+                    <div className="pt-6 border-t border-dashed border-slate-200">
+                      <div className="h-14 bg-slate-100 rounded-2xl"></div>
+                    </div>
+                  </div>
+                ))
+              ) : coupons.length > 0 ? coupons.map((coupon, i) => (
                 <div key={coupon._id} className="relative group">
                   <div className="absolute inset-0 bg-emerald-600 rounded-[32px] translate-y-2 group-hover:translate-y-3 transition-transform opacity-10" />
                   <div className="bg-white border border-slate-100 rounded-[32px] p-8 space-y-6 shadow-xl shadow-slate-200/50 relative overflow-hidden">
@@ -165,7 +177,19 @@ const Promotions = () => {
               exit={{ opacity: 0, y: -20 }}
               className="grid gap-6"
             >
-              {offers.length > 0 ? offers.map((offer, i) => (
+              {loading && offers.length === 0 ? (
+                Array(2).fill(0).map((_, i) => (
+                  <div key={i} className="bg-white rounded-[32px] border border-slate-100 p-6 md:p-12 animate-pulse flex flex-col md:flex-row gap-8 items-center">
+                    <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-slate-100 shrink-0"></div>
+                    <div className="space-y-4 flex-grow w-full">
+                      <div className="h-4 bg-slate-100 rounded w-1/4"></div>
+                      <div className="h-8 bg-slate-100 rounded w-2/3"></div>
+                      <div className="h-4 bg-slate-100 rounded w-full"></div>
+                    </div>
+                    <div className="w-full md:w-40 h-14 bg-slate-100 rounded-[24px] shrink-0"></div>
+                  </div>
+                ))
+              ) : offers.length > 0 ? offers.map((offer, i) => (
                 <div key={offer._id} className="bg-white rounded-[32px] md:rounded-[40px] border border-slate-100 p-6 md:p-12 shadow-2xl shadow-slate-200/50 flex flex-col md:flex-row gap-8 md:gap-12 items-center hover:scale-[1.01] transition-transform">
                    <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 shrink-0 shadow-inner">
                       <Zap size={48} strokeWidth={2.5} className="group-hover:animate-pulse" />

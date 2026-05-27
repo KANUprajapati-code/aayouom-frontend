@@ -65,20 +65,12 @@ const Dashboard = () => {
   const totalSavings = Math.floor(totalAmount * 0.15); // Hypothetical 15% savings
 
   const stats = [
-    { label: 'Total Orders', value: totalOrders.toString(), icon: Package, color: 'primary', trend: '+12%', trendUp: true },
-    { label: 'Total Value', value: `₹${totalAmount.toLocaleString()}`, icon: TrendingUp, color: 'secondary', trend: '+8%', trendUp: true },
-    { label: 'Est. Savings', value: `₹${totalSavings.toLocaleString()}`, icon: History, color: 'accent-orange', trend: '15%', trendUp: true },
+    { label: 'Total Orders', value: loading && orders.length === 0 ? '...' : totalOrders.toString(), icon: Package, color: 'primary', trend: '+12%', trendUp: true },
+    { label: 'Total Value', value: loading && orders.length === 0 ? '...' : `₹${totalAmount.toLocaleString()}`, icon: TrendingUp, color: 'secondary', trend: '+8%', trendUp: true },
+    { label: 'Est. Savings', value: loading && orders.length === 0 ? '...' : `₹${totalSavings.toLocaleString()}`, icon: History, color: 'accent-orange', trend: '15%', trendUp: true },
   ];
 
   const recentOrders = orders.slice(0, 5);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -138,7 +130,28 @@ const Dashboard = () => {
           </div>
           
           <div className="bg-white rounded-2xl border border-surface-border overflow-hidden">
-            {orders.length > 0 ? (
+            {loading && orders.length === 0 ? (
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="bg-surface-light text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-surface-border">
+                    <th className="px-6 py-4">Order ID</th>
+                    <th className="px-6 py-4">Date</th>
+                    <th className="px-6 py-4">Status</th>
+                    <th className="px-6 py-4 text-right">Total</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-50">
+                  {Array(3).fill(0).map((_, i) => (
+                    <tr key={i} className="animate-pulse">
+                      <td className="px-6 py-4"><div className="h-4 bg-slate-100 rounded w-2/3"></div></td>
+                      <td className="px-6 py-4"><div className="h-4 bg-slate-100 rounded w-1/2"></div></td>
+                      <td className="px-6 py-4"><div className="h-4 bg-slate-100 rounded w-1/3"></div></td>
+                      <td className="px-6 py-4 text-right"><div className="h-4 bg-slate-100 rounded w-1/4 ml-auto"></div></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : orders.length > 0 ? (
               <table className="w-full text-left">
                 <thead>
                   <tr className="bg-surface-light text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-surface-border">

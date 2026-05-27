@@ -47,8 +47,18 @@ const DynamicPage = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
+      <div className="space-y-8 max-w-7xl mx-auto px-4 lg:px-8 py-12 animate-pulse">
+        <div className="h-64 bg-slate-100 rounded-[48px] w-full mb-12"></div>
+        <div className="space-y-4">
+          <div className="h-8 bg-slate-100 rounded w-1/3"></div>
+          <div className="h-4 bg-slate-100 rounded w-2/3"></div>
+          <div className="grid grid-cols-4 gap-6">
+            <div className="h-72 bg-slate-100 rounded-3xl"></div>
+            <div className="h-72 bg-slate-100 rounded-3xl"></div>
+            <div className="h-72 bg-slate-100 rounded-3xl"></div>
+            <div className="h-72 bg-slate-100 rounded-3xl"></div>
+          </div>
+        </div>
       </div>
     );
   }

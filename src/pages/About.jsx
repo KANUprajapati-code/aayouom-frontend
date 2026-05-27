@@ -34,11 +34,7 @@ const About = () => {
         visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
     };
 
-    if (loading) return (
-        <div className="min-h-screen flex items-center justify-center">
-            <div className="w-12 h-12 border-4 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
-        </div>
-    );
+    // Removed full screen blocker loader for smooth instant layout render
 
     return (
         <div className="bg-white pb-24">
@@ -89,12 +85,20 @@ const About = () => {
                                 <div className="w-8 h-px bg-primary-600"></div> Our Purpose
                             </h2>
                             <h3 className="text-4xl lg:text-5xl font-black text-slate-900 leading-[1.1] tracking-tighter">
-                                {cms.aboutMissionTitle}
+                                {loading ? <div className="h-10 bg-slate-100 rounded w-3/4 animate-pulse"></div> : cms.aboutMissionTitle}
                             </h3>
                         </div>
-                        <p className="text-xl text-text-muted leading-relaxed">
-                            {cms.aboutMissionDesc}
-                        </p>
+                        {loading ? (
+                          <div className="space-y-2 animate-pulse">
+                            <div className="h-4 bg-slate-100 rounded w-full"></div>
+                            <div className="h-4 bg-slate-100 rounded w-5/6"></div>
+                            <div className="h-4 bg-slate-100 rounded w-4/5"></div>
+                          </div>
+                        ) : (
+                          <p className="text-xl text-text-muted leading-relaxed">
+                              {cms.aboutMissionDesc}
+                          </p>
+                        )}
                         <div className="flex gap-12 border-t border-slate-50 pt-10">
                             <div>
                                 <p className="text-4xl font-black text-slate-900">100%</p>
@@ -137,8 +141,17 @@ const About = () => {
                                 {i === 3 && <Award size={32} />}
                                 {i === 4 && <Target size={32} />}
                             </div>
-                            <h4 className="text-xl font-black text-slate-900 mb-4">{cms[`aboutValue${i}Title`]}</h4>
-                            <p className="text-slate-500 leading-relaxed text-sm">{cms[`aboutValue${i}Desc`]}</p>
+                            <h4 className="text-xl font-black text-slate-900 mb-4">
+                              {loading ? <div className="h-6 bg-slate-200 rounded w-1/2 animate-pulse"></div> : cms[`aboutValue${i}Title`]}
+                            </h4>
+                            {loading ? (
+                              <div className="space-y-2 animate-pulse">
+                                <div className="h-3 bg-slate-200 rounded w-full"></div>
+                                <div className="h-3 bg-slate-200 rounded w-5/6"></div>
+                              </div>
+                            ) : (
+                              <p className="text-slate-500 leading-relaxed text-sm">{cms[`aboutValue${i}Desc`]}</p>
+                            )}
                         </motion.div>
                     ))}
                 </motion.div>

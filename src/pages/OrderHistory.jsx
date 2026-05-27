@@ -58,13 +58,7 @@ const OrderHistory = () => {
     return matchesSearch && matchesStatus;
   });
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
-      </div>
-    );
-  }
+  // Removed full screen blocker loader for smooth instant layout render
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 pb-20 px-4">
@@ -100,7 +94,29 @@ const OrderHistory = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {filteredOrders.length > 0 ? (
+        {loading && orders.length === 0 ? (
+          Array(4).fill(0).map((_, i) => (
+            <div key={i} className="bg-white rounded-3xl border border-slate-100 p-6 flex flex-col md:flex-row gap-6 animate-pulse">
+              <div className="w-full md:w-32 h-32 bg-slate-100 rounded-2xl shrink-0"></div>
+              <div className="flex-grow space-y-4">
+                <div className="flex justify-between items-start">
+                  <div className="space-y-2 w-1/2">
+                    <div className="h-5 bg-slate-100 rounded w-2/3"></div>
+                    <div className="h-3 bg-slate-100 rounded w-1/3"></div>
+                  </div>
+                  <div className="h-5 bg-slate-100 rounded w-1/4"></div>
+                </div>
+                <div className="flex items-end justify-between">
+                  <div className="space-y-1">
+                    <div className="h-3 bg-slate-100 rounded w-10"></div>
+                    <div className="h-6 bg-slate-100 rounded w-20"></div>
+                  </div>
+                  <div className="h-8 bg-slate-100 rounded w-28"></div>
+                </div>
+              </div>
+            </div>
+          ))
+        ) : filteredOrders.length > 0 ? (
           filteredOrders.map(order => (
             <div key={order._id} className="bg-white rounded-3xl border border-slate-100 p-6 flex flex-col md:flex-row gap-6 hover:shadow-xl transition-all duration-500 group">
                {/* Product Image Section */}

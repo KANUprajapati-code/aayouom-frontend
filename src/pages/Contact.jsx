@@ -45,9 +45,7 @@ const Contact = () => {
     fetchData();
   }, []);
 
-  if (loading) {
-     return <div className="min-h-screen flex items-center justify-center"><div className="w-10 h-10 border-4 border-primary-100 border-t-primary-600 rounded-full animate-spin"></div></div>;
-  }
+  // Removed full screen blocker loader for smooth instant layout render
 
   const contactItems = [
     { icon: Phone, title: "Phone Support", info: cms?.contactPhone || "+91 123 456 7890" },
