@@ -23,6 +23,41 @@ import SEO from '../components/common/SEO';
 import { useCart } from '../context/CartContext';
 import { motion } from 'framer-motion';
 
+const ProductDetailSkeleton = () => (
+  <div className="space-y-8 pb-20 max-w-6xl mx-auto px-4 font-sans animate-pulse">
+    <div className="h-8 bg-slate-100 rounded w-1/4"></div>
+    <div className="grid lg:grid-cols-2 gap-12">
+      {/* Gallery Skeleton */}
+      <div className="space-y-4">
+        <div className="aspect-square bg-slate-100 rounded-[32px] md:rounded-[48px] w-full"></div>
+        <div className="flex gap-4 justify-center">
+          <div className="w-20 h-20 bg-slate-100 rounded-2xl"></div>
+          <div className="w-20 h-20 bg-slate-100 rounded-2xl"></div>
+          <div className="w-20 h-20 bg-slate-100 rounded-2xl"></div>
+        </div>
+      </div>
+      {/* Info Skeleton */}
+      <div className="space-y-8">
+        <div className="space-y-4">
+          <div className="h-6 bg-slate-100 rounded w-1/3"></div>
+          <div className="h-10 bg-slate-100 rounded w-3/4"></div>
+        </div>
+        <div className="p-6 md:p-8 bg-slate-50 rounded-[32px] md:rounded-[40px] space-y-6">
+          <div className="flex justify-between items-center">
+            <div className="space-y-2 w-1/2">
+              <div className="h-4 bg-slate-200 rounded w-1/3"></div>
+              <div className="h-12 bg-slate-200 rounded w-2/3"></div>
+            </div>
+            <div className="h-8 bg-slate-200 rounded w-1/4"></div>
+          </div>
+          <div className="h-14 bg-slate-200 rounded-2xl"></div>
+          <div className="h-14 bg-slate-200 rounded-2xl"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -75,11 +110,7 @@ const ProductDetail = () => {
   const displayStock = selectedVariant ? selectedVariant.stock : medicine?.stock;
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
-      </div>
-    );
+    return <ProductDetailSkeleton />;
   }
 
   if (!medicine) {

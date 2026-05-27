@@ -21,6 +21,26 @@ import SEO from '../components/common/SEO';
 import { useCart } from '../context/CartContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const MedicineCardSkeleton = () => (
+  <div className="bg-white rounded-3xl p-4 md:p-6 border-2 border-slate-100 animate-pulse space-y-4 h-full flex flex-col">
+    <div className="aspect-square bg-slate-100 rounded-2xl w-full h-40 md:h-56"></div>
+    <div className="space-y-3 flex-grow flex flex-col justify-between">
+      <div className="space-y-2">
+        <div className="h-3 bg-slate-100 rounded w-1/4"></div>
+        <div className="h-5 bg-slate-100 rounded w-3/4"></div>
+        <div className="h-5 bg-slate-100 rounded w-1/2"></div>
+      </div>
+      <div className="pt-4 border-t border-slate-100 border-dashed">
+        <div className="h-6 bg-slate-100 rounded w-1/3 mb-4"></div>
+        <div className="grid grid-cols-2 gap-2">
+          <div className="h-8 bg-slate-100 rounded-lg"></div>
+          <div className="h-8 bg-slate-100 rounded-lg"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 const Home = () => {
   const { addToCart } = useCart();
   const [homeProducts, setHomeProducts] = useState(() => {
@@ -42,34 +62,49 @@ const Home = () => {
   });
   const [loading, setLoading] = useState(homeProducts.length === 0);
 
+  // Fetch static layout components once on mount to maximize efficiency
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchStaticData = async () => {
       try {
-        const [prodRes, cmsRes, catRes, brandsRes] = await Promise.all([
-          axios.get(`https://ayuom-backend.vercel.app/api/products?placement=home${selectedBrand ? `&brand=${selectedBrand}` : ''}`),
+        const [cmsRes, catRes, brandsRes] = await Promise.all([
           axios.get('https://ayuom-backend.vercel.app/api/content/homepage').catch(() => ({ data: {} })),
           axios.get('https://ayuom-backend.vercel.app/api/categories').catch(() => ({ data: [] })),
           axios.get('https://ayuom-backend.vercel.app/api/brands').catch(() => ({ data: [] }))
         ]);
-        setHomeProducts(Array.isArray(prodRes.data) ? prodRes.data : []);
         setCms(cmsRes.data || {});
         setCategories(Array.isArray(catRes.data) ? catRes.data : []);
         setBrands(Array.isArray(brandsRes.data) ? brandsRes.data : []);
 
-        // Cache the data if no brand is selected
+        localStorage.setItem('home_cms_cache', JSON.stringify(cmsRes.data || {}));
+        localStorage.setItem('home_categories_cache', JSON.stringify(Array.isArray(catRes.data) ? catRes.data : []));
+        localStorage.setItem('home_brands_cache', JSON.stringify(Array.isArray(brandsRes.data) ? brandsRes.data : []));
+      } catch (err) {
+        console.error('Failed to fetch static home data:', err);
+      }
+    };
+    fetchStaticData();
+  }, []);
+
+  // Fetch product listings when brand changes or on mount
+  useEffect(() => {
+    const fetchProductsData = async () => {
+      setLoading(true);
+      try {
+        const prodRes = await axios.get(`https://ayuom-backend.vercel.app/api/products?placement=home${selectedBrand ? `&brand=${selectedBrand}` : ''}`);
+        const products = Array.isArray(prodRes.data) ? prodRes.data : [];
+        setHomeProducts(products);
+
+        // Cache products if no brand is selected
         if (!selectedBrand) {
-          localStorage.setItem('home_products_cache', JSON.stringify(Array.isArray(prodRes.data) ? prodRes.data : []));
-          localStorage.setItem('home_cms_cache', JSON.stringify(cmsRes.data || {}));
-          localStorage.setItem('home_categories_cache', JSON.stringify(Array.isArray(catRes.data) ? catRes.data : []));
-          localStorage.setItem('home_brands_cache', JSON.stringify(Array.isArray(brandsRes.data) ? brandsRes.data : []));
+          localStorage.setItem('home_products_cache', JSON.stringify(products));
         }
       } catch (err) {
-        console.error('Failed to fetch home data:', err);
+        console.error('Failed to fetch home products:', err);
       } finally {
         setLoading(false);
       }
     };
-    fetchData();
+    fetchProductsData();
   }, [selectedBrand]);
 
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -97,14 +132,7 @@ const Home = () => {
   const nextSlide = useCallback(() => setCurrentSlide(prev => (prev + 1) % (activeBanners?.length || 1)), [activeBanners]);
   const prevSlide = useCallback(() => setCurrentSlide(prev => (prev - 1 + (activeBanners?.length || 1)) % (activeBanners?.length || 1)), [activeBanners]);
 
-  if (loading && homeProducts.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-green"></div>
-        <p className="text-[10px] font-bold uppercase tracking-widest text-slate-300 animate-pulse">Loading Ayuone Marketplace...</p>
-      </div>
-    );
-  }
+  // Removed full screen blocker loader for smooth instant layout render
 
   // Ensure default categories
   const displayCategories = [...categories];
@@ -294,10 +322,14 @@ const Home = () => {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
-          {displayFeatured.map((p) => (
-            <MedicineCard key={p._id} medicine={p} onAddToCart={addToCart} />
-          ))}
-          {homeProducts.length === 0 && <div className="col-span-full py-20 text-center text-slate-400 font-medium border-2 border-dashed border-slate-100 rounded-3xl">No products found.</div>}
+          {loading && homeProducts.length === 0 ? (
+            Array(4).fill(0).map((_, i) => <MedicineCardSkeleton key={i} />)
+          ) : (
+            displayFeatured.map((p) => (
+              <MedicineCard key={p._id} medicine={p} onAddToCart={addToCart} />
+            ))
+          )}
+          {!loading && homeProducts.length === 0 && <div className="col-span-full py-20 text-center text-slate-400 font-medium border-2 border-dashed border-slate-100 rounded-3xl">No products found.</div>}
         </div>
       </section>
 
@@ -312,10 +344,14 @@ const Home = () => {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
-          {displayTrending.map((p) => (
-            <MedicineCard key={p._id + '_trending'} medicine={p} onAddToCart={addToCart} />
-          ))}
-          {homeProducts.length === 0 && <div className="col-span-full py-20 text-center text-slate-400 font-medium border-2 border-dashed border-slate-100 rounded-3xl">No products found.</div>}
+          {loading && homeProducts.length === 0 ? (
+            Array(4).fill(0).map((_, i) => <MedicineCardSkeleton key={i} />)
+          ) : (
+            displayTrending.map((p) => (
+              <MedicineCard key={p._id + '_trending'} medicine={p} onAddToCart={addToCart} />
+            ))
+          )}
+          {!loading && homeProducts.length === 0 && <div className="col-span-full py-20 text-center text-slate-400 font-medium border-2 border-dashed border-slate-100 rounded-3xl">No products found.</div>}
         </div>
       </section>
 

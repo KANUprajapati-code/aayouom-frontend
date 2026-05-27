@@ -30,6 +30,26 @@ import MedicineCard from '../components/common/MedicineCard';
 import SEO from '../components/common/SEO';
 import { useCart } from '../context/CartContext';
 
+const MedicineCardSkeleton = () => (
+  <div className="bg-white rounded-3xl p-4 md:p-6 border-2 border-slate-100 animate-pulse space-y-4 h-full flex flex-col">
+    <div className="aspect-square bg-slate-100 rounded-2xl w-full h-40 md:h-56"></div>
+    <div className="space-y-3 flex-grow flex flex-col justify-between">
+      <div className="space-y-2">
+        <div className="h-3 bg-slate-100 rounded w-1/4"></div>
+        <div className="h-5 bg-slate-100 rounded w-3/4"></div>
+        <div className="h-5 bg-slate-100 rounded w-1/2"></div>
+      </div>
+      <div className="pt-4 border-t border-slate-100 border-dashed">
+        <div className="h-6 bg-slate-100 rounded w-1/3 mb-4"></div>
+        <div className="grid grid-cols-2 gap-2">
+          <div className="h-8 bg-slate-100 rounded-lg"></div>
+          <div className="h-8 bg-slate-100 rounded-lg"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 const Products = () => {
   const { addToCart } = useCart();
   const location = useLocation();
@@ -151,12 +171,7 @@ const Products = () => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
   };
 
-  if (loading) return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
-      <div className="w-12 h-12 border-4 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
-      <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Loading Marketplace...</p>
-    </div>
-  );
+  // Removed full screen blocker loader for smooth instant layout render
 
   return (
     <motion.div 
@@ -433,7 +448,11 @@ const Products = () => {
             </motion.div>
           ) : (
             <AnimatePresence mode="popLayout">
-              {filteredMedicines.length > 0 ? (
+              {loading && medicines.length === 0 ? (
+                <div className={`grid gap-4 md:gap-8 ${viewMode === 'grid' ? 'grid-cols-2 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
+                  {Array(6).fill(0).map((_, i) => <MedicineCardSkeleton key={i} />)}
+                </div>
+              ) : filteredMedicines.length > 0 ? (
                 <motion.div 
                   layout
                   className={`grid gap-4 md:gap-8 ${viewMode === 'grid' ? 'grid-cols-2 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}
